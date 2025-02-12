@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhA Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
+        <h2>Մուտք գործել</h2>
+        <p>Մուտքագրեք Ձեր ID-ն ձեր վահանակ մուտք գործելու համար</p>
+        <input type="text" id="userID" placeholder="ID">
+        <button onclick="redirectUser()">Մուտք</button>
+    </div>
+
+    <script>
+        function redirectUser() {
+            let userID = document.getElementById("userID").value.trim();
+            if (userID) {
+                window.location.href = `/${userID}`;
+            } else {
+                alert("Խնդրում ենք մուտքագրել ID");
+            }
+        }
+    </script>
+</body>
+</html>
