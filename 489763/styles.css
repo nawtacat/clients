@@ -52,7 +52,7 @@ h2 {
 /* Description text */
 .description {
     font-size: 14px;
-    font-weight: light;
+    font-weight: 300;
     color: #555;
     margin-bottom: 20px;
 }
