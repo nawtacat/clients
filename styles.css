@@ -1,52 +1,81 @@
-/* General Styles */
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Center content on screen */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f5f5f5;
+    background-color: white; /* No shadow, plain white background */
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-/* Portal Container */
+/* Remove shadowed container */
 .container {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    width: 350px;
+    max-width: 400px;
+    width: 90%;
+    padding: 20px;
 }
 
-/* Logo */
+/* Profile image */
 .profile-image {
-    width: 80px;
-    margin-bottom: 15px;
-    border-radius: 100%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
 }
 
-/* Input Field */
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+/* Title */
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Description */
+.description {
     font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Input field */
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    text-align: center;
 }
 
 /* Button */
-button {
+.button {
+    display: block;
     width: 100%;
     background: #1976D2;
     color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
     font-size: 18px;
+    margin-top: 15px;
+    border-radius: 5px;
+    border: none;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
-button:hover {
+/* Button hover effect */
+.button:hover {
     background: #1565C0;
 }
