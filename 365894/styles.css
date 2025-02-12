@@ -72,7 +72,7 @@ h2 {
 
 @font-face {
     font-family: 'Mardoto';
-    src: url('fonts/Mardoto-Regular.woff2') format('woff2'),
+    src: url('fonts/Mardoto-Medium.woff2') format('woff2'),
     font-weight: normal;
     font-style: normal;
 }
