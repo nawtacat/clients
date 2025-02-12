@@ -1,17 +1,25 @@
+/* Define Medium Weight */
 @font-face {
     font-family: 'Mardoto';
     src: url('/fonts/Mardoto-Medium.woff2') format('woff2');
-    font-weight: normal;
+    font-weight: 500;
     font-style: normal;
 }
+
+/* Define Regular Weight */
+@font-face {
+    font-family: 'Mardoto-Regular';
+    src: url('/fonts/Mardoto-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
 /* Reset default styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-
 
 /* Centering content on screen */
 body {
@@ -49,10 +57,11 @@ h2 {
     margin-bottom: 10px;
 }
 
-/* Description text */
+/* Description text - Uses "Mardoto-Regular" */
 .description {
+    font-family: 'Mardoto-Regular', sans-serif;
     font-size: 14px;
-    font-weight: 100;
+    font-weight: 400;
     color: #555;
     margin-bottom: 20px;
 }
@@ -76,3 +85,4 @@ h2 {
 .button:hover {
     background: #1565C0;
 }
+
