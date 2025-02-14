@@ -36,25 +36,31 @@
         let deferredPrompt;
         const installButton = document.getElementById("installButton");
 
+        // Hide install button by default
+        installButton.style.display = "none";
+
         window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault(); // Prevent the automatic browser install prompt
+            event.preventDefault(); // Prevent automatic prompt
             deferredPrompt = event;
-            installButton.style.display = "inline"; // Show the install button when available
+            installButton.style.display = "inline"; // Show install icon
+            console.log("Install prompt available");
         });
 
         installButton.addEventListener("click", async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt(); // Show the install prompt
-                const choiceResult = await deferredPrompt.userChoice;
-                if (choiceResult.outcome === "accepted") {
-                    console.log("User accepted the install prompt");
-                } else {
-                    console.log("User dismissed the install prompt");
-                }
-                deferredPrompt = null; // Reset the variable
+            if (!deferredPrompt) {
+                alert("Հնարավոր չէ այժմ տեղադրել։");
+                return;
             }
+            deferredPrompt.prompt(); // Show install prompt
+            const choiceResult = await deferredPrompt.userChoice;
+            if (choiceResult.outcome === "accepted") {
+                console.log("User accepted install prompt");
+                installButton.style.display = "none"; // Hide after install
+            } else {
+                console.log("User dismissed install prompt");
+            }
+            deferredPrompt = null;
         });
-
     </script>
 </body>
 </html>
