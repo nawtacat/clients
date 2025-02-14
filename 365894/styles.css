@@ -25,7 +25,7 @@
 body {
     font-family: 'Mardoto', sans-serif;
     text-align: center;
-    background-color: white;
+    background-color: white; /* Plain white background */
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -36,7 +36,7 @@ body {
 .container {
     max-width: 400px;
     width: 90%;
-    background: white;
+    background: white; /* Matches the background */
     padding: 20px;
 }
 
@@ -55,22 +55,9 @@ h2 {
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
 }
 
-/* Install icon */
-.install-icon {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: middle; /* Ensures proper alignment */
-}
-
-/* Description text */
+/* Description text - Uses "Mardoto-Regular" */
 .description {
     font-family: 'Mardoto-Regular', sans-serif;
     font-size: 14px;
