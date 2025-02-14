@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="/rounded_android_small.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/rounded_android_large.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="rounded_android_small.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="rounded_android_large.png">
     <link rel="icon" type="image/jpg" href="/rounded_favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="stylesheet" href="styles.css">
@@ -14,53 +14,21 @@
 <body>
     <div class="container">
         <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
-        
-        <!-- Client ID with Install Button -->
-        <h2>365894 
-            <img src="/cloud.png" alt="Install" class="install-icon" id="installButton">
-        </h2>
-        
+        <h2>365894</h2>
         <p class="description">Բարի գալուստ, Սիոնա։ Սա Ձեր երեխայի անհատականացված PhA վահանակն է</p>
         
         <a class="button" href="https://meet.google.com/roe-ixrb-rks">Միանալ դասին</a>
         <a class="button" href="https://calendar.google.com/calendar/embed?src=8457f1bf98d9c663640234bf088a0bf60dcdbdff1a2c1e7ab3908ff97897a09e%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
-        <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
+        <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a> <!-- Modified this -->
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
     </div>
 
     <script>
         function checkSubscription() {
-            alert("Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 04.03.2025");
+            // Simulated subscription expiration date (adjust as needed)
+            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 04.03.2025');
         }
-
-        let deferredPrompt;
-        const installButton = document.getElementById("installButton");
-
-        // Hide install button by default
-        installButton.style.display = "none";
-
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault(); // Prevent automatic prompt
-            deferredPrompt = event;
-            installButton.style.display = "inline"; // Show install icon
-            console.log("Install prompt available");
-        });
-
-        installButton.addEventListener("click", async () => {
-            if (!deferredPrompt) {
-                alert("Հնարավոր չէ այժմ տեղադրել։");
-                return;
-            }
-            deferredPrompt.prompt(); // Show install prompt
-            const choiceResult = await deferredPrompt.userChoice;
-            if (choiceResult.outcome === "accepted") {
-                console.log("User accepted install prompt");
-                installButton.style.display = "none"; // Hide after install
-            } else {
-                console.log("User dismissed install prompt");
-            }
-            deferredPrompt = null;
-        });
     </script>
 </body>
 </html>
+
