@@ -20,7 +20,17 @@
     padding: 0;
     box-sizing: border-box;
 }
+.install-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: none; /* Hidden by default */
+    transition: opacity 0.3s ease;
+}
 
+.install-icon:hover {
+    opacity: 0.7;
+}
 /* Centering content on screen */
 body {
     font-family: 'Mardoto', sans-serif;
