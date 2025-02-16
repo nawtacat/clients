@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Install App</title>
+    <title>Install PhA</title>
+
+    <!-- Link to the PWA Manifest -->
     <link rel="manifest" href="manifest.json">
+
+    <!-- Apple Touch Icon for iOS -->
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,48 +36,51 @@
 </head>
 <body>
 
-    <h1>Install Our App</h1>
-    <p>Click the button below to add the app to your home screen.</p>
+    <h1>Install PhA Web App</h1>
+    <p>Click the button below to install the app on your device.</p>
     
     <button id="installApp">Add to Home Screen</button>
 
     <script>
-        let deferredPrompt;
+        document.addEventListener("DOMContentLoaded", function () {
+            let deferredPrompt;
 
-        // Detect Android Install Prompt
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault();
-            deferredPrompt = event;
-            document.getElementById("installApp").style.display = "block";
-        });
+            // Detect Android Install Prompt
+            window.addEventListener("beforeinstallprompt", (event) => {
+                event.preventDefault();
+                deferredPrompt = event;
+                document.getElementById("installApp").style.display = "block";
+            });
 
-        document.getElementById("installApp").addEventListener("click", () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === "accepted") {
-                        console.log("User installed the app");
-                    }
-                    deferredPrompt = null;
-                });
-            } else if (isIos() && !isInStandaloneMode()) {
-                alert("To install, tap the Share button and then 'Add to Home Screen'.");
+            document.getElementById("installApp").addEventListener("click", () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === "accepted") {
+                            console.log("User installed the app");
+                        }
+                        deferredPrompt = null;
+                    });
+                } else if (isIos() && !isInStandaloneMode()) {
+                    alert("To install, tap the Share button and then 'Add to Home Screen'.");
+                }
+            });
+
+            // Detect iOS (Safari) and show manual instructions
+            function isIos() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            }
+
+            function isInStandaloneMode() {
+                return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+            }
+
+            if (isIos() && !isInStandaloneMode()) {
+                document.getElementById("installApp").style.display = "block";
             }
         });
-
-        // Detect iOS (Safari) and show manual instructions
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function isInStandaloneMode() {
-            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-        }
-
-        if (isIos() && !isInStandaloneMode()) {
-            document.getElementById("installApp").style.display = "block";
-        }
     </script>
 
 </body>
 </html>
+
