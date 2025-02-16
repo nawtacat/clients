@@ -1,72 +1,98 @@
-<!DOCTYPE html>
-<html lang="hy">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="/manifest.json">
-</head>
-<body>
-    <div class="container">
-        <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
-        
-        <div class="id-container">
-            <h2>112367</h2>
-            <img src="https://pha.am/cloud.png" alt="Install App" class="install-icon" id="installIcon">
-        </div>
+/* Define Medium Weight */
+@font-face {
+    font-family: 'Mardoto';
+    src: url('/fonts/Mardoto-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
 
-        <p class="description">Բարի գալուստ, Լուսինե։ Սա Ձեր երեխայի անհատականացված PhA վահանակն է</p>
-        
-        <a class="button" href="https://meet.google.com/nhv-gmwm-ied">Միանալ դասին</a>
-        <a class="button" href="https://calendar.google.com/calendar/embed?src=6c06af934d8297f331aa836aa789e7c45b1dc576332fd0be8beeead31d3acdc8%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
-        <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
-        <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
-    </div>
+/* Define Regular Weight */
+@font-face {
+    font-family: 'Mardoto-Regular';
+    src: url('/fonts/Mardoto-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
 
-    <script>
-        let deferredPrompt;
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.install-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
 
-        // Detect Android Install Prompt
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault();
-            deferredPrompt = event;
-            document.getElementById("installIcon").style.display = "inline"; // Show the icon
-        });
+.install-icon:hover {
+    opacity: 0.7;
+}
+/* Centering content on screen */
+body {
+    font-family: 'Mardoto', sans-serif;
+    text-align: center;
+    background-color: white; /* Plain white background */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        document.getElementById("installIcon").addEventListener("click", () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === "accepted") {
-                        console.log("User installed the app");
-                    }
-                    deferredPrompt = null;
-                });
-            } else if (isIos() && !isInStandaloneMode()) {
-                alert("To install, tap the Share button and then 'Add to Home Screen'.");
-            }
-        });
+/* Remove shadow and borders from container */
+.container {
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-        // iOS Detection for Manual Install Instructions
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
+/* Profile image */
+.profile-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
 
-        function isInStandaloneMode() {
-            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-        }
+/* Client ID */
+h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
 
-        if (isIos() && !isInStandaloneMode()) {
-            document.getElementById("installIcon").style.display = "inline";
-        }
+/* Description text - Uses "Mardoto-Regular" */
+.description {
+    font-family: 'Mardoto-Regular', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #555;
+    margin-bottom: 20px;
+}
 
-        function checkSubscription() {
-            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 11.03.2025');
-        }
-    </script>
-</body>
-</html>
+/* Button styles */
+.button {
+    display: block;
+    width: 100%;
+    background: #1976D2;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
 
+/* Button hover effect */
+.button:hover {
+    background: #1565C0;
+}
