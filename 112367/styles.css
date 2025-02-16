@@ -20,28 +20,19 @@
     padding: 0;
     box-sizing: border-box;
 }
-.install-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
 
-.install-icon:hover {
-    opacity: 0.7;
-}
 /* Centering content on screen */
 body {
     font-family: 'Mardoto', sans-serif;
     text-align: center;
-    background-color: white; /* Plain white background */
+    background-color: white;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Remove shadow and borders from container */
+/* Container styling */
 .container {
     max-width: 400px;
     margin: auto;
@@ -68,7 +59,7 @@ h2 {
     margin-bottom: 10px;
 }
 
-/* Description text - Uses "Mardoto-Regular" */
+/* Description text */
 .description {
     font-family: 'Mardoto-Regular', sans-serif;
     font-size: 14px;
@@ -77,10 +68,17 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* Button styles */
+/* Button styling */
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
 .button {
-    display: block;
-    width: 100%;
+    display: inline-block;
     background: #1976D2;
     color: white;
     padding: 15px;
@@ -90,9 +88,24 @@ h2 {
     margin: 10px 0;
     border-radius: 5px;
     transition: background 0.3s;
+    width: 80%;
 }
 
 /* Button hover effect */
 .button:hover {
     background: #1565C0;
 }
+
+/* Cloud install icon */
+.install-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: none; /* Hidden until install prompt is available */
+    transition: opacity 0.3s ease;
+}
+
+.install-icon:hover {
+    opacity: 0.7;
+}
+
