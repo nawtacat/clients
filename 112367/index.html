@@ -10,13 +10,12 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-
-    <!-- Full-screen notification (now properly centered and overlaying content) -->
-    <div id="fullScreenNotification" class="fullscreen-notification">
-        <div class="notification-content">
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content">
             <h2>🔔 Ծանուցում</h2>
             <p>Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
-            <button class="close-btn" onclick="closeFullScreenNotification()">Փակել</button>
+            <button id="closeModal" class="close-btn">Փակել</button>
         </div>
     </div>
 
@@ -38,14 +37,15 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Show full-screen notification when the page loads
-            document.getElementById("fullScreenNotification").style.display = "flex";
+            // Show the modal when the page loads
+            document.getElementById("modalOverlay").style.display = "flex";
         });
 
-        function closeFullScreenNotification() {
-            // Hide the notification
-            document.getElementById("fullScreenNotification").style.display = "none";
-        }
+        document.getElementById("closeModal").addEventListener("click", function () {
+            // Hide the modal when the close button is clicked
+            document.getElementById("modalOverlay").style.display = "none";
+        });
     </script>
 </body>
 </html>
+
