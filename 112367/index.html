@@ -11,6 +11,13 @@
 </head>
 <body>
     <div class="container">
+        <!-- Notification Window -->
+        <div id="notificationWindow" class="notification">
+            <h3>🔔 Ծանուցում</h3>
+            <p id="notificationText">Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
+            <button class="close-btn" onclick="closeNotification()">Փակել</button>
+        </div>
+
         <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
         
         <div class="id-container">
@@ -26,24 +33,15 @@
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
     </div>
 
-    <!-- Modern Pop-up -->
-    <div id="popupMessage" class="popup">
-        <div class="popup-content">
-            <h3>🔔 Ծանուցում</h3>
-            <p id="popupText">Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
-            <button class="close-btn" onclick="closePopup()">Փակել</button>
-        </div>
-    </div>
-
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Show the pop-up when the page loads
-            document.getElementById("popupMessage").style.display = "flex";
+            // Show notification when the page loads
+            document.getElementById("notificationWindow").style.display = "block";
         });
 
-        function closePopup() {
-            // Hide the pop-up when clicking the close button
-            document.getElementById("popupMessage").style.display = "none";
+        function closeNotification() {
+            // Hide notification
+            document.getElementById("notificationWindow").style.display = "none";
         }
 
         let deferredPrompt;
