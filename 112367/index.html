@@ -6,7 +6,7 @@
     <title>Dashboard</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/thestyle.css">
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
@@ -26,14 +26,31 @@
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
     </div>
 
-    <script>
-        let deferredPrompt;
+    <!-- Modern Pop-up -->
+    <div id="popupMessage" class="popup">
+        <div class="popup-content">
+            <h3>🔔 Ծանուցում</h3>
+            <p id="popupText">Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
+            <button class="close-btn" onclick="closePopup()">Փակել</button>
+        </div>
+    </div>
 
-        // Detect Android Install Prompt
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Show the pop-up when the page loads
+            document.getElementById("popupMessage").style.display = "flex";
+        });
+
+        function closePopup() {
+            // Hide the pop-up when clicking the close button
+            document.getElementById("popupMessage").style.display = "none";
+        }
+
+        let deferredPrompt;
         window.addEventListener("beforeinstallprompt", (event) => {
             event.preventDefault();
             deferredPrompt = event;
-            document.getElementById("installIcon").style.display = "inline"; // Show the icon
+            document.getElementById("installIcon").style.display = "inline";
         });
 
         document.getElementById("installIcon").addEventListener("click", () => {
@@ -50,7 +67,6 @@
             }
         });
 
-        // iOS Detection for Manual Install Instructions
         function isIos() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
@@ -69,4 +85,3 @@
     </script>
 </body>
 </html>
-
