@@ -11,15 +11,16 @@
 </head>
 <body>
 
-    <!-- Full-Screen Modal -->
-    <div id="fullScreenModal" class="modal-overlay">
-        <div class="modal-content">
+    <!-- Full-Screen Modal (Properly Centered) -->
+    <div id="modal" class="modal">
+        <div class="modal-box">
             <h2>🔔 Ծանուցում</h2>
             <p>Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
-            <button class="close-btn" onclick="closeModal()">Փակել</button>
+            <button class="modal-close" onclick="closeModal()">Փակել</button>
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="container">
         <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
         
@@ -38,15 +39,16 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Show the modal when the page loads
-            document.getElementById("fullScreenModal").style.display = "flex";
+            // Show modal on page load
+            document.getElementById("modal").style.display = "flex";
         });
 
         function closeModal() {
-            // Hide the modal when clicking close
-            document.getElementById("fullScreenModal").style.display = "none";
+            // Hide modal
+            document.getElementById("modal").style.display = "none";
         }
     </script>
+
 </body>
 </html>
 
