@@ -10,12 +10,13 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-    <!-- Modal Overlay -->
-    <div id="modalOverlay" class="modal-overlay">
+
+    <!-- Full-Screen Modal -->
+    <div id="fullScreenModal" class="modal-overlay">
         <div class="modal-content">
             <h2>🔔 Ծանուցում</h2>
             <p>Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
-            <button id="closeModal" class="close-btn">Փակել</button>
+            <button class="close-btn" onclick="closeModal()">Փակել</button>
         </div>
     </div>
 
@@ -38,13 +39,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Show the modal when the page loads
-            document.getElementById("modalOverlay").style.display = "flex";
+            document.getElementById("fullScreenModal").style.display = "flex";
         });
 
-        document.getElementById("closeModal").addEventListener("click", function () {
-            // Hide the modal when the close button is clicked
-            document.getElementById("modalOverlay").style.display = "none";
-        });
+        function closeModal() {
+            // Hide the modal when clicking close
+            document.getElementById("fullScreenModal").style.display = "none";
+        }
     </script>
 </body>
 </html>
