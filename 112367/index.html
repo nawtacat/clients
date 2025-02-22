@@ -11,12 +11,12 @@
 </head>
 <body>
 
-    <!-- Full-Screen Modal (Properly Centered) -->
-    <div id="modal" class="modal">
+    <!-- 🔥 Modal Popup (This will cover 75% width, 80% height) -->
+    <div id="popup" class="modal-overlay">
         <div class="modal-box">
             <h2>🔔 Ծանուցում</h2>
             <p>Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
-            <button class="modal-close" onclick="closeModal()">Փակել</button>
+            <button class="close-btn" onclick="closePopup()">Փակել</button>
         </div>
     </div>
 
@@ -25,27 +25,27 @@
         <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
         
         <div class="id-container">
-            <h2>112367</h2>
+            <h2>236222</h2>
             <img src="https://pha.am/cloud.png" alt="Install App" class="install-icon" id="installIcon">
         </div>
 
-        <p class="description">Բարի գալուստ, Լուսինե։ Սա Ձեր երեխայի անհատականացված PhA վահանակն է</p>
+        <p class="description">Բարի գալուստ, Իրա։ Սա Ձեր երեխայի անհատականացված PhA վահանակն է</p>
         
-        <a class="button" href="https://meet.google.com/nhv-gmwm-ied">Միանալ դասին</a>
-        <a class="button" href="https://calendar.google.com/calendar/embed?src=6c06af934d8297f331aa836aa789e7c45b1dc576332fd0be8beeead31d3acdc8%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
+        <a class="button" href="https://meet.google.com/uko-nxgb-nuf">Միանալ դասին</a>
+        <a class="button" href="https://calendar.google.com/calendar/embed?src=0f6b95e88317b5063c52fb48ab124c7755c748fb9c5148295105543ad9d7f6d6%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
         <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Show modal on page load
-            document.getElementById("modal").style.display = "flex";
+            // Show the modal pop-up when the page loads
+            document.getElementById("popup").style.display = "flex";
         });
 
-        function closeModal() {
-            // Hide modal
-            document.getElementById("modal").style.display = "none";
+        function closePopup() {
+            // Hide the modal pop-up
+            document.getElementById("popup").style.display = "none";
         }
     </script>
 
