@@ -1,4 +1,4 @@
-/* Define Medium Weight */
+/* Import Mardoto Fonts */
 @font-face {
     font-family: 'Mardoto';
     src: url('/fonts/Mardoto-Medium.woff2') format('woff2');
@@ -6,7 +6,6 @@
     font-style: normal;
 }
 
-/* Define Regular Weight */
 @font-face {
     font-family: 'Mardoto-Regular';
     src: url('/fonts/Mardoto-Regular.woff2') format('woff2');
@@ -14,26 +13,14 @@
     font-style: normal;
 }
 
-/* Reset default styles */
+/* Reset Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Install icon */
-.install-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
-
-.install-icon:hover {
-    opacity: 0.7;
-}
-
-/* Centering content on screen */
+/* Centering Main Content */
 body {
     font-family: 'Mardoto', sans-serif;
     text-align: center;
@@ -44,7 +31,7 @@ body {
     align-items: center;
 }
 
-/* Remove shadow and borders from container */
+/* Main Container */
 .container {
     max-width: 400px;
     margin: auto;
@@ -53,7 +40,7 @@ body {
     border-radius: 10px;
 }
 
-/* Profile image */
+/* Profile Image */
 .profile-image {
     width: 100px;
     height: 100px;
@@ -62,7 +49,7 @@ body {
     margin-bottom: 10px;
 }
 
-/* Client ID */
+/* User ID */
 h2 {
     font-size: 22px;
     font-weight: bold;
@@ -70,7 +57,7 @@ h2 {
     margin-bottom: 10px;
 }
 
-/* Description text */
+/* Description */
 .description {
     font-family: 'Mardoto-Regular', sans-serif;
     font-size: 14px;
@@ -79,7 +66,7 @@ h2 {
     margin-bottom: 20px;
 }
 
-/* Button styles */
+/* Buttons */
 .button {
     display: block;
     width: 100%;
@@ -98,26 +85,63 @@ h2 {
     background: #1565C0;
 }
 
-/* Full-Screen Modal Overlay */
-.modal-overlay {
+/* 🔥 MODAL STYLES (FIXED) */
+.modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-/* Modal Content */
-.modal-content {
+    top: 50%;
+    left: 50%;
     width: 75%;
     height: 80%;
+    transform: translate(-50%, -50%);
     background: white;
     border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 1000;
     padding: 30px;
-    text-align:
+    animation: fadeIn 0.3s ease-in-out;
+}
 
+/* Modal Title */
+.modal-box h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Modal Text */
+.modal-box p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+    max-width: 80%;
+    line-height: 1.5;
+}
+
+/* Close Button */
+.modal-close {
+    background: #1976D2;
+    color: white;
+    border: none;
+    padding: 14px 22px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.modal-close:hover {
+    background: #1565C0;
+}
+
+/* Fade-In Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
