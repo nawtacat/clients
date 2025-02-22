@@ -10,14 +10,17 @@
     <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-    <div class="container">
-        <!-- Notification Window -->
-        <div id="notificationWindow" class="notification">
-            <h3>🔔 Ծանուցում</h3>
-            <p id="notificationText">Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
-            <button class="close-btn" onclick="closeNotification()">Փակել</button>
-        </div>
 
+    <!-- Full-screen notification -->
+    <div id="fullScreenNotification" class="fullscreen-notification">
+        <div class="notification-content">
+            <h2>🔔 Ծանուցում</h2>
+            <p>Ձեր բաժանորդագրությունը ավարտվել է։ Խնդրում ենք վերականգնել բաժանորդագրությունը։</p>
+            <button class="close-btn" onclick="closeFullScreenNotification()">Փակել</button>
+        </div>
+    </div>
+
+    <div class="container">
         <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
         
         <div class="id-container">
@@ -35,51 +38,15 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Show notification when the page loads
-            document.getElementById("notificationWindow").style.display = "block";
+            // Show full-screen notification when the page loads
+            document.getElementById("fullScreenNotification").style.display = "flex";
         });
 
-        function closeNotification() {
-            // Hide notification
-            document.getElementById("notificationWindow").style.display = "none";
-        }
-
-        let deferredPrompt;
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault();
-            deferredPrompt = event;
-            document.getElementById("installIcon").style.display = "inline";
-        });
-
-        document.getElementById("installIcon").addEventListener("click", () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === "accepted") {
-                        console.log("User installed the app");
-                    }
-                    deferredPrompt = null;
-                });
-            } else if (isIos() && !isInStandaloneMode()) {
-                alert("To install, tap the Share button and then 'Add to Home Screen'.");
-            }
-        });
-
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function isInStandaloneMode() {
-            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-        }
-
-        if (isIos() && !isInStandaloneMode()) {
-            document.getElementById("installIcon").style.display = "inline";
-        }
-
-        function checkSubscription() {
-            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 13.03.2025');
+        function closeFullScreenNotification() {
+            // Hide the notification
+            document.getElementById("fullScreenNotification").style.display = "none";
         }
     </script>
 </body>
 </html>
+
