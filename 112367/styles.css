@@ -1,4 +1,4 @@
-/* Import Mardoto Fonts */
+/* Define Medium Weight */
 @font-face {
     font-family: 'Mardoto';
     src: url('/fonts/Mardoto-Medium.woff2') format('woff2');
@@ -6,6 +6,7 @@
     font-style: normal;
 }
 
+/* Define Regular Weight */
 @font-face {
     font-family: 'Mardoto-Regular';
     src: url('/fonts/Mardoto-Regular.woff2') format('woff2');
@@ -13,14 +14,14 @@
     font-style: normal;
 }
 
-/* Reset Styles */
+/* Reset default styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Centering Main Content */
+/* Centering the Page */
 body {
     font-family: 'Mardoto', sans-serif;
     text-align: center;
@@ -49,7 +50,7 @@ body {
     margin-bottom: 10px;
 }
 
-/* User ID */
+/* ID Number */
 h2 {
     font-size: 22px;
     font-weight: bold;
@@ -85,25 +86,33 @@ h2 {
     background: #1565C0;
 }
 
-/* 🔥 MODAL STYLES (FIXED) */
-.modal {
+/* 🔥 MODAL OVERLAY (Covers Entire Screen) */
+.modal-overlay {
     display: none;
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dark transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* 🔥 MODAL BOX (Centered, 75% Width, 80% Height) */
+.modal-box {
     width: 75%;
     height: 80%;
-    transform: translate(-50%, -50%);
     background: white;
     border-radius: 12px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    z-index: 1000;
-    padding: 30px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -115,7 +124,7 @@ h2 {
     margin-bottom: 15px;
 }
 
-/* Modal Text */
+/* Modal Message */
 .modal-box p {
     font-size: 18px;
     color: #555;
@@ -125,7 +134,7 @@ h2 {
 }
 
 /* Close Button */
-.modal-close {
+.close-btn {
     background: #1976D2;
     color: white;
     border: none;
@@ -136,7 +145,7 @@ h2 {
     transition: background 0.3s;
 }
 
-.modal-close:hover {
+.close-btn:hover {
     background: #1565C0;
 }
 
