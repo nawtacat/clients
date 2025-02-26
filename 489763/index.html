@@ -13,20 +13,35 @@
 
             try {
                 const response = await fetch(sheetUrl);
+                if (!response.ok) throw new Error("Failed to fetch sheet data");
+
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
 
-                const cols = json.table.cols; // Get column headers (User IDs)
-                const rows = json.table.rows; // Get data (Notifications)
+                console.log("Fetched JSON:", json); // Debugging log
+
+                const rows = json.table.rows; // Get rows
 
                 let notification = "";
+                let userColumnIndex = -1;
 
-                for (let i = 0; i < cols.length; i++) {
-                    if (cols[i].label == userId) { // Match User ID from the first row
-                        notification = rows[0].c[i]?.v || ""; // Set to empty string if no message
-                        break;
+                // ✅ Step 1: Find the correct column for the user ID
+                if (rows.length > 0) {
+                    const userRow = rows[0].c; // Get first row (User IDs)
+                    for (let i = 0; i < userRow.length; i++) {
+                        if (userRow[i]?.v == userId) {
+                            userColumnIndex = i; // Found the correct column
+                            break;
+                        }
                     }
                 }
+
+                // ✅ Step 2: Get the notification from the second row
+                if (userColumnIndex !== -1 && rows.length > 1) {
+                    notification = rows[1].c[userColumnIndex]?.v || ""; // Fetch notification message
+                }
+
+                console.log("Notification for User:", notification); // Debugging log
 
                 if (notification) {
                     document.getElementById("notification").innerText = notification;
@@ -34,6 +49,7 @@
                     document.getElementById("notification").style.display = "none"; // Hide if no message
                 }
             } catch (error) {
+                console.error("Error fetching notification:", error);
                 document.getElementById("notification").style.display = "none"; // Hide if fetch fails
             }
         }
@@ -57,3 +73,4 @@
     </div>
 </body>
 </html>
+
