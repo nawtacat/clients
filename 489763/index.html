@@ -5,45 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="icon" type="image/jpg" href="/rounded_favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="stylesheet" href="styles.css">
     <script>
-        async function fetchQuizLink() {
+        async function fetchNotification() {
+            const userId = "489763"; // Replace dynamically with the logged-in user ID
+            const sheetUrl = "https://docs.google.com/spreadsheets/d/1jBXmjxpWvOfNwOF3bjtYOmtdsv1-iWEiUkdopl9t2uo/gviz/tq?tqx=out:json";
+
             try {
-                const sheetUrl = "https://docs.google.com/spreadsheets/d/1rLhPecvsMSTwoFF4XOWsClsuTd8coJhyTCUXeMlNusQ/gviz/tq?tqx=out:json";
                 const response = await fetch(sheetUrl);
                 const text = await response.text();
-
-                // Fix: Extract the second row (A2) instead of the header (A1)
                 const json = JSON.parse(text.substring(47, text.length - 2));
-                const quizLink = json.table.rows[1].c[0].v; 
 
-                if (!quizLink.startsWith("http")) {
-                    throw new Error("Invalid Quiz Link Found in Google Sheets.");
+                const cols = json.table.cols; // Get column headers (User IDs)
+                const rows = json.table.rows; // Get data (Notifications)
+
+                let notification = "";
+
+                for (let i = 0; i < cols.length; i++) {
+                    if (cols[i].label == userId) { // Match User ID from the first row
+                        notification = rows[0].c[i]?.v || ""; // Set to empty string if no message
+                        break;
+                    }
                 }
 
-                document.getElementById("quiz-button").href = quizLink;
-                document.getElementById("quiz-button").innerText = "Սկսել Թեստը";
+                if (notification) {
+                    document.getElementById("notification").innerText = notification;
+                } else {
+                    document.getElementById("notification").style.display = "none"; // Hide if no message
+                }
             } catch (error) {
-                console.error("Error fetching quiz link:", error);
-                document.getElementById("quiz-button").innerText = "❌ Թեստը հասանելի չէ";
-                document.getElementById("quiz-button").style.backgroundColor = "red";
+                document.getElementById("notification").style.display = "none"; // Hide if fetch fails
             }
         }
-        window.onload = fetchQuizLink;
+        window.onload = fetchNotification;
     </script>
 </head>
 <body>
     <div class="container">
         <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
-        <h2>452398</h2>
+        <h2>489763</h2>
         <p class="description">Բարի գալուստ։ Սա Ձեր անհատականացված PhA վահանակն է</p>
-        
+
+        <!-- ✅ Notification Section (Hidden if empty) -->
+        <p id="notification" style="color: red; font-weight: bold;"></p>
+
         <a class="button" href="https://meet.google.com/nhv-gmwm-ied">Միանալ դասին</a>
         <a class="button" href="https://calendar.google.com/calendar/embed?src=e923ac60833ec46da83148460e293f0ae015a88f1faacdba726482a511d3a26d%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
         <a class="button" href="https://docs.google.com/presentation/d/1d1pa6v3M4mTs3hp-_D0mA25wv0ziufQKlpQInutezqw/edit?usp=sharing">Բաժանորդագրություն</a>
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
-        <a id="quiz-button" class="button" href="#">Թեստ</a> <!-- New Test Button -->
+        <a id="quiz-button" class="button" href="#">Թեստ</a>
     </div>
 </body>
 </html>
