@@ -13,13 +13,21 @@
                 const sheetUrl = "https://docs.google.com/spreadsheets/d/1rLhPecvsMSTwoFF4XOWsClsuTd8coJhyTCUXeMlNusQ/gviz/tq?tqx=out:json";
                 const response = await fetch(sheetUrl);
                 const text = await response.text();
-                const json = JSON.parse(text.substring(47, text.length - 2)); // Google Sheets JSON formatting fix
-                const quizLink = json.table.rows[0].c[0].v; 
+
+                // Fix: Extract the second row (A2) instead of the header (A1)
+                const json = JSON.parse(text.substring(47, text.length - 2));
+                const quizLink = json.table.rows[1].c[0].v; 
+
+                if (!quizLink.startsWith("http")) {
+                    throw new Error("Invalid Quiz Link Found in Google Sheets.");
+                }
 
                 document.getElementById("quiz-button").href = quizLink;
+                document.getElementById("quiz-button").innerText = "Սկսել Թեստը";
             } catch (error) {
                 console.error("Error fetching quiz link:", error);
-                document.getElementById("quiz-button").innerText = "Թեստը հասանելի չէ";
+                document.getElementById("quiz-button").innerText = "❌ Թեստը հասանելի չէ";
+                document.getElementById("quiz-button").style.backgroundColor = "red";
             }
         }
         window.onload = fetchQuizLink;
