@@ -26,7 +26,15 @@
                 let quizLink = rows[1]?.c[0]?.v || "";
 
                 if (quizLink) {
-                    document.getElementById("quiz-button").href = quizLink; // Update link dynamically
+                    const quizButton = document.getElementById("quiz-button");
+                    quizButton.href = quizLink; // Update link dynamically
+
+                    // Make sure the link works by checking it's not a placeholder
+                    if (quizButton.href !== "#") {
+                        quizButton.style.pointerEvents = "auto"; // Enable click if valid link
+                    } else {
+                        quizButton.style.pointerEvents = "none"; // Disable click if invalid link
+                    }
                 } else {
                     document.getElementById("quiz-button").style.display = "none"; // Hide button if no link
                 }
@@ -45,6 +53,7 @@
                     }
                 }
 
+                // ✅ If user has a notification, fetch it
                 if (userColumnIndex !== -1 && rows.length > 1) {
                     notification = rows[1].c[userColumnIndex]?.v || "";
                 }
@@ -54,8 +63,9 @@
                 if (notification) {
                     document.getElementById("notification").innerText = notification;
                 } else {
-                    document.getElementById("notification").style.display = "none"; 
+                    document.getElementById("notification").style.display = "none"; // Hide if no notification
                 }
+
             } catch (error) {
                 console.error("Error fetching data:", error);
                 document.getElementById("notification").style.display = "none"; 
@@ -71,15 +81,15 @@
         <h2>489763</h2>
         <p class="description">Բարի գալուստ։ Սա Ձեր անհատականացված PhA վահանակն է</p>
 
-        <p id="notification" font-weight: bold;"></p>
+        <!-- ✅ Notification Section -->
+        <p id="notification" style="font-weight: bold;"></p>
 
         <a class="button" href="https://meet.google.com/nhv-gmwm-ied">Միանալ դասին</a>
         <a class="button" href="https://calendar.google.com/calendar/embed?src=e923ac60833ec46da83148460e293f0ae015a88f1faacdba726482a511d3a26d%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
         <a class="button" href="https://docs.google.com/presentation/d/1d1pa6v3M4mTs3hp-_D0mA25wv0ziufQKlpQInutezqw/edit?usp=sharing">Բաժանորդագրություն</a>
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
-        <a id="quiz-button" class="button" href="#">Թեստ</a>
+        <a id="quiz-button" class="button" href="#" style="pointer-events: none;">Թեստ</a>
     </div>
 </body>
 </html>
-
 
