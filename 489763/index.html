@@ -7,9 +7,9 @@
     <link rel="icon" type="image/jpg" href="/rounded_favicon.png">
     <link rel="stylesheet" href="styles.css">
     <script>
-        async function fetchNotification() {
+        async function fetchData() {
             const userId = "489763"; // Replace dynamically with the logged-in user ID
-            const sheetUrl = "https://docs.google.com/spreadsheets/d/1jBXmjxpWvOfNwOF3bjtYOmtdsv1-iWEiUkdopl9t2uo/gviz/tq?tqx=out:json";
+            const sheetUrl = "https://docs.google.com/spreadsheets/d/1rLhPecvsMSTwoFF4XOWsClsuTd8coJhyTCUXeMlNusQ/gviz/tq?tqx=out:json"; // Updated Google Sheet URL
 
             try {
                 const response = await fetch(sheetUrl);
@@ -22,23 +22,31 @@
 
                 const rows = json.table.rows; // Get rows
 
+                // ✅ Extract A2 cell value (row index 1, column index 0)
+                let quizLink = rows[1]?.c[0]?.v || "";
+
+                if (quizLink) {
+                    document.getElementById("quiz-button").href = quizLink; // Update link dynamically
+                } else {
+                    document.getElementById("quiz-button").style.display = "none"; // Hide button if no link
+                }
+
+                // ✅ Fetch notification (if needed)
                 let notification = "";
                 let userColumnIndex = -1;
 
-                // ✅ Step 1: Find the correct column for the user ID
                 if (rows.length > 0) {
-                    const userRow = rows[0].c; // Get first row (User IDs)
+                    const userRow = rows[0].c;
                     for (let i = 0; i < userRow.length; i++) {
                         if (userRow[i]?.v == userId) {
-                            userColumnIndex = i; // Found the correct column
+                            userColumnIndex = i;
                             break;
                         }
                     }
                 }
 
-                // ✅ Step 2: Get the notification from the second row
                 if (userColumnIndex !== -1 && rows.length > 1) {
-                    notification = rows[1].c[userColumnIndex]?.v || ""; // Fetch notification message
+                    notification = rows[1].c[userColumnIndex]?.v || "";
                 }
 
                 console.log("Notification for User:", notification); // Debugging log
@@ -46,14 +54,15 @@
                 if (notification) {
                     document.getElementById("notification").innerText = notification;
                 } else {
-                    document.getElementById("notification").style.display = "none"; // Hide if no message
+                    document.getElementById("notification").style.display = "none"; 
                 }
             } catch (error) {
-                console.error("Error fetching notification:", error);
-                document.getElementById("notification").style.display = "none"; // Hide if fetch fails
+                console.error("Error fetching data:", error);
+                document.getElementById("notification").style.display = "none"; 
             }
         }
-        window.onload = fetchNotification;
+
+        window.onload = fetchData;
     </script>
 </head>
 <body>
@@ -62,7 +71,6 @@
         <h2>489763</h2>
         <p class="description">Բարի գալուստ։ Սա Ձեր անհատականացված PhA վահանակն է</p>
 
-        <!-- ✅ Notification Section (Hidden if empty) -->
         <p id="notification" font-weight: bold;"></p>
 
         <a class="button" href="https://meet.google.com/nhv-gmwm-ied">Միանալ դասին</a>
@@ -73,4 +81,5 @@
     </div>
 </body>
 </html>
+
 
