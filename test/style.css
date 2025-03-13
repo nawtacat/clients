@@ -215,4 +215,17 @@ p {
     padding: 1rem;
     box-sizing: border-box;
     color: white;
+    /* ✅ Center the text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Ensure text is centered */
+}
+
+.orange-box h2 {
+    /* ✅ Style the heading */
+    font-size: 2rem; /* Adjust as needed */
+    font-weight: 500; /* Adjust as needed */
+    line-height: 1.2;  /* Adjust line spacing */
+    margin: 0;       /* Reset default margins */
 }
