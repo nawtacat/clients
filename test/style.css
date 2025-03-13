@@ -176,22 +176,28 @@ p {
     }
 }
 
-/* ✅ New Styles for the Boxes */
+/* ✅ New Styles for the Boxes (Full Width) */
 .boxes-container {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    gap: 1rem; /* Space between the boxes */
-    margin-top: 2rem; /* Space below the button */
+    display: flex; /* Use flexbox */
+    width: 100%; /* Take up the full width */
+    margin-top: 2rem;
 }
 
 .blue-box {
-    background-color: #307dbb; /* Primary Blue */
-    width: 100px; /* Adjust size as needed */
-    height: 100px;
+    background-color: #307dbb;
+    width: 50%; /* 50% width */
+    height: 200px; /* Adjust height as needed */
+    /* Add padding for content */
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+    color: white; /* Example text color */
 }
 
 .orange-box {
-    background-color: #ec9172; /* Accent Coral */
-    width: 100px;
-    height: 100px;
+    background-color: #ec9172;
+    width: 50%; /* 50% width */
+    height: 200px;
+    padding: 1rem;
+    box-sizing: border-box;
+    color: white; /* Example text color */
 }
