@@ -71,7 +71,7 @@ p {
     max-width: 600px;
     margin: 0 auto;
     margin-bottom: 2rem;
-    font-weight: 400; /* ✅ Use Regular Mardoto */
+    font-weight: 500; /* ✅ Use Regular Mardoto */
 }
 
 .get-started-btn {
