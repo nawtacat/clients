@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Մուտք - PhA</title>
+    <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
-        /* Fonts */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -23,65 +22,55 @@
             font-display: swap;
         }
 
-        /* Colors */
         :root {
             --primary-blue: #307dbb;
             --accent-coral: #ec9172;
-            --dark-blue: #1f5a87;
-            --light-blue: #9fc5e8;
         }
 
-        /* Prevent Horizontal Scroll */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
-        html, body {
-            overflow-x: hidden;
-            width: 100vw;
+        body {
             font-family: 'Mardoto-Light', sans-serif;
             background-color: white;
             color: #333;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
-        /* Login Container */
         .login-container {
             display: flex;
             min-height: 100vh;
-            width: 100%;
         }
 
-        /* Left Side (Image) */
         .login-left {
             width: 50%;
-            background-image: url('https://pha.am/loginphoto.jpg'); /* Change if needed */
+            background-image: url('https://pha.am/loginphoto.jpg'); 
             background-size: cover;
             background-position: center;
         }
 
-        /* Right Side (Login Form) */
         .login-right {
             width: 50%;
             background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .login-form-container {
+            width: 80%;
+            max-width: 400px;
             padding: 2rem;
         }
 
-        /* Form Container */
-        .login-form-container {
-            width: 100%;
-            max-width: 400px;
-        }
-
         .card-header {
-            text-align: left;
             margin-bottom: 2rem;
+            text-align: left;
         }
 
         .card-header h2 {
@@ -96,7 +85,6 @@
             font-size: 1rem;
         }
 
-        /* Form Inputs */
         .login-form .form-group {
             margin-bottom: 1.5rem;
             text-align: left;
@@ -118,10 +106,8 @@
             font-size: 1rem;
         }
 
-        /* Submit Button */
         .form-actions {
             text-align: center;
-            margin-bottom: 1rem;
         }
 
         .login-btn {
@@ -138,51 +124,43 @@
         }
 
         .login-btn:hover {
-            background-color: var(--dark-blue);
+            background-color: #1f5a87;
         }
 
-        /* Forgot Password (Under Button) */
         .forgot-password {
             display: block;
-            text-align: center;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             color: #007bff;
             text-decoration: none;
             font-size: 0.9rem;
+            text-align: center;
         }
 
-        /* Mobile Responsive */
+        /* Hide image on mobile */
         @media (max-width: 768px) {
             .login-left {
-                display: none; /* Hide image on mobile */
-                width: 0;
+                display: none;
             }
 
             .login-right {
-                width: 100%; /* Take full width */
-                padding: 1.5rem;
-            }
-
-            .login-form-container {
-                max-width: 100%;
+                width: 100%;
             }
         }
-
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-left"></div> <!-- Left Side Image (Hidden on Mobile) -->
+        <div class="login-left"></div>
         <div class="login-right">
             <div class="login-form-container">
                 <div class="card-header">
-                    <h2>Մուտք գործել էլ․ փոստով</h2>
-                    <p>Ստեղծե՞ք նոր փաստաթուղթ՝ ձեր բառերը, տվյալները ու թիմերը միասին պահելու համար։ Անվճար։</p>
+                    <h2>Մուտք գործել էլ. փոստով</h2>
+                    <p>Ստեղծե՞լ նոր հաշիվ։ Ձեր փաստաթղթերը, տողերը և թիմերը միասին։ Անվճար։</p>
                 </div>
                 <form class="login-form">
                     <div class="form-group">
-                        <label for="username">Էլ․ փոստ</label>
-                        <input type="text" id="username" name="username" placeholder="Էլ․ փոստ" required>
+                        <label for="username">Էլ. փոստ</label>
+                        <input type="text" id="username" name="username" placeholder="Էլ. փոստ" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Գաղտնաբառ</label>
@@ -190,11 +168,55 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="login-btn">Մուտք գործել</button>
+                        <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառս</a>
                     </div>
-                    <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառը</a>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Firebase Authentication Script -->
+    <script type="module">
+        // Import Firebase Modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhnPp8ctI888bJCLUdcT7zmQDvR_fdu8",
+            authDomain: "physmathacademy-722b3.firebaseapp.com",
+            projectId: "physmathacademy-722b3",
+            storageBucket: "physmathacademy-722b3.appspot.com",
+            messagingSenderId: "1093649922622",
+            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+            measurementId: "G-CGVKXTXJLB"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Login Function
+        function loginUser(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const email = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Մուտքը հաջողությամբ իրականացվեց!");
+                    window.location.href = "/dashboard"; // Redirect to Dashboard
+                })
+                .catch((error) => {
+                    alert("Սխալ։ Խնդրում ենք ստուգել տվյալները։");
+                });
+        }
+
+        // Attach event listener to form
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector(".login-form").addEventListener("submit", loginUser);
+        });
+    </script>
 </body>
 </html>
