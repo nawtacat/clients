@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
+    <title>Մուտք - PhA</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
         @font-face {
@@ -40,18 +40,21 @@
             flex-direction: column;
         }
 
+        /* Full-screen login container */
         .login-container {
             display: flex;
             min-height: 100vh;
         }
 
+        /* Left section with image */
         .login-left {
             width: 50%;
             background-image: url('https://pha.am/loginphoto.jpg'); /* Add the image */
-            background-size: cover; /* Cover the entire area */
-            background-position: center; /* Center the image */
+            background-size: cover;
+            background-position: center;
         }
 
+        /* Right section with login form */
         .login-right {
             width: 50%;
             background-color: white;
@@ -112,8 +115,9 @@
             margin-bottom: 2rem;
         }
 
+        /* Updated button color to primary blue */
         .login-btn {
-            background-color: var(--primary-blue); /* Changed to primary blue */
+            background-color: var(--primary-blue);
             color: white;
             padding: 12px 20px;
             border: none;
@@ -125,13 +129,36 @@
         }
 
         .login-btn:hover {
-            background-color: #205a87;
+            background-color: #1f5a87;
         }
 
         .forgot-password {
             color: #007bff;
             text-decoration: none;
             font-size: 0.9rem;
+        }
+
+        /* Responsive Fix for Mobile */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column; /* Stack sections vertically */
+                align-items: center;
+                justify-content: center;
+            }
+
+            .login-left {
+                display: none; /* Hide image on mobile */
+            }
+
+            .login-right {
+                width: 100%; /* Make login form full width */
+                padding: 2rem;
+            }
+
+            .login-form-container {
+                width: 90%;
+                max-width: 400px;
+            }
         }
     </style>
 </head>
@@ -142,7 +169,7 @@
             <div class="login-form-container">
                 <div class="card-header">
                     <h2>Մուտք գործել էլ. փոստով</h2>
-                    <p>Ստեղծեք նոր փաստաթուղթ՝ ձեր բառերը, տվյալները և թիմերը մեկտեղելու համար: Անվճար:</p>
+                    <p>Ստեղծե՞լ նոր փաստաթուղթ՝ ձեր բառերը, տվյալները և թիմերը միասին բերելու համար: Անվճար:</p>
                 </div>
                 <form class="login-form">
                     <div class="form-group">
