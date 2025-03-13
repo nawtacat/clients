@@ -6,6 +6,7 @@
     <title>Մուտք - PhA</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
+        /* Fonts */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -22,6 +23,7 @@
             font-display: swap;
         }
 
+        /* Colors */
         :root {
             --primary-blue: #307dbb;
             --accent-coral: #ec9172;
@@ -29,10 +31,16 @@
             --light-blue: #9fc5e8;
         }
 
-        body {
+        /* Prevent Horizontal Scroll */
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100vw;
             font-family: 'Mardoto-Light', sans-serif;
             background-color: white;
             color: #333;
@@ -40,38 +48,40 @@
             flex-direction: column;
         }
 
-        /* Full-screen login container */
+        /* Login Container */
         .login-container {
             display: flex;
             min-height: 100vh;
+            width: 100%;
         }
 
-        /* Left section with image */
+        /* Left Side (Image) */
         .login-left {
             width: 50%;
-            background-image: url('https://pha.am/loginphoto.jpg'); /* Add the image */
+            background-image: url('https://pha.am/loginphoto.jpg'); /* Change if needed */
             background-size: cover;
             background-position: center;
         }
 
-        /* Right section with login form */
+        /* Right Side (Login Form) */
         .login-right {
             width: 50%;
             background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        .login-form-container {
-            width: 80%;
-            max-width: 400px;
             padding: 2rem;
         }
 
+        /* Form Container */
+        .login-form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
         .card-header {
-            margin-bottom: 2rem;
             text-align: left;
+            margin-bottom: 2rem;
         }
 
         .card-header h2 {
@@ -86,6 +96,7 @@
             font-size: 1rem;
         }
 
+        /* Form Inputs */
         .login-form .form-group {
             margin-bottom: 1.5rem;
             text-align: left;
@@ -99,8 +110,7 @@
             font-family: 'Mardoto-Medium', sans-serif;
         }
 
-        .login-form input[type="text"],
-        .login-form input[type="password"] {
+        .login-form input {
             width: calc(100% - 20px);
             padding: 10px;
             border: 1px solid #ddd;
@@ -108,13 +118,12 @@
             font-size: 1rem;
         }
 
-        /* Form actions: Centered button with text underneath */
+        /* Submit Button */
         .form-actions {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
-        /* Updated button color to primary blue */
         .login-btn {
             background-color: var(--primary-blue);
             color: white;
@@ -125,61 +134,55 @@
             font-size: 1rem;
             font-family: 'Mardoto-Medium', sans-serif;
             transition: background-color 0.3s ease;
-            display: block;
-            width: 100%; /* Make the button full width */
+            width: 100%;
         }
 
         .login-btn:hover {
-            background-color: #1f5a87;
+            background-color: var(--dark-blue);
         }
 
-        /* Forgot password text now appears underneath */
+        /* Forgot Password (Under Button) */
         .forgot-password {
             display: block;
             text-align: center;
+            margin-top: 0.5rem;
             color: #007bff;
             text-decoration: none;
             font-size: 0.9rem;
-            margin-top: 0.8rem;
         }
 
-        /* Responsive Fix for Mobile */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .login-container {
-                flex-direction: column; /* Stack sections vertically */
-                align-items: center;
-                justify-content: center;
-            }
-
             .login-left {
                 display: none; /* Hide image on mobile */
+                width: 0;
             }
 
             .login-right {
-                width: 100%; /* Make login form full width */
-                padding: 2rem;
+                width: 100%; /* Take full width */
+                padding: 1.5rem;
             }
 
             .login-form-container {
-                width: 90%;
-                max-width: 400px;
+                max-width: 100%;
             }
         }
+
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-left"></div>
+        <div class="login-left"></div> <!-- Left Side Image (Hidden on Mobile) -->
         <div class="login-right">
             <div class="login-form-container">
                 <div class="card-header">
-                    <h2>Մուտք գործել էլ. փոստով</h2>
-                    <p>Ստեղծե՞լ նոր փաստաթուղթ՝ ձեր բառերը, տվյալները և թիմերը միասին բերելու համար: Անվճար:</p>
+                    <h2>Մուտք գործել էլ․ փոստով</h2>
+                    <p>Ստեղծե՞ք նոր փաստաթուղթ՝ ձեր բառերը, տվյալները ու թիմերը միասին պահելու համար։ Անվճար։</p>
                 </div>
                 <form class="login-form">
                     <div class="form-group">
-                        <label for="username">Էլ. փոստ</label>
-                        <input type="text" id="username" name="username" placeholder="Էլ. փոստ" required>
+                        <label for="username">Էլ․ փոստ</label>
+                        <input type="text" id="username" name="username" placeholder="Էլ․ փոստ" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Գաղտնաբառ</label>
@@ -187,8 +190,8 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="login-btn">Մուտք գործել</button>
-                        <a href="#" class="forgot-password">Մոռացե՞լ եք գաղտնաբառը:</a>
                     </div>
+                    <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառը</a>
                 </form>
             </div>
         </div>
