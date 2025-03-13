@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Մուտք - PhA</title>
+    <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
-    
     <style>
         @font-face {
             font-family: 'Mardoto-Light';
@@ -28,16 +27,19 @@
             --accent-coral: #ec9172;
         }
 
-        body {
+        * {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: 'Mardoto-Light', sans-serif;
             background-color: white;
             color: #333;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden; /* Prevents scrolling right */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         .login-container {
@@ -47,16 +49,9 @@
 
         .login-left {
             width: 50%;
-            background: var(--accent-coral);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-left img {
-            max-width: 90%;
-            height: auto;
-            border-radius: 8px;
+            background-image: url('https://pha.am/loginphoto.jpg'); 
+            background-size: cover;
+            background-position: center;
         }
 
         .login-right {
@@ -65,7 +60,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
         }
 
         .login-form-container {
@@ -82,6 +76,7 @@
         .card-header h2 {
             font-size: 1.8rem;
             color: #333;
+            margin-bottom: 0.5rem;
             font-family: 'Mardoto-Medium', sans-serif;
         }
 
@@ -103,8 +98,7 @@
             font-family: 'Mardoto-Medium', sans-serif;
         }
 
-        .login-form input[type="text"],
-        .login-form input[type="password"] {
+        .login-form input {
             width: calc(100% - 20px);
             padding: 10px;
             border: 1px solid #ddd;
@@ -113,10 +107,7 @@
         }
 
         .form-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
+            text-align: center;
         }
 
         .login-btn {
@@ -137,9 +128,12 @@
         }
 
         .forgot-password {
+            display: block;
+            margin-top: 1rem;
             color: #007bff;
             text-decoration: none;
             font-size: 0.9rem;
+            text-align: center;
         }
 
         /* Hide image on mobile */
@@ -156,16 +150,14 @@
 </head>
 <body>
     <div class="login-container">
-        <div class="login-left">
-            <img src="https://pha.am/mother-child-homework.jpg" alt="Mother Helping Child">
-        </div>
+        <div class="login-left"></div>
         <div class="login-right">
             <div class="login-form-container">
                 <div class="card-header">
-                    <h2>Մուտք գործել էլ․ փոստով</h2>
-                    <p>Ստեղծե՞լ նոր հաշիվ։ Ձեր փաստաթղթերը, թիմերը և տվյալները միասին։ Անվճար։</p>
+                    <h2>Մուտք գործել էլ. փոստով</h2>
+                    <p>Ստեղծե՞լ նոր հաշիվ։ Ձեր փաստաթղթերը, տողերը և թիմերը միասին։ Անվճար։</p>
                 </div>
-                <form id="login-form" class="login-form">
+                <form class="login-form">
                     <div class="form-group">
                         <label for="username">Էլ. փոստ</label>
                         <input type="text" id="username" name="username" placeholder="Էլ. փոստ" required>
@@ -176,14 +168,55 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="login-btn">Մուտք գործել</button>
-                        <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառը</a>
+                        <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառս</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <script type="module" src="firebase-auth.js"></script>
+    <!-- Firebase Authentication Script -->
+    <script type="module">
+        // Import Firebase Modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhnPp8ctI888bJCLUdcT7zmQDvR_fdu8",
+            authDomain: "physmathacademy-722b3.firebaseapp.com",
+            projectId: "physmathacademy-722b3",
+            storageBucket: "physmathacademy-722b3.appspot.com",
+            messagingSenderId: "1093649922622",
+            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+            measurementId: "G-CGVKXTXJLB"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Login Function
+        function loginUser(event) {
+            event.preventDefault(); // Prevent page reload
+
+            const email = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Մուտքը հաջողությամբ իրականացվեց!");
+                    window.location.href = "/dashboard"; // Redirect to Dashboard
+                })
+                .catch((error) => {
+                    alert("Սխալ։ Խնդրում ենք ստուգել տվյալները։");
+                });
+        }
+
+        // Attach event listener to form
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector(".login-form").addEventListener("submit", loginUser);
+        });
+    </script>
 </body>
 </html>
-
