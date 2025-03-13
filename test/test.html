@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue & Coral Website</title>
+    <style>
+        :root {
+            --primary-blue: #307dbb;
+            --accent-coral: #ec9172;
+            --dark-blue: #1f5a87;
+            --light-blue: #9fc5e8;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: white;
+            color: #333;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            padding: 1.5rem;
+            background: #3d71ac;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .content-wrapper {
+            text-align: center;
+            padding: 4rem 2rem;
+            margin-bottom: 4rem; /* ✅ Adds space BELOW this section */
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            margin-bottom: 2rem;
+        }
+
+        .get-started-btn {
+            background-color: var(--accent-coral);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Second Section Styles */
+        .second-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-top: 4rem; /* ✅ Adds space ABOVE this section */
+        }
+
+        .second-section-container { 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            gap: 2rem;
+        }
+
+        .second-section-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        .second-section-image {
+            flex: 1;
+            text-align: right;
+        }
+
+        .second-section-image img {
+            max-width: 70%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .second-section-text h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .second-section-text p {
+            max-width: 100%;
+            text-align: left;
+        }
+
+        /* ✅ Responsive Fix */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .second-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .second-section-container { 
+                flex-direction: column; /* ✅ Forces stacking instead of squeezing */
+                align-items: center; 
+                text-align: center;
+            }
+
+            .second-section-text {
+                padding-right: 0;
+                text-align: left;
+            }
+
+            .second-section-image {
+                text-align: center;
+                margin-top: 2rem;
+            }
+
+            .second-section-image img {
+                max-width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Services</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1>Welcome to Our Innovative Space</h1>
+        <p>Discover a world of possibilities and seamless experiences. We are dedicated to providing you with the best solutions and services tailored to your needs.</p>
+        <button class="get-started-btn">Get Started</button>
+    </div>
+
+    <div class="second-section">
+        <div class="second-section-container">
+            <div class="second-section-text">
+                <h2>Empowering Creativity</h2>
+                <p>Our platform is designed to foster creativity and innovation. We provide the tools and resources you need to bring your ideas to life. Explore new possibilities and unlock your potential with us.</p>
+            </div>
+            <div class="second-section-image">
+                <img src="https://pha.am/kid.png" alt="Child with Notebook Hat">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
