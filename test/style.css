@@ -1,18 +1,19 @@
 @font-face {
-    font-family: 'Mardoto-Light'; /* ✅ Specific font-family name */
-    src: url('../../fonts/Mardoto-Light.ttf') format('truetype'); /* ✅ Correct path and format */
-    font-weight: 300; /* ✅ Assign a font-weight */
+    font-family: 'Mardoto-Light';
+    src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
+    font-weight: 300;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'Mardoto-Medium'; /* ✅ Specific font-family name */
-    src: url('../../fonts/Mardoto-Medium.woff2') format('woff2'); /* ✅ Correct path and format */
-    font-weight: 500; /* ✅ Assign a font-weight */
+    font-family: 'Mardoto-Medium';
+    src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+    font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
+
 :root {
     --primary-blue: #307dbb;
     --accent-coral: #ec9172;
@@ -24,7 +25,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: 'Mardoto-Light', sans-serif; /* ✅ Use Mardoto as default */
+    font-family: 'Mardoto-Light', sans-serif;
     background-color: white;
     color: #333;
 }
@@ -56,14 +57,14 @@ body {
 .content-wrapper {
     text-align: center;
     padding: 4rem 2rem;
-    margin-bottom: 4rem; /* ✅ Adds space BELOW this section */
+    margin-bottom: 4rem;
 }
 
 h1 {
     color: var(--primary-blue);
     font-size: 3rem;
     margin-bottom: 1rem;
-    font-weight: 500; /* ✅ Use Medium Mardoto */
+    font-weight: 500;
 }
 
 p {
@@ -98,7 +99,7 @@ p {
     padding: 4rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
-    margin-top: 4rem; /* ✅ Adds space ABOVE this section */
+    margin-top: 4rem;
 }
 
 .second-section-container {
@@ -139,7 +140,7 @@ p {
     font-weight: 400;
 }
 
-/* ✅ Responsive Fix */
+/* Responsive Fix */
 @media (max-width: 768px) {
     .nav-links {
         gap: 1.5rem;
@@ -155,7 +156,7 @@ p {
     }
 
     .second-section-container {
-        flex-direction: column; /* ✅ Forces stacking instead of squeezing */
+        flex-direction: column;
         align-items: center;
         text-align: center;
     }
@@ -173,4 +174,24 @@ p {
     .second-section-image img {
         max-width: 80%;
     }
+}
+
+/* ✅ New Styles for the Boxes */
+.boxes-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    gap: 1rem; /* Space between the boxes */
+    margin-top: 2rem; /* Space below the button */
+}
+
+.blue-box {
+    background-color: #307dbb; /* Primary Blue */
+    width: 100px; /* Adjust size as needed */
+    height: 100px;
+}
+
+.orange-box {
+    background-color: #ec9172; /* Accent Coral */
+    width: 100px;
+    height: 100px;
 }
