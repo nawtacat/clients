@@ -24,7 +24,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: 'Mardoto', sans-serif; /* ✅ Use Mardoto as default */
+    font-family: 'Mardoto-Light', sans-serif; /* ✅ Use Mardoto as default */
     background-color: white;
     color: #333;
 }
