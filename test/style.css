@@ -202,8 +202,8 @@ p {
 
 .blue-box img {
     /* ✅ More specific sizing */
-    width: 100px; /* Or a fixed width like 200px */
-    height: 100px; /* Or a fixed height */
+    width: 200px; /* Or a fixed width like 200px */
+    height: 200px; /* Or a fixed height */
     max-width: 60%; /* Adjust as needed */
     max-height: 60%; /* Adjust as needed */
 }
