@@ -1,17 +1,18 @@
 @font-face {
-    font-family: 'MardotoN';
-    src: url('../font/Mardoto-Regular.woff2') format('woff2');
-    font-weight: 400;
+    font-family: 'Mardoto-Light'; /* ✅ Specific font-family name */
+    src: url('../../fonts/Mardoto-Light.ttf') format('truetype'); /* ✅ Correct path and format */
+    font-weight: 300; /* ✅ Assign a font-weight */
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-    font-family: 'Mardoto';
-    src: url('../fonts/Mardoto-Medium.woff2') format('woff2');
-    font-weight: 500;
+    font-family: 'Mardoto-Medium'; /* ✅ Specific font-family name */
+    src: url('../../fonts/Mardoto-Medium.woff2') format('woff2'); /* ✅ Correct path and format */
+    font-weight: 500; /* ✅ Assign a font-weight */
     font-style: normal;
+    font-display: swap;
 }
-
 :root {
     --primary-blue: #307dbb;
     --accent-coral: #ec9172;
