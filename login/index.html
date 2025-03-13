@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hy">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - PhA</title>
+    <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
         @font-face {
@@ -28,6 +28,7 @@
             --dark-blue: #1f5a87;
             --light-blue: #9fc5e8;
         }
+
         body {
             margin: 0;
             padding: 0;
@@ -39,237 +40,126 @@
             flex-direction: column;
         }
 
-        .nav-bar {
+        .login-container {
             display: flex;
-            justify-content: center;
-            padding: 1.5rem;
-            background: #3d71ac;
+            min-height: 100vh;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
+        .login-left {
+            width: 50%;
+            background-image: url('https://pha.am/loginphoto.jpg'); /* Add the image */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
         }
 
-        .nav-link {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: opacity 0.3s ease;
-            font-family: 'Mardoto-Medium', sans-serif;
-        }
-
-        .nav-link:hover {
-            opacity: 0.8;
-        }
-
-        /* Hero Section Styles */
-        .hero-section {
+        .login-right {
+            width: 50%;
+            background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 4rem 2rem;
-            gap: 2rem;
         }
 
-        .content-wrapper {
+        .login-form-container {
+            width: 80%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
             text-align: left;
-            flex: 1;
-            max-width: 50%;
-            padding-left: 4rem;
         }
 
-        h1 {
-            color: var(--primary-blue);
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
+        .card-header h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-family: 'Mardoto-Medium', sans-serif;
         }
 
-        p {
+        .card-header p {
             color: #666;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin-bottom: 2.5rem;
+            font-size: 1rem;
         }
 
-        .get-started-btn {
-            background-color: var(--accent-coral);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
             font-family: 'Mardoto-Medium', sans-serif;
         }
 
-        .get-started-btn:hover {
-            transform: translateY(-2px);
-        }
-        /* Image Container Styles */
-        .image-container {
-            flex: 1;
-            text-align: center;
-            max-width: 50%;
-        }
-
-        .image-container img {
-            max-width: 90%;
-            max-height: 500px;
-            margin-top: 1.5rem;
-            height: auto;
-            border-radius: 8px;
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
         }
 
-        /* Second Section Styles */
-        .second-section {
+        .form-actions {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            padding: 4rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            margin-top: 4rem;
-        }
-
-        .second-section-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 90%;
-            max-width: 1000px;
-            margin: 0 auto;
-            gap: 2rem;
-        }
-
-        .second-section-text {
-            flex: 1;
-            text-align: left;
-        }
-
-        .second-section-image {
-            flex: 1;
-            text-align: right;
-        }
-
-        .second-section-image img {
-            max-width: 70%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .second-section-text h2 {
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-            font-weight: 500;
-        }
-
-        .second-section-text p {
-            max-width: 100%;
-            text-align: left;
-            font-weight: 400;
-        }
-
-        /* Responsive Fix */
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 1.5rem;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .second-section {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .second-section-container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .second-section-text {
-                padding-right: 0;
-                text-align: left;
-            }
-
-            .second-section-image {
-                text-align: center;
-                margin-top: 2rem;
-            }
-
-            .second-section-image img {
-                max-width: 80%;
-            }
-
-            .hero-section {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .content-wrapper,
-            .image-container {
-                max-width: 100%;
-            }
-
-            .content-wrapper {
-                text-align: center;
-                padding-left: 0;
-            }
-
-            .image-container {
-                display: none;
-            }
-        }
-        /* New Styles for the Boxes */
-        .boxes-container {
-            display: flex;
-            width: 100%;
-            height: 350px;
-            margin-top: 8.6rem;
             margin-bottom: 2rem;
         }
 
-        .blue-box {
-            background-color: #307dbb;
-            width: 50%;
-            height: 100%;
-            padding: 1rem;
-            box-sizing: border-box;
+        .login-btn {
+            background-color: var(--primary-blue); /* Changed to primary blue */
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Mardoto-Medium', sans-serif;
+            transition: background-color 0.3s ease;
         }
 
-        .blue-box img {
-            max-width: 60%;
-            max-height: 60%;
+        .login-btn:hover {
+            background-color: #205a87;
         }
 
-        .orange-box {
-            background-color: #ec9172;
-            width: 50%;
-            height: 100%;
-            padding: 1rem;
-            box-sizing: border-box;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+        .forgot-password {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
-
-        .orange-box h2 {
-            font-size: 2rem;
-            font-weight: 500;
-            line-height: 1.2;
-            margin: 0;
-        }
-
-        /* Split-Screen Login Styles */
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left"></div>
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="card-header">
+                    <h2>Մուտք գործել էլ. փոստով</h2>
+                    <p>Ստեղծեք նոր փաստաթուղթ՝ ձեր բառերը, տվյալները և թիմերը մեկտեղելու համար: Անվճար:</p>
+                </div>
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="username">Էլ. փոստ</label>
+                        <input type="text" id="username" name="username" placeholder="Էլ. փոստ" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Գաղտնաբառ</label>
+                        <input type="password" id="password" name="password" placeholder="Գաղտնաբառ" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="login-btn">Մուտք գործել</button>
+                        <a href="#" class="forgot-password">Մոռացե՞լ եք գաղտնաբառը:</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
