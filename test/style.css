@@ -69,20 +69,24 @@ body {
     text-align: left;
     flex: 1;
     max-width: 50%;
+    /* Added padding */
+    padding-left: 4rem;
 }
 
 h1 {
     color: var(--primary-blue);
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    /* Increased font size */
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem; /* Increased margin */
     font-weight: 500;
 }
 
 p {
     color: #666;
-    font-size: 1.1rem;
+    /* Increased font size */
+    font-size: 1.2rem;
     max-width: 600px;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem; /* Increased margin */
 }
 
 .get-started-btn {
@@ -110,8 +114,9 @@ p {
 
 .image-container img {
     /* Control image size here */
-    max-width: 80%;  /* Adjust as needed: Percentage of container */
-    max-height: 400px; /* Adjust as needed: Fixed height */
+    /* Increased image size */
+    max-width: 90%;
+    max-height: 500px;
     height: auto;
     border-radius: 8px;
 }
