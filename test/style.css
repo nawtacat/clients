@@ -1,13 +1,13 @@
 @font-face {
     font-family: 'Mardoto';
-    src: url('../font/mardoto/Mardoto-Regular.woff2') format('woff2');
+    src: url('../font/Mardoto-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Mardoto';
-    src: url('../font/mardoto/Mardoto-Medium.woff2') format('woff2');
+    src: url('../fonts/Mardoto-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
