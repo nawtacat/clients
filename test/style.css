@@ -69,24 +69,21 @@ body {
     text-align: left;
     flex: 1;
     max-width: 50%;
-    /* Added padding */
     padding-left: 4rem;
 }
 
 h1 {
     color: var(--primary-blue);
-    /* Increased font size */
     font-size: 3.5rem;
-    margin-bottom: 1.5rem; /* Increased margin */
+    margin-bottom: 1.5rem;
     font-weight: 500;
 }
 
 p {
     color: #666;
-    /* Increased font size */
     font-size: 1.2rem;
     max-width: 600px;
-    margin-bottom: 2.5rem; /* Increased margin */
+    margin-bottom: 2.5rem;
 }
 
 .get-started-btn {
@@ -114,7 +111,6 @@ p {
 
 .image-container img {
     /* Control image size here */
-    /* Increased image size */
     max-width: 90%;
     max-height: 500px;
     height: auto;
@@ -207,17 +203,22 @@ p {
 
     /* Responsive for Hero Section */
     .hero-section {
-        flex-direction: column;
+        flex-direction: column; /* Stack on smaller screens */
         align-items: center;
     }
 
     .content-wrapper,
     .image-container {
-        max-width: 90%;
+        max-width: 100%; /* Take up full width */
     }
 
     .content-wrapper {
-        text-align: center;
+        text-align: center; /* Center text */
+        padding-left: 0; /* Remove left padding */
+    }
+
+    .image-container {
+        display: none; /* Hide the image container */
     }
 }
 
