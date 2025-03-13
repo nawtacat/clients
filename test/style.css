@@ -46,7 +46,6 @@ body {
     text-decoration: none;
     font-weight: 500;
     transition: opacity 0.3s ease;
-    font-family: 'Mardoto', sans-serif;
 }
 
 .nav-link:hover {
