@@ -56,19 +56,19 @@ body {
     opacity: 0.8;
 }
 
-/* ✅ New Styles for Main Content */
-.main-content {
-    display: flex; /* Use Flexbox for layout */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+/* Hero Section Styles */
+.hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 4rem 2rem;
-    gap: 2rem; /* Spacing between content and image */
+    gap: 2rem;
 }
 
 .content-wrapper {
-    text-align: left; /* ✅ Align text left */
-    flex: 1; /* Take up available space */
-    max-width: 50%; /* Limit content width */
+    text-align: left;
+    flex: 1;
+    max-width: 50%;
 }
 
 h1 {
@@ -101,17 +101,19 @@ p {
     transform: translateY(-2px);
 }
 
-/* ✅ Image Container Styles */
-.hero-image-container {
-    flex: 1; /* Take up available space */
-    text-align: center; /* Center the image */
+/* Image Container Styles */
+.image-container {
+    flex: 1;
+    text-align: center;
     max-width: 50%;
 }
 
-.hero-image-container img {
-    max-width: 100%; /* Image takes full container width */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 8px; /* Optional: Rounded corners */
+.image-container img {
+    /* Control image size here */
+    max-width: 80%;  /* Adjust as needed: Percentage of container */
+    max-height: 400px; /* Adjust as needed: Fixed height */
+    height: auto;
+    border-radius: 8px;
 }
 
 /* Second Section Styles */
@@ -198,19 +200,19 @@ p {
         max-width: 80%;
     }
 
-    /* ✅ Responsive for Main Content */
-    .main-content {
-        flex-direction: column; /* Stack on smaller screens */
+    /* Responsive for Hero Section */
+    .hero-section {
+        flex-direction: column;
         align-items: center;
     }
 
     .content-wrapper,
-    .hero-image-container {
-        max-width: 90%; /* Take up more width */
+    .image-container {
+        max-width: 90%;
     }
 
     .content-wrapper {
-        text-align: center; /* Center text on smaller screens */
+        text-align: center;
     }
 }
 
@@ -236,11 +238,11 @@ p {
 }
 
 .blue-box img {
-    /* ✅ More specific sizing */
-    width: auto; /* Or a fixed width like 200px */
-    height: auto; /* Or a fixed height */
-    max-width: 60%; /* Adjust as needed */
-    max-height: 60%; /* Adjust as needed */
+    /* More specific sizing */
+    width: auto;
+    height: auto;
+    max-width: 60%;
+    max-height: 60%;
 }
 
 .orange-box {
@@ -250,17 +252,17 @@ p {
     padding: 1rem;
     box-sizing: border-box;
     color: white;
-    /* ✅ Center the text */
+    /* Center the text */
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center; /* Ensure text is centered */
+    text-align: center;
 }
 
 .orange-box h2 {
-    /* ✅ Style the heading */
-    font-size: 2rem; /* Adjust as needed */
-    font-weight: 500; /* Adjust as needed */
-    line-height: 1.2;  /* Adjust line spacing */
-    margin: 0;       /* Reset default margins */
+    /* Style the heading */
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0;
 }
