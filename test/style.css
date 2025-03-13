@@ -24,10 +24,12 @@
 body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    min-height: 100vh; /* Ensure body takes full viewport height */
     font-family: 'Mardoto-Light', sans-serif;
     background-color: white;
     color: #333;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack elements vertically */
 }
 
 .nav-bar {
@@ -58,6 +60,7 @@ body {
     text-align: center;
     padding: 4rem 2rem;
     margin-bottom: 4rem;
+    flex-grow: 1; /* Allow content to take up available space */
 }
 
 h1 {
@@ -176,18 +179,18 @@ p {
     }
 }
 
-/* New Styles for the Boxes (Full Width) */
+/* New Styles for the Boxes (Full Width, Bottom) */
 .boxes-container {
     display: flex;
     width: 100%;
-    /* ✅ Increased margin-top */
-    margin-top: 5rem; /* Adjust this value */
+    height: 450px; /* Set height to 450px */
+    margin-top: auto; /* Push to bottom */
 }
 
 .blue-box {
     background-color: #307dbb;
     width: 50%;
-    height: 200px;
+    height: 100%; /* Take full height of parent */
     padding: 1rem;
     box-sizing: border-box;
     color: white;
@@ -196,7 +199,7 @@ p {
 .orange-box {
     background-color: #ec9172;
     width: 50%;
-    height: 200px;
+    height: 100%; /* Take full height of parent */
     padding: 1rem;
     box-sizing: border-box;
     color: white;
