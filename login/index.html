@@ -206,7 +206,6 @@
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     alert("Մուտքը հաջողությամբ իրականացվեց!");
-                    window.location.href = "/dashboard"; // Redirect to Dashboard
                 })
                 .catch((error) => {
                     alert("Սխալ։ Խնդրում ենք ստուգել տվյալները։");
