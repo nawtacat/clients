@@ -107,22 +107,15 @@ p {
     flex: 1;
     text-align: center;
     max-width: 50%;
-    /* ✅ Add position relative to the container */
-    position: relative;
 }
 
 .image-container img {
     /* Control image size here */
     max-width: 90%;
     max-height: 500px;
+    margin-top: 1.5rem;
     height: auto;
     border-radius: 8px;
-    /* ✅ Add position absolute to the image */
-    position: absolute;
-    /* ✅ Adjust top to move the image down */
-    top: 10px;  /* Adjust this value as needed */
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 /* Second Section Styles */
@@ -211,22 +204,22 @@ p {
 
     /* Responsive for Hero Section */
     .hero-section {
-        flex-direction: column;
+        flex-direction: column; /* Stack on smaller screens */
         align-items: center;
     }
 
     .content-wrapper,
     .image-container {
-        max-width: 100%;
+        max-width: 100%; /* Take up full width */
     }
 
     .content-wrapper {
-        text-align: center;
-        padding-left: 0;
+        text-align: center; /* Center text */
+        padding-left: 0; /* Remove left padding */
     }
 
     .image-container {
-        display: none;
+        display: none; /* Hide the image container */
     }
 }
 
