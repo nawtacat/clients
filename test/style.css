@@ -56,11 +56,19 @@ body {
     opacity: 0.8;
 }
 
-.content-wrapper {
-    text-align: center;
+/* ✅ New Styles for Main Content */
+.main-content {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
     padding: 4rem 2rem;
-    margin-bottom: 2rem;
-    flex-grow: 1;
+    gap: 2rem; /* Spacing between content and image */
+}
+
+.content-wrapper {
+    text-align: left; /* ✅ Align text left */
+    flex: 1; /* Take up available space */
+    max-width: 50%; /* Limit content width */
 }
 
 h1 {
@@ -74,7 +82,6 @@ p {
     color: #666;
     font-size: 1.1rem;
     max-width: 600px;
-    margin: 0 auto;
     margin-bottom: 2rem;
 }
 
@@ -92,6 +99,19 @@ p {
 
 .get-started-btn:hover {
     transform: translateY(-2px);
+}
+
+/* ✅ Image Container Styles */
+.hero-image-container {
+    flex: 1; /* Take up available space */
+    text-align: center; /* Center the image */
+    max-width: 50%;
+}
+
+.hero-image-container img {
+    max-width: 100%; /* Image takes full container width */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional: Rounded corners */
 }
 
 /* Second Section Styles */
@@ -176,6 +196,21 @@ p {
 
     .second-section-image img {
         max-width: 80%;
+    }
+
+    /* ✅ Responsive for Main Content */
+    .main-content {
+        flex-direction: column; /* Stack on smaller screens */
+        align-items: center;
+    }
+
+    .content-wrapper,
+    .hero-image-container {
+        max-width: 90%; /* Take up more width */
+    }
+
+    .content-wrapper {
+        text-align: center; /* Center text on smaller screens */
     }
 }
 
