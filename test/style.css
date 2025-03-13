@@ -71,7 +71,7 @@ p {
     max-width: 600px;
     margin: 0 auto;
     margin-bottom: 2rem;
-    font-family: "MardotoN" /* ✅ Use Regular Mardoto */
+    font-family: 'MardotoN', sans-serif; /* ✅ Use Regular Mardoto */
 }
 
 .get-started-btn {
