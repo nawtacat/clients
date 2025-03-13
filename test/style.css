@@ -176,28 +176,28 @@ p {
     }
 }
 
-/* ✅ New Styles for the Boxes (Full Width) */
+/* New Styles for the Boxes (Full Width) */
 .boxes-container {
-    display: flex; /* Use flexbox */
-    width: 100%; /* Take up the full width */
-    margin-top: 2rem;
+    display: flex;
+    width: 100%;
+    /* ✅ Increased margin-top */
+    margin-top: 5rem; /* Adjust this value */
 }
 
 .blue-box {
     background-color: #307dbb;
-    width: 50%; /* 50% width */
-    height: 200px; /* Adjust height as needed */
-    /* Add padding for content */
+    width: 50%;
+    height: 200px;
     padding: 1rem;
-    box-sizing: border-box; /* Include padding in width calculation */
-    color: white; /* Example text color */
+    box-sizing: border-box;
+    color: white;
 }
 
 .orange-box {
     background-color: #ec9172;
-    width: 50%; /* 50% width */
+    width: 50%;
     height: 200px;
     padding: 1rem;
     box-sizing: border-box;
-    color: white; /* Example text color */
+    color: white;
 }
