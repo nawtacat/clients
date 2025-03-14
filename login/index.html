@@ -65,12 +65,18 @@
         .login-btn:hover {
             background-color: #1f5a87;
         }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h2>Մուտք գործել</h2>
-        <form class="login-form">
+        <form id="login-form">
             <label for="email">Էլ. փոստ</label>
             <input type="email" id="email" required>
             
@@ -79,7 +85,7 @@
 
             <button type="submit" class="login-btn">Մուտք գործել</button>
         </form>
-        <p id="error-message" style="color: red; display: none;">Սխալ մուտքանուն կամ գաղտնաբառ</p>
+        <p id="error-message">Սխալ մուտքանուն կամ գաղտնաբառ</p>
     </div>
 
     <script type="module">
@@ -102,35 +108,32 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Login Function
-        function loginUser(event) {
-            event.preventDefault(); // Prevent page reload
+        // Ensure the form does not reload the page
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault(); // ✅ Prevent form from refreshing the page
 
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                    // 🔄 Redirect based on user email
-                    if (user.email === "info@pha.am") {
-                        window.location.href = "/PhysmathA"; // Redirect admin to PhysmathA page
-                    } else {
-                        window.location.href = "/profile"; // Redirect all other users to their profile
-                    }
-                })
-                .catch((error) => {
-                    document.getElementById("error-message").style.display = "block";
-                });
-        }
-
-        // Attach event listener to form
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelector(".login-form").addEventListener("submit", loginUser);
+                // 🔄 Redirect based on user email
+                if (user.email === "info@pha.am") {
+                    window.location.href = "/PhysmathA"; // Redirect admin to PhysmathA page
+                } else {
+                    window.location.href = "/profile"; // Redirect all other users to their profile
+                }
+            } catch (error) {
+                errorMessage.style.display = "block";
+                errorMessage.textContent = "Սխալ մուտքանուն կամ գաղտնաբառ";
+            }
         });
     </script>
 </body>
 </html>
+
 
 
