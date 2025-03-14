@@ -26,9 +26,9 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Authentication guard
+        // Allow any authenticated user
         onAuthStateChanged(auth, (user) => {
-            if (!user || user.email !== 'info@pha.am') {
+            if (!user) {
                 window.location.href = '/login';
             }
         });
@@ -63,6 +63,45 @@
         <button class="button" onclick="logout()" style="background: #dc3545;">Դուրս գալ</button>
     </div>
 
-    <!-- Rest of your existing script remains unchanged -->
+    <script>
+        // Your existing app installation script
+        let deferredPrompt;
+
+        window.addEventListener("beforeinstallprompt", (event) => {
+            event.preventDefault();
+            deferredPrompt = event;
+            document.getElementById("installIcon").style.display = "inline";
+        });
+
+        document.getElementById("installIcon").addEventListener("click", () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === "accepted") {
+                        console.log("User installed the app");
+                    }
+                    deferredPrompt = null;
+                });
+            } else if (isIos() && !isInStandaloneMode()) {
+                alert("To install, tap the Share button and then 'Add to Home Screen'.");
+            }
+        });
+
+        function isIos() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        function isInStandaloneMode() {
+            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+        }
+
+        if (isIos() && !isInStandaloneMode()) {
+            document.getElementById("installIcon").style.display = "inline";
+        }
+
+        function checkSubscription() {
+            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 01.03.2025');
+        }
+    </script>
 </body>
 </html>
