@@ -300,9 +300,14 @@ p {
 }
 
 .application-form .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem; /* Increased spacing between form groups */
     width: 100%;
 }
+
+.radio-group {
+    margin-bottom: 1rem; /* Adds spacing between individual radio options */
+}
+
 
 .application-form label {
     display: block;
