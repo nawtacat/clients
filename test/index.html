@@ -13,7 +13,7 @@
 <body>
   <nav class="nav-bar">
     <div class="nav-links">
-      <a href="#" class="nav-link">Գրանցվել</a>
+      <a href="#" id="register-link" class="nav-link">Գրանցվել</a>
       <a href="#" class="nav-link">Մասին</a>
       <a href="#" class="nav-link">Կապ</a>
       <a href="https://pha.am/login/" class="nav-link">Մուտք</a>
@@ -54,6 +54,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Scroll to the second section when the "Իմանալ ավելին" button is clicked
       document.getElementById("scroll-btn").addEventListener("click", function () {
         window.scrollTo({
           top: document.getElementById("second-section").offsetTop,
@@ -63,11 +64,17 @@
           window.scrollBy({ top: -20, behavior: "smooth" }); // Minor slowdown effect
         }, 500);
       });
+
+      // Scroll to the application form when "Գրանցվել" link is clicked
+      document.getElementById("register-link").addEventListener("click", function (e) {
+        e.preventDefault();
+        document.getElementById("application-form-container").scrollIntoView({ behavior: "smooth" });
+      });
     });
   </script>
 
   <!-- Integrated Application Form -->
-  <div class="application-container">
+  <div class="application-container" id="application-form-container">
     <h1>Դիմումի ձև</h1>
     <form class="application-form">
       <div class="form-group">
@@ -158,7 +165,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault(); // Prevent the default page reload
 
-      // Retrieve form values, including the new phone field
+      // Retrieve form values, including the phone field
       const parentName = document.getElementById('parentName').value;
       const phone = document.getElementById('phone').value;
       const childName = document.getElementById('childName').value;
@@ -192,4 +199,3 @@
   </script>
 </body>
 </html>
-
