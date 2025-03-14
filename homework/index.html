@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     @font-face {
-    font-family: 'Mardoto-Light';
-    src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-}
+      font-family: 'Mardoto-Light';
+      src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
     body {
       font-family: 'Mardoto-Light', sans-serif;
       background-color: #F5F5F5;
@@ -143,12 +143,14 @@
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
           if (cells.length < 6) return null;
+
           const optA = cells[cells.length - 5];
           const optB = cells[cells.length - 4];
           const optC = cells[cells.length - 3];
           const optD = cells[cells.length - 2];
           const correct = cells[cells.length - 1].toUpperCase();
           const problem = cells.slice(0, cells.length - 5).join(',');
+
           return {
             problem,
             options: { A: optA, B: optB, C: optC, D: optD },
@@ -161,12 +163,18 @@
         quizDiv.innerHTML = '';
         questions.forEach((q, idx) => {
           if (!q) return;
+
+          // If Option C is just "C)", hide Options C and D
+          const showAllOptions = q.options["C"].trim() !== "C)";
+          const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
+
           const questionBlock = document.createElement('div');
           questionBlock.className = 'question-block';
+
           questionBlock.innerHTML = `
             <h2>${idx + 1}. ${q.problem}</h2>
             <ul class="options">
-              ${['A','B','C','D'].map(letter => `
+              ${letters.map(letter => `
                 <li>
                   <label>
                     <input type="radio" name="q${idx}" value="${letter}">
@@ -218,10 +226,7 @@
             if (correctIndex >= 0) listItems[correctIndex].classList.add('correct');
           }
         });
-        resultsDiv.innerHTML = `
-          Score: ${score} / ${questions.length}
-          <br>Percentage: ${Math.round((score / questions.length) * 100)}%
-        `;
+        resultsDiv.innerHTML = `Score: ${score} / ${questions.length} <br>Percentage: ${Math.round((score / questions.length) * 100)}%`;
       }
     });
   </script>
