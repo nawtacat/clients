@@ -14,9 +14,23 @@
             font-display: swap;
         }
 
+        @font-face {
+            font-family: 'Mardoto-Medium';
+            src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --primary-blue: #307dbb;
             --accent-coral: #ec9172;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -24,70 +38,144 @@
             background-color: white;
             color: #333;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            flex-direction: column;
+            overflow-x: hidden;
         }
 
         .login-container {
-            width: 100%;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .login-left {
+            width: 50%;
+            background-image: url('https://pha.am/loginphoto.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-right {
+            width: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-form-container {
+            width: 80%;
             max-width: 400px;
             padding: 2rem;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            text-align: center;
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-family: 'Mardoto-Light', sans-serif;
+        }
+
+        .card-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
         }
 
         .login-form label {
             display: block;
-            margin: 10px 0 5px;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
+            font-family: 'Mardoto-Medium', sans-serif;
         }
 
         .login-form input {
-            width: 100%;
+            width: calc(100% - 20px);
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-actions {
+            text-align: center;
         }
 
         .login-btn {
             background-color: var(--primary-blue);
             color: white;
-            padding: 12px;
+            padding: 12px 20px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
+            font-family: 'Mardoto-Medium', sans-serif;
+            transition: background-color 0.3s ease;
             width: 100%;
-            margin-top: 15px;
         }
 
         .login-btn:hover {
             background-color: #1f5a87;
         }
 
-        #error-message {
-            color: red;
-            margin-top: 10px;
-            display: none;
+        .forgot-password {
+            display: block;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Hide image on mobile */
+        @media (max-width: 768px) {
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Մուտք գործել</h2>
-        <form id="login-form">
-            <label for="email">Էլ. փոստ</label>
-            <input type="email" id="email" required>
-            
-            <label for="password">Գաղտնաբառ</label>
-            <input type="password" id="password" required>
-
-            <button type="submit" class="login-btn">Մուտք գործել</button>
-        </form>
-        <p id="error-message">Սխալ մուտքանուն կամ գաղտնաբառ</p>
+        <div class="login-left"></div>
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="card-header">
+                    <h2>Մուտք գործել էլ. փոստով</h2>
+                    <p>Ստեղծե՞լ նոր հաշիվ։ Ձեր փաստաթղթերը, տողերը և թիմերը միասին։ Անվճար։</p>
+                </div>
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="email">Էլ. փոստ</label>
+                        <input type="email" id="email" name="email" placeholder="Էլ. փոստ" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Գաղտնաբառ</label>
+                        <input type="password" id="password" name="password" placeholder="Գաղտնաբառ" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="login-btn">Մուտք գործել</button>
+                        <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառս</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
+    <!-- Firebase Authentication Script -->
     <script type="module">
         // Import Firebase Modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -108,32 +196,27 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Ensure the form does not reload the page
-        document.getElementById("login-form").addEventListener("submit", async function(event) {
-            event.preventDefault(); // ✅ Prevent form from refreshing the page
+        // Login Function
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page reload
 
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-            const errorMessage = document.getElementById("error-message");
 
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    alert("Մուտքը հաջողությամբ իրականացվեց!");
 
-                // 🔄 Redirect based on user email
-                if (user.email === "info@pha.am") {
-                    window.location.href = "/PhysmathA"; // Redirect admin to PhysmathA page
-                } else {
-                    window.location.href = "/profile"; // Redirect all other users to their profile
-                }
-            } catch (error) {
-                errorMessage.style.display = "block";
-                errorMessage.textContent = "Սխալ մուտքանուն կամ գաղտնաբառ";
-            }
+                    // ✅ Redirect to profile page
+                    window.location.href = "https://pha.am/profile";
+                })
+                .catch((error) => {
+                    alert("Սխալ։ Խնդրում ենք ստուգել տվյալները։");
+                });
         });
     </script>
 </body>
 </html>
-
 
 
