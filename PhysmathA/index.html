@@ -27,16 +27,22 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // 🔒 Ensure User is Logged In & Redirect Based on Email
+        // ✅ Ensure User is Logged In & Redirect Based on Email (Avoid Redirect Loops)
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = "/login"; // Redirect to login if not authenticated
+                // Not logged in → Redirect to login page
+                if (window.location.pathname !== "/login") {
+                    window.location.href = "/login";
+                }
             } else {
-                // ✅ Check if the user is "info@pha.am"
-                if (user.email === "info@pha.am") {
-                    window.location.href = "/PhysmathA"; // Redirect to this specific profile
-                } else {
-                    window.location.href = "/profile"; // Redirect all other users to their profile page
+                const userEmail = user.email;
+                const currentPath = window.location.pathname;
+
+                // ✅ Redirect only if NOT already on the correct page
+                if (userEmail === "info@pha.am" && currentPath !== "/PhysmathA") {
+                    window.location.href = "/PhysmathA";
+                } else if (userEmail !== "info@pha.am" && currentPath !== "/profile") {
+                    window.location.href = "/profile";
                 }
             }
         });
@@ -50,6 +56,7 @@
             });
         }
 
+        // Expose logout function globally for button click
         window.logout = logout;
     </script>
 </head>
@@ -79,3 +86,4 @@
     </script>
 </body>
 </html>
+
