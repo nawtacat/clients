@@ -6,6 +6,7 @@
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
+        /* Your existing CSS styles remain untouched */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -197,13 +198,9 @@
             const password = document.getElementById('password').value;
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                if (userCredential.user.email === 'info@pha.am') {
-                    window.location.href = 'https://pha.am/PhysmathA';
-                } else {
-                    alert('Մուտքը թույլատրված է միայն ադմինիստրատորին');
-                    await auth.signOut();
-                }
+                await signInWithEmailAndPassword(auth, email, password);
+                // Redirect all authenticated users
+                window.location.href = 'https://pha.am/PhysmathA';
             } catch (error) {
                 const errorMessage = {
                     'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
