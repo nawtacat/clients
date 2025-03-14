@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PhA Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #F5F5F5;
+      margin: 0;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 700px;
+      background: white;
+      margin: auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .question-block {
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background: #E3F2FD;
+      border-left: 5px solid #1976D2;
+    }
+    .question-block h2 {
+      font-size: 1rem;
+      color: #0D47A1;
+      margin-bottom: 0.75rem;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 0;
+    }
+    .options li {
+      margin-bottom: 8px;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 6px;
+      border: 2px solid #1976D2;
+      cursor: pointer;
+      transition: 0.3s ease;
+      position: relative;
+    }
+    .options li:hover {
+      background: #BBDEFB;
+    }
+    .options li.selected {
+      background: #90CAF9 !important;
+      border-color: #0D47A1 !important;
+    }
+    .options input[type="radio"] {
+      display: none;
+    }
+    .options label {
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+    }
+    .correct {
+      background-color: #E8F5E9 !important;
+      border-left: 5px solid #4CAF50 !important;
+    }
+    .incorrect {
+      background-color: #FFEBEE !important;
+      border-left: 5px solid #F44336 !important;
+    }
+    .unanswered {
+      background-color: #FFF3E0 !important;
+      border-left: 5px solid #FFA000 !important;
+    }
+    #submit-btn {
+      display: none;
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      background: #F57C00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+    #submit-btn:hover {
+      background: #E65100;
+    }
+    #results {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <form id="quiz-form">
+      <div id="quiz"></div>
+      <button type="button" id="submit-btn">Submit Quiz</button>
+    </form>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const quizDiv = document.getElementById('quiz');
+      const submitBtn = document.getElementById('submit-btn');
+      const resultsDiv = document.getElementById('results');
+      const quizForm = document.getElementById('quiz-form');
+
+      const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
+
+      let questions = [];
+
+      fetch(csvUrl)
+        .then(response => response.text())
+        .then(csv => {
+          questions = parseCSV(csv);
+          renderQuestions(questions);
+          submitBtn.style.display = 'block';
+        })
+        .catch(err => {
+          console.error('Error loading quiz:', err);
+          resultsDiv.textContent = 'Failed to load quiz. Please try again later.';
+        });
+
+      function parseCSV(csv) {
+        const lines = csv.trim().split('\n');
+        lines.shift();
+        return lines.map(line => {
+          const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
+          if (cells.length < 6) return null;
+          const optA = cells[cells.length - 5];
+          const optB = cells[cells.length - 4];
+          const optC = cells[cells.length - 3];
+          const optD = cells[cells.length - 2];
+          const correct = cells[cells.length - 1].toUpperCase();
+          const problem = cells.slice(0, cells.length - 5).join(',');
+          return {
+            problem,
+            options: { A: optA, B: optB, C: optC, D: optD },
+            correct
+          };
+        }).filter(Boolean);
+      }
+
+      function renderQuestions(questions) {
+        quizDiv.innerHTML = '';
+        questions.forEach((q, idx) => {
+          if (!q) return;
+          const questionBlock = document.createElement('div');
+          questionBlock.className = 'question-block';
+          questionBlock.innerHTML = `
+            <h2>${idx + 1}. ${q.problem}</h2>
+            <ul class="options">
+              ${['A','B','C','D'].map(letter => `
+                <li>
+                  <label>
+                    <input type="radio" name="q${idx}" value="${letter}">
+                    ${q.options[letter]}
+                  </label>
+                </li>
+              `).join('')}
+            </ul>
+          `;
+          quizDiv.appendChild(questionBlock);
+        });
+
+        quizDiv.querySelectorAll('.options li').forEach(li => {
+          li.addEventListener('click', () => {
+            const parentUl = li.closest('ul');
+            parentUl.querySelectorAll('li').forEach(sibling => {
+              sibling.classList.remove('selected');
+            });
+            li.classList.add('selected');
+            const radio = li.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+          });
+        });
+      }
+
+      submitBtn.addEventListener('click', () => {
+        for (let i = 0; i < questions.length; i++) {
+          if (!quizForm.querySelector(`input[name="q${i}"]:checked`)) {
+            alert("Պատասխանի՛ր բոլոր հարցերին");
+            return;
+          }
+        }
+        gradeQuiz();
+      });
+
+      function gradeQuiz() {
+        let score = 0;
+        resultsDiv.innerHTML = '';
+        questions.forEach((q, idx) => {
+          const selected = quizForm.querySelector(`input[name="q${idx}"]:checked`);
+          const listItems = quizDiv.children[idx].querySelectorAll('li');
+          listItems.forEach(li => li.className = '');
+          if (!selected) return;
+          const isCorrect = selected.value === q.correct;
+          if (isCorrect) score++;
+          selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
+          if (!isCorrect) {
+            const correctIndex = ['A','B','C','D'].indexOf(q.correct);
+            if (correctIndex >= 0) listItems[correctIndex].classList.add('correct');
+          }
+        });
+        resultsDiv.innerHTML = `
+          Score: ${score} / ${questions.length}
+          <br>Percentage: ${Math.round((score / questions.length) * 100)}%
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
