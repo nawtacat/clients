@@ -273,3 +273,78 @@ p {
     line-height: 1.2;
     margin: 0;
 }
+
+/* Minimalistic Application Form Styles (Updated) */
+.application-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: flex-start;
+    padding: 2rem;
+    min-height: calc(100vh - 80px);
+    background-color: #f0f0f0; /* Light gray background */
+}
+
+.application-form {
+    width: 600px; /* Wider form */
+    max-width: 90%; /* Responsive width */
+    margin: 2rem auto; /* Center the form */
+}
+
+.application-container h1 {
+    color: #333; /* Darker heading */
+    margin-bottom: 2rem;
+    font-family: 'Mardoto-Medium', sans-serif;
+    font-size: 2rem; /* Larger heading */
+    text-align: center; /* Center the heading */
+}
+
+.application-form .form-group {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.application-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333; /* Darker label color */
+    font-family: 'Mardoto-Light', sans-serif; /* Lighter font */
+    font-size: 1rem;
+    text-align: left; /* Align labels left */
+}
+
+.application-form input[type="text"],
+.application-form input[type="email"],
+.application-form input[type="tel"],
+.application-form textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px;
+    font-family: 'Mardoto-Light', sans-serif;
+    font-size: 1rem;
+    background-color: white;
+}
+
+.application-form textarea {
+    resize: vertical; /* Allow vertical resizing */
+}
+
+.apply-btn {
+    background-color: #307dbb;
+    color: #fff; /* White text */
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Mardoto-Medium', sans-serif;
+    transition: background-color 0.3s ease;
+    width: 150px; /* Adjust button width */
+    margin: 1rem auto; /* Center the button */
+    display: block;
+}
+
+.apply-btn:hover {
+    background-color: #1f5a87; /* Darker blue hover */
+}
