@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
-    <!-- Original CSS untouched -->
     <style>
-        /* All your original CSS remains exactly the same */
+        /* Your original CSS remains completely unchanged */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -150,7 +149,6 @@
     </style>
 </head>
 <body>
-    <!-- Original HTML structure untouched -->
     <div class="login-container">
         <div class="login-left"></div>
         <div class="login-right">
@@ -177,10 +175,14 @@
         </div>
     </div>
 
-    <!-- Only authentication script added -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            setPersistence,
+            browserSessionPersistence
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
@@ -195,27 +197,21 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Email-to-path mapping
-        const USER_PATHS = {
-            'info@pha.am': '/physmatha/',
-            'user1@pha.am': '/user1/',
-            'user2@pha.am': '/user2/'
-        };
-
         document.querySelector('.login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('username').value.toLowerCase().trim();
             const password = document.getElementById('password').value;
 
             try {
+                await setPersistence(auth, browserSessionPersistence);
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const userEmail = userCredential.user.email.toLowerCase();
                 
-                if (USER_PATHS[userEmail]) {
-                    window.location.href = USER_PATHS[userEmail];
+                // Redirect based on email
+                if(email === 'info@pha.am') {
+                    window.location.href = '/info/';
                 } else {
-                    alert('Մուտքը թույլատրված չէ');
-                    await auth.signOut();
+                    const username = email.split('@')[0];
+                    window.location.href = `/${username}/`;
                 }
             } catch (error) {
                 const errorMessage = {
