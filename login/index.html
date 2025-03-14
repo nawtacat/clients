@@ -6,7 +6,7 @@
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
-        /* Your original CSS remains completely unchanged */
+        /* Original CSS preserved exactly */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -147,6 +147,56 @@
             }
         }
     </style>
+    
+    <!-- Firebase Authentication -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            setPersistence,
+            browserLocalPersistence
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+            authDomain: "physmathacademy-722b3.firebaseapp.com",
+            projectId: "physmathacademy-722b3",
+            storageBucket: "physmathacademy-722b3.appspot.com",
+            messagingSenderId: "1093649922622",
+            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+            measurementId: "G-CGVKXTXJLB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.querySelector('.login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                // Redirect based on email
+                if(email === 'info@pha.am') {
+                    window.location.href = '/info/';
+                } else {
+                    const username = email.split('@')[0];
+                    window.location.href = `/${username}/`;
+                }
+            } catch (error) {
+                const errorMessage = {
+                    'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
+                    'auth/too-many-requests': 'Չափազանց շատ անհաջող փորձեր',
+                    'auth/network-request-failed': 'Ցանցի սխալ'
+                }[error.code] || 'Մուտքագրման սխալ';
+                alert(errorMessage);
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="login-container">
@@ -174,54 +224,5 @@
             </div>
         </div>
     </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword,
-            setPersistence,
-            browserSessionPersistence
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-            authDomain: "physmathacademy-722b3.firebaseapp.com",
-            projectId: "physmathacademy-722b3",
-            storageBucket: "physmathacademy-722b3.appspot.com",
-            messagingSenderId: "1093649922622",
-            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
-            measurementId: "G-CGVKXTXJLB"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        document.querySelector('.login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('username').value.toLowerCase().trim();
-            const password = document.getElementById('password').value;
-
-            try {
-                await setPersistence(auth, browserSessionPersistence);
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                
-                // Redirect based on email
-                if(email === 'info@pha.am') {
-                    window.location.href = '/info/';
-                } else {
-                    const username = email.split('@')[0];
-                    window.location.href = `/${username}/`;
-                }
-            } catch (error) {
-                const errorMessage = {
-                    'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
-                    'auth/too-many-requests': 'Չափազանց շատ անհաջող փորձեր',
-                    'auth/network-request-failed': 'Ցանցի սխալ'
-                }[error.code] || 'Մուտքագրման սխալ';
-                alert(errorMessage);
-            }
-        });
-    </script>
 </body>
 </html>
