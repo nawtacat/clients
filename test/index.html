@@ -125,6 +125,65 @@
     <button type="submit" class="apply-btn">Ուղարկել</button>
   </form>
 </div>
+    <!-- Place this script at the end of your HTML (before the closing </body> tag) -->
+<script type="module">
+  // Import the necessary functions from the Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+    authDomain: "physmathacademy-722b3.firebaseapp.com",
+    projectId: "physmathacademy-722b3",
+    storageBucket: "physmathacademy-722b3.firebasestorage.app",
+    messagingSenderId: "1093640992262",
+    appId: "1:1093640992262:web:35b1bf4d2364bcf745f587",
+    measurementId: "G-CGVKKTJXLB"
+  };
+
+  // Initialize Firebase and its services
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  // Form submission handler
+  const form = document.querySelector('.application-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent the default page reload
+
+    // Retrieve form values
+    const parentName = document.getElementById('parentName').value;
+    const childName = document.getElementById('childName').value;
+    const locationValue = document.getElementById('location').value;
+    const classValue = document.getElementById('class').value;
+    const schedule = document.querySelector('input[name="schedule"]:checked')?.value;
+    const additionalInfo = document.getElementById('additionalInfo').value;
+
+    // Build the data object to store
+    const formData = {
+      parentName,
+      childName,
+      location: locationValue,
+      class: classValue,
+      schedule,
+      additionalInfo,
+      submittedAt: new Date() // Timestamp the submission
+    };
+
+    try {
+      // Save the form data to Firestore under the "applications" collection
+      await addDoc(collection(db, "applications"), formData);
+      alert("Your application has been submitted successfully!");
+      form.reset(); // Reset the form fields
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("There was an error submitting your application. Please try again.");
+    }
+  });
+</script>
+
 
 </body>
 </html>
