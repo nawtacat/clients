@@ -295,7 +295,7 @@ p {
 .application-container h1 {
     color: #333; /* Darker heading */
     margin-bottom: 0.5rem;
-    margin-top: 2rem;
+    margin-top: 5rem;
     font-family: 'Mardoto-Medium', sans-serif;
     font-size: 2rem; /* Larger heading */
     text-align: center; /* Center the heading */
