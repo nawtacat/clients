@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="stylesheet" href="/thestyle.css">
+    <link rel="manifest" href="/manifest.json">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+            authDomain: "physmathacademy-722b3.firebaseapp.com",
+            projectId: "physmathacademy-722b3",
+            storageBucket: "physmathacademy-722b3.appspot.com",
+            messagingSenderId: "1093649922622",
+            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+            measurementId: "G-CGVKXTXJLB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Authentication guard
+        onAuthStateChanged(auth, (user) => {
+            if (!user || user.email !== 'info@pha.am') {
+                window.location.href = '/login';
+            }
+        });
+
+        // Logout functionality
+        window.logout = async () => {
+            try {
+                await signOut(auth);
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
+        
+        <div class="id-container">
+            <h2>Peretz Deeznutssuck</h2>
+            <img src="https://pha.am/cloud.png" alt="Install App" class="install-icon" id="installIcon">
+        </div>
+
+        <p class="description">Welcome Peretez</p>
+        
+        <a class="buttonO" href="https://pha.am/homework/">Թեստային աշխատանք</a>
+        <a class="button" href="https://meet.google.com/uko-nxgb-nuf">Միանալ դասին</a>
+        <a class="button" href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
+        <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
+        <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
+        <button class="button" onclick="logout()" style="background: #dc3545;">Դուրս գալ</button>
+    </div>
+
+    <!-- Rest of your existing script remains unchanged -->
+</body>
+</html>
