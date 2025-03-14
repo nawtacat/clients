@@ -1,189 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhA</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
-    <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhA</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+  <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
 </head>
 <body>
-    <nav class="nav-bar">
-        <div class="nav-links">
-            <a href="#" class="nav-link">Տուն</a>
-            <a href="#" class="nav-link">Մասին</a>
-            <a href="#" class="nav-link">Կապ</a>
-            <a href="https://pha.am/login/" class="nav-link">Մուտք</a>
-        </div>
-    </nav>
-
-    <div class="hero-section">
-        <div class="content-wrapper">
-            <h1>Բարի գալուստ Ֆիզմաթ Ակադեմիա</h1>
-            <p>Մեր նպատակն է օգնել սովորողներին ոչ միայն տիրապետել դպրոցական ծրագրին, այլև զարգացնել տրամաբանական մտածողությունն ու խնդիրների լուծման հմտությունները:</p>
-            <button class="get-started-btn" id="scroll-btn">Իմանալ ավելին</button>
-        </div>
-        <div class="image-container">
-            <img src="https://pha.am/teacher.png" alt="Empowering Creativity">
-        </div>
+  <nav class="nav-bar">
+    <div class="nav-links">
+      <a href="#" class="nav-link">Տուն</a>
+      <a href="#" class="nav-link">Մասին</a>
+      <a href="#" class="nav-link">Կապ</a>
+      <a href="https://pha.am/login/" class="nav-link">Մուտք</a>
     </div>
+  </nav>
 
-    <div class="boxes-container">
-        <div class="blue-box">
-            <img src="https://pha.am/logotr.png" alt="PhA Logo">
-        </div>
-        <div class="orange-box">
-            <h2>Ստեղծելով նոր <br> Կրթական ուղիներ</h2>
-        </div>
+  <div class="hero-section">
+    <div class="content-wrapper">
+      <h1>Բարի գալուստ Ֆիզմաթ Ակադեմիա</h1>
+      <p>Մեր նպատակն է օգնել սովորողներին ոչ միայն տիրապետել դպրոցական ծրագրին, այլև զարգացնել տրամաբանական մտածողությունն ու խնդիրների լուծման հմտությունները:</p>
+      <button class="get-started-btn" id="scroll-btn">Իմանալ ավելին</button>
     </div>
-
-    <div class="second-section" id="second-section">
-        <div class="second-section-container">
-            <div class="second-section-text">
-                <h2>Empowering Creativity</h2>
-                <p>Our platform is designed to foster creativity and innovation. We provide the tools and resources you need to bring your ideas to life. Explore new possibilities and unlock your potential with us.</p>
-            </div>
-            <div class="second-section-image">
-                <img src="https://pha.am/kid.png" alt="Child with Notebook Hat">
-            </div>
-        </div>
+    <div class="image-container">
+      <img src="https://pha.am/teacher.png" alt="Empowering Creativity">
     </div>
+  </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("scroll-btn").addEventListener("click", function () {
-                window.scrollTo({
-                    top: document.getElementById("second-section").offsetTop,
-                    behavior: "smooth"
-                });
-                setTimeout(function () {
-                    window.scrollBy({ top: -20, behavior: "smooth" }); // Minor slowdown effect
-                }, 500);
-            });
+  <div class="boxes-container">
+    <div class="blue-box">
+      <img src="https://pha.am/logotr.png" alt="PhA Logo">
+    </div>
+    <div class="orange-box">
+      <h2>Ստեղծելով նոր <br> Կրթական ուղիներ</h2>
+    </div>
+  </div>
+
+  <div class="second-section" id="second-section">
+    <div class="second-section-container">
+      <div class="second-section-text">
+        <h2>Empowering Creativity</h2>
+        <p>Our platform is designed to foster creativity and innovation. We provide the tools and resources you need to bring your ideas to life. Explore new possibilities and unlock your potential with us.</p>
+      </div>
+      <div class="second-section-image">
+        <img src="https://pha.am/kid.png" alt="Child with Notebook Hat">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("scroll-btn").addEventListener("click", function () {
+        window.scrollTo({
+          top: document.getElementById("second-section").offsetTop,
+          behavior: "smooth"
         });
-    </script>
+        setTimeout(function () {
+          window.scrollBy({ top: -20, behavior: "smooth" }); // Minor slowdown effect
+        }, 500);
+      });
+    });
+  </script>
 
-    <!-- Integrated Application Form -->
-    <div class="application-container">
-  <h1>Դիմումի ձև</h1>
-  <form class="application-form">
-    <div class="form-group">
-      <label for="parentName">Ծնողի անուն և ազգանուն</label>
-      <input type="text" id="parentName" name="parentName" placeholder="Մուտքագրեք ծնողի անունը և ազգանունը" required>
-    </div>
-    <div class="form-group">
-      <label for="childName">Երեխայի անուն և ազգանուն</label>
-      <input type="text" id="childName" name="childName" placeholder="Մուտքագրեք երեխաների անունը և ազգանունը" required>
-    </div>
-    <div class="form-group">
-      <label for="location">Քաղաք/Գյուղ</label>
-      <input type="text" id="location" name="location" placeholder="Մուտքագրեք ձեր քաղաքը կամ գյուղը" required>
-    </div>
-    <div class="form-group">
-      <label for="class">Դասարան</label>
-      <select id="class" name="class" required>
-        <option value="">Ընտրեք դասարան</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Դասընթացի նախընտրելի օրացանկ</label>
-      <div class="radio-group">
-        <label>
-          <input type="radio" name="schedule" value="MWF" required>
-          Երկուշաբթի-Չորեքշաբթի-Ուրբաթ
-        </label>
+  <!-- Integrated Application Form -->
+  <div class="application-container">
+    <h1>Դիմումի ձև</h1>
+    <form class="application-form">
+      <div class="form-group">
+        <label for="parentName">Ծնողի անուն և ազգանուն</label>
+        <input type="text" id="parentName" name="parentName" placeholder="Մուտքագրեք ծնողի անունը և ազգանունը" required>
       </div>
-      <div class="radio-group">
-        <label>
-          <input type="radio" name="schedule" value="TTS" required>
-          Երեքշաբթի-Հինգշաբթի-Շաբաթ
-        </label>
+      <div class="form-group">
+        <label for="phone">Հեռախոսահամար</label>
+        <input type="tel" id="phone" name="phone" placeholder="Մուտքագրեք ձեր հեռախոսահամարը" required>
       </div>
-      <div class="radio-group">
-        <label>
-          <input type="radio" name="schedule" value="both" required>
-          Երկուսն էլ
-        </label>
+      <div class="form-group">
+        <label for="childName">Երեխայի անուն և ազգանուն</label>
+        <input type="text" id="childName" name="childName" placeholder="Մուտքագրեք երեխայի անունը և ազգանունը" required>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="additionalInfo">Ի՞նչ կցանկանայիք մեզ տեղեկացնել (Երեխայի հատուկ պայմաններ, ժամային գրաֆիկ, ․․․)</label>
-      <textarea id="additionalInfo" name="additionalInfo" placeholder="Մուտքագրեք ձեր հաղորդագրությունը" rows="5"></textarea>
-    </div>
-    <button type="submit" class="apply-btn">Ուղարկել</button>
-  </form>
-</div>
-    <!-- Place this script at the end of your HTML (before the closing </body> tag) -->
-<script type="module">
-  // Import the necessary functions from the Firebase SDK
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+      <div class="form-group">
+        <label for="location">Քաղաք/Գյուղ</label>
+        <input type="text" id="location" name="location" placeholder="Մուտքագրեք ձեր քաղաքը կամ գյուղը" required>
+      </div>
+      <div class="form-group">
+        <label for="class">Դասարան</label>
+        <select id="class" name="class" required>
+          <option value="">Ընտրեք դասարան</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Դասընթացի նախընտրելի օրացանկ</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="schedule" value="MWF" required>
+            Երկուշաբթի-Չորեքշաբթի-Ուրբաթ
+          </label>
+        </div>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="schedule" value="TTS" required>
+            Երեքշաբթի-Հինգշաբթի-Շաբաթ
+          </label>
+        </div>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="schedule" value="both" required>
+            Երկուսն էլ
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="additionalInfo">Ի՞նչ կցանկանայիք մեզ տեղեկացնել (Երեխայի հատուկ պայմաններ, ժամային գրաֆիկ, ․․․)</label>
+        <textarea id="additionalInfo" name="additionalInfo" placeholder="Մուտքագրեք ձեր հաղորդագրությունը" rows="5"></textarea>
+      </div>
+      <button type="submit" class="apply-btn">Ուղարկել</button>
+    </form>
+  </div>
 
-  // Your Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-    authDomain: "physmathacademy-722b3.firebaseapp.com",
-    projectId: "physmathacademy-722b3",
-    storageBucket: "physmathacademy-722b3.firebasestorage.app",
-    messagingSenderId: "1093640992262",
-    appId: "1:1093640992262:web:35b1bf4d2364bcf745f587",
-    measurementId: "G-CGVKKTJXLB"
-  };
+  <!-- Firebase Integration Script -->
+  <script type="module">
+    // Import the necessary functions from the Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
 
-  // Initialize Firebase and its services
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getFirestore(app);
-
-  // Form submission handler
-  const form = document.querySelector('.application-form');
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent the default page reload
-
-    // Retrieve form values
-    const parentName = document.getElementById('parentName').value;
-    const childName = document.getElementById('childName').value;
-    const locationValue = document.getElementById('location').value;
-    const classValue = document.getElementById('class').value;
-    const schedule = document.querySelector('input[name="schedule"]:checked')?.value;
-    const additionalInfo = document.getElementById('additionalInfo').value;
-
-    // Build the data object to store
-    const formData = {
-      parentName,
-      childName,
-      location: locationValue,
-      class: classValue,
-      schedule,
-      additionalInfo,
-      submittedAt: new Date() // Timestamp the submission
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.firebasestorage.app",
+      messagingSenderId: "1093640992262",
+      appId: "1:1093640992262:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKKTJXLB"
     };
 
-    try {
-      // Save the form data to Firestore under the "applications" collection
-      await addDoc(collection(db, "applications"), formData);
-      alert("Your application has been submitted successfully!");
-      form.reset(); // Reset the form fields
-    } catch (error) {
-      console.error("Error adding document: ", error);
-      alert("There was an error submitting your application. Please try again.");
-    }
-  });
-</script>
+    // Initialize Firebase and its services
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
 
+    // Form submission handler
+    const form = document.querySelector('.application-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Prevent the default page reload
 
+      // Retrieve form values, including the new phone field
+      const parentName = document.getElementById('parentName').value;
+      const phone = document.getElementById('phone').value;
+      const childName = document.getElementById('childName').value;
+      const locationValue = document.getElementById('location').value;
+      const classValue = document.getElementById('class').value;
+      const schedule = document.querySelector('input[name="schedule"]:checked')?.value;
+      const additionalInfo = document.getElementById('additionalInfo').value;
+
+      // Build the data object to store
+      const formData = {
+        parentName,
+        phone,
+        childName,
+        location: locationValue,
+        class: classValue,
+        schedule,
+        additionalInfo,
+        submittedAt: new Date() // Timestamp the submission
+      };
+
+      try {
+        // Save the form data to Firestore under the "applications" collection
+        await addDoc(collection(db, "applications"), formData);
+        alert("Your application has been submitted successfully!");
+        form.reset(); // Reset the form fields
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("There was an error submitting your application. Please try again.");
+      }
+    });
+  </script>
 </body>
 </html>
+
