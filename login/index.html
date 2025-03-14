@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
+    <!-- Original CSS untouched -->
     <style>
-        /* Your existing CSS styles remain untouched */
+        /* All your original CSS remains exactly the same */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -149,6 +150,7 @@
     </style>
 </head>
 <body>
+    <!-- Original HTML structure untouched -->
     <div class="login-container">
         <div class="login-left"></div>
         <div class="login-right">
@@ -175,6 +177,7 @@
         </div>
     </div>
 
+    <!-- Only authentication script added -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -192,15 +195,28 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // Email-to-path mapping
+        const USER_PATHS = {
+            'info@pha.am': '/physmatha/',
+            'user1@pha.am': '/user1/',
+            'user2@pha.am': '/user2/'
+        };
+
         document.querySelector('.login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('username').value;
+            const email = document.getElementById('username').value.toLowerCase().trim();
             const password = document.getElementById('password').value;
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // Redirect all authenticated users
-                window.location.href = 'https://pha.am/PhysmathA';
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const userEmail = userCredential.user.email.toLowerCase();
+                
+                if (USER_PATHS[userEmail]) {
+                    window.location.href = USER_PATHS[userEmail];
+                } else {
+                    alert('Մուտքը թույլատրված չէ');
+                    await auth.signOut();
+                }
             } catch (error) {
                 const errorMessage = {
                     'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
