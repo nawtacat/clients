@@ -5,68 +5,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="stylesheet" href="/thestyle.css">
-    <link rel="manifest" href="/manifest.json">
+    
+    <script type="module">
+        // Import Firebase Modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+            authDomain: "physmathacademy-722b3.firebaseapp.com",
+            projectId: "physmathacademy-722b3",
+            storageBucket: "physmathacademy-722b3.appspot.com",
+            messagingSenderId: "1093649922622",
+            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+            measurementId: "G-CGVKXTXJLB"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // 🔒 Ensure User is Logged In
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "/login"; // Redirect to login if not authenticated
+                return;
+            }
+
+            // 🏆 Get Profile Data from Firestore
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                document.getElementById("user-name").textContent = `Բարի գալուստ, ${userData.name}`;
+                document.getElementById("user-id").textContent = userData.id || "N/A";
+            } else {
+                console.log("No user data found");
+            }
+        });
+
+        // 🚪 Logout Function
+        function logout() {
+            signOut(auth).then(() => {
+                window.location.href = "/login"; // Redirect to login after logout
+            }).catch((error) => {
+                console.error("Logout failed:", error);
+            });
+        }
+
+        window.logout = logout;
+    </script>
 </head>
 <body>
     <div class="container">
-        <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
+        <img src="https://pha.am/rounded_favicon.png" alt="PhA Logo" class="profile-image">
         
         <div class="id-container">
-            <h2>511639</h2>
+            <h2 id="user-id">Loading...</h2>
             <img src="https://pha.am/cloud.png" alt="Install App" class="install-icon" id="installIcon">
         </div>
 
-        <p class="description">Բարի գալուստ, Մարինա։ Սա Ձեր երեխայի անհատականացված PhA վահանակն է</p>
+        <p class="description" id="user-name">Բարի գալուստ...</p>
         
         <a class="buttonO" href="https://pha.am/homework/">Թեստային աշխատանք</a>
         <a class="button" href="https://meet.google.com/uko-nxgb-nuf">Միանալ դասին</a>
         <a class="button" href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
         <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
         <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
+        <button class="button logout-btn" onclick="logout()">Դուրս գալ</button>
     </div>
 
     <script>
-        let deferredPrompt;
-
-        // Detect Android Install Prompt
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault();
-            deferredPrompt = event;
-            document.getElementById("installIcon").style.display = "inline"; // Show the icon
-        });
-
-        document.getElementById("installIcon").addEventListener("click", () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === "accepted") {
-                        console.log("User installed the app");
-                    }
-                    deferredPrompt = null;
-                });
-            } else if (isIos() && !isInStandaloneMode()) {
-                alert("To install, tap the Share button and then 'Add to Home Screen'.");
-            }
-        });
-
-        // iOS Detection for Manual Install Instructions
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function isInStandaloneMode() {
-            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-        }
-
-        if (isIos() && !isInStandaloneMode()) {
-            document.getElementById("installIcon").style.display = "inline";
-        }
-
         function checkSubscription() {
             alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 01.03.2025');
         }
     </script>
 </body>
 </html>
+
