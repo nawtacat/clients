@@ -6,7 +6,7 @@
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
-        /* Original CSS preserved exactly */
+        /* Your original CSS remains unchanged */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -153,9 +153,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
             getAuth, 
-            signInWithEmailAndPassword,
-            setPersistence,
-            browserLocalPersistence
+            signInWithEmailAndPassword, 
+            setPersistence, 
+            browserLocalPersistence, 
+            onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -171,6 +172,16 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // 🚀 Check if user is already authenticated
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email.toLowerCase();
+                const username = email.split('@')[0];  
+                window.location.href = `/${username}/`; // Redirect to user’s personal page
+            }
+        });
+
+        // 🔒 Login Function
         document.querySelector('.login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('username').value.toLowerCase().trim();
@@ -180,13 +191,10 @@
                 await setPersistence(auth, browserLocalPersistence);
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
-                // 🔄 Redirecting the user to the correct profile page
-                if (email === 'info@pha.am') {
-                    window.location.href = '/info'; // ✅ Redirect admin to /info (without index.html)
-                } else {
-                    const username = email.split('@')[0];
-                    window.location.href = `/${username}`; // ✅ Redirect normal users to /name (without index.html)
-                }
+                // ✅ Redirect based on email
+                const username = email.split('@')[0];
+                window.location.href = `/${username}/`;
+
             } catch (error) {
                 const errorMessage = {
                     'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
@@ -226,4 +234,5 @@
     </div>
 </body>
 </html>
+
 
