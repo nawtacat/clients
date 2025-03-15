@@ -1,14 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hy">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PhA</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
   <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
+
+  <!-- Firebase Authentication for Login Redirection -->
+  <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+      const firebaseConfig = {
+          apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+          authDomain: "physmathacademy-722b3.firebaseapp.com",
+          projectId: "physmathacademy-722b3",
+          storageBucket: "physmathacademy-722b3.appspot.com",
+          messagingSenderId: "1093649922622",
+          appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+          measurementId: "G-CGVKXTXJLB"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document.addEventListener("DOMContentLoaded", function () {
+          document.getElementById("loginButton").addEventListener("click", () => {
+              onAuthStateChanged(auth, (user) => {
+                  if (user) {
+                      const username = user.email.split("@")[0];
+                      window.location.href = `/${username}/`; // Redirect to profile page
+                  } else {
+                      window.location.href = "/login/"; // Redirect to login page
+                  }
+              });
+          });
+      });
+  </script>
 </head>
 <body>
   <nav class="nav-bar">
@@ -16,7 +48,7 @@
       <a href="#" id="register-link" class="nav-link">Գրանցվել</a>
       <a href="#" class="nav-link">Մասին</a>
       <a href="#" class="nav-link">Կապ</a>
-      <a href="https://pha.am/login/" class="nav-link">Մուտք</a>
+      <a href="#" id="loginButton" class="nav-link">Մուտք</a>
     </div>
   </nav>
 
@@ -54,18 +86,13 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Scroll to the second section when the "Իմանալ ավելին" button is clicked
       document.getElementById("scroll-btn").addEventListener("click", function () {
         window.scrollTo({
           top: document.getElementById("second-section").offsetTop,
           behavior: "smooth"
         });
-        setTimeout(function () {
-          window.scrollBy({ top: -20, behavior: "smooth" }); // Minor slowdown effect
-        }, 500);
       });
 
-      // Scroll to the application form when "Գրանցվել" link is clicked
       document.getElementById("register-link").addEventListener("click", function (e) {
         e.preventDefault();
         document.getElementById("application-form-container").scrollIntoView({ behavior: "smooth" });
@@ -80,19 +107,19 @@
     <form class="application-form">
       <div class="form-group">
         <label for="parentName">Ծնողի անուն և ազգանուն</label>
-        <input type="text" id="parentName" name="parentName" placeholder="Մուտքագրեք ծնողի անունը և ազգանունը" required>
+        <input type="text" id="parentName" name="parentName" required>
       </div>
       <div class="form-group">
         <label for="phone">Հեռախոսահամար</label>
-        <input type="tel" id="phone" name="phone" placeholder="Մուտքագրեք ձեր հեռախոսահամարը" required>
+        <input type="tel" id="phone" name="phone" required>
       </div>
       <div class="form-group">
         <label for="childName">Երեխայի անուն և ազգանուն</label>
-        <input type="text" id="childName" name="childName" placeholder="Մուտքագրեք երեխայի անունը և ազգանունը" required>
+        <input type="text" id="childName" name="childName" required>
       </div>
       <div class="form-group">
         <label for="location">Քաղաք/Գյուղ</label>
-        <input type="text" id="location" name="location" placeholder="Մուտքագրեք ձեր քաղաքը կամ գյուղը" required>
+        <input type="text" id="location" name="location" required>
       </div>
       <div class="form-group">
         <label for="class">Դասարան</label>
@@ -109,94 +136,8 @@
           <option value="9">9</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Դասընթացի նախընտրելի օրացանկ</label>
-        <div class="radio-group">
-          <label>
-            <input type="radio" name="schedule" value="MWF" required>
-            Երկուշաբթի-Չորեքշաբթի-Ուրբաթ
-          </label>
-        </div>
-        <div class="radio-group">
-          <label>
-            <input type="radio" name="schedule" value="TTS" required>
-            Երեքշաբթի-Հինգշաբթի-Շաբաթ
-          </label>
-        </div>
-        <div class="radio-group">
-          <label>
-            <input type="radio" name="schedule" value="both" required>
-            Երկուսն էլ
-          </label>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="additionalInfo">Ի՞նչ կցանկանայիք մեզ տեղեկացնել (Երեխայի հատուկ պայմաններ, ժամային գրաֆիկ, ․․․)</label>
-        <textarea id="additionalInfo" name="additionalInfo" placeholder="Մուտքագրեք ձեր հաղորդագրությունը" rows="5"></textarea>
-      </div>
       <button type="submit" class="apply-btn">Ուղարկել</button>
     </form>
   </div>
-
-  <!-- Firebase Integration Script -->
-  <script type="module">
-    // Import the necessary functions from the Firebase SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
-
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-      authDomain: "physmathacademy-722b3.firebaseapp.com",
-      projectId: "physmathacademy-722b3",
-      storageBucket: "physmathacademy-722b3.firebasestorage.app",
-      messagingSenderId: "1093640992262",
-      appId: "1:1093640992262:web:35b1bf4d2364bcf745f587",
-      measurementId: "G-CGVKKTJXLB"
-    };
-
-    // Initialize Firebase and its services
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-
-    // Form submission handler
-    const form = document.querySelector('.application-form');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent the default page reload
-
-      // Retrieve form values, including the phone field
-      const parentName = document.getElementById('parentName').value;
-      const phone = document.getElementById('phone').value;
-      const childName = document.getElementById('childName').value;
-      const locationValue = document.getElementById('location').value;
-      const classValue = document.getElementById('class').value;
-      const schedule = document.querySelector('input[name="schedule"]:checked')?.value;
-      const additionalInfo = document.getElementById('additionalInfo').value;
-
-      // Build the data object to store
-      const formData = {
-        parentName,
-        phone,
-        childName,
-        location: locationValue,
-        class: classValue,
-        schedule,
-        additionalInfo,
-        submittedAt: new Date() // Timestamp the submission
-      };
-
-      try {
-        // Save the form data to Firestore under the "applications" collection
-        await addDoc(collection(db, "applications"), formData);
-        alert("Your application has been submitted successfully!");
-        form.reset(); // Reset the form fields
-      } catch (error) {
-        console.error("Error adding document: ", error);
-        alert("There was an error submitting your application. Please try again.");
-      }
-    });
-  </script>
 </body>
 </html>
