@@ -29,7 +29,6 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
         let userName = "";
 
         onAuthStateChanged(auth, (user) => {
@@ -39,7 +38,7 @@
             }
 
             const userEmail = user.email.toLowerCase();
-            const emailParts = userEmail.split("@")[0].split("."); // Extracts 'first.last' from 'first.last@pha.am'
+            const emailParts = userEmail.split("@")[0].split("."); // Extract 'first.last'
             userName = emailParts.map(name => name.charAt(0).toUpperCase() + name.slice(1)).join(" "); // Capitalizes names
 
             document.getElementById("userNameDisplay").textContent = userName;
@@ -61,8 +60,13 @@
             }
         };
 
-        // Function to join the Jitsi meeting with the user's name
+        // ✅ FIXED: Make sure `userName` is set before launching Jitsi
         function joinMeeting() {
+            if (!userName) {
+                alert("Error: Unable to retrieve your name. Please refresh the page and try again.");
+                return;
+            }
+
             const domain = "meet.jit.si";
             const options = {
                 roomName: "PhA-Math-Class",
@@ -73,7 +77,14 @@
                     displayName: userName
                 }
             };
-            const api = new JitsiMeetExternalAPI(domain, options);
+
+            // ✅ Ensure Jitsi API initializes correctly
+            try {
+                new JitsiMeetExternalAPI(domain, options);
+            } catch (error) {
+                alert("Error initializing Jitsi. Please try again.");
+                console.error(error);
+            }
         }
     </script>
 </head>
