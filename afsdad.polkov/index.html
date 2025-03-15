@@ -27,6 +27,8 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        let userName = "";
+
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = "/login/"; // Redirect if not logged in
@@ -34,14 +36,14 @@
             }
 
             const userEmail = user.email.toLowerCase();
-            const userName = userEmail.split("@")[0]; // Extracts 'name' from 'name@pha.am'
+            const emailParts = userEmail.split("@")[0].split("."); // Splits first.last
+            userName = emailParts.map(name => name.charAt(0).toUpperCase() + name.slice(1)).join(" "); // Capitalizes first letters
 
-            // Get the current URL path (e.g., '/aramasatryan290/')
+            // Get the current page path (e.g., '/afsdad.polkov/')
             const currentPath = window.location.pathname.replace(/\//g, "").toLowerCase();
 
-            if (userName !== currentPath) {
-                // If logged-in user tries to access another user's page, redirect
-                window.location.href = "/login/";
+            if (userEmail.split("@")[0] !== currentPath) {
+                window.location.href = "/login/"; // Redirect if accessing another user's page
             }
         });
 
@@ -53,29 +55,45 @@
                 console.error("Logout error:", error);
             }
         };
+
+        // Function to join the Jitsi meeting with the user's name
+        function joinMeeting() {
+            const domain = "meet.jit.si";
+            const options = {
+                roomName: "PhA-Math-Class",
+                width: "100%",
+                height: "100%",
+                parentNode: document.querySelector("#meetingContainer"),
+                userInfo: {
+                    displayName: userName
+                }
+            };
+            const api = new JitsiMeetExternalAPI(domain, options);
+        }
     </script>
 </head>
 <body>
     <div class="container">
-        <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
+        <img src="https://pha.am/logo.png" alt="PhA Logo" class="profile-image">
         
         <div class="id-container">
             <h2>511639</h2>
             <img src="https://pha.am/cloud.png" alt="Install App" class="install-icon" id="installIcon">
         </div>
 
-        <p class="description">AFsdad</p>
-        
+        <p class="description">Բարի գալուստ, <span id="userNameDisplay">User</span></p>
+
         <a class="buttonO" href="https://pha.am/homework/">Թեստային աշխատանք</a>
-        <a class="button" href="https://meet.google.com/uko-nxgb-nuf">Միանալ դասին</a>
-        <a class="button" href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
+        <button class="button" onclick="joinMeeting()">Միանալ դասին</button>
+        <a class="button" href="https://calendar.google.com/calendar/">Հաճախություն</a>
         <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
-        <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
+        <a class="button" href="https://invite.viber.com/">Համայնք</a>
         <button class="button" onclick="logout()" style="background: #dc3545;">Դուրս գալ</button>
     </div>
 
+    <div id="meetingContainer" style="width: 100%; height: 100vh;"></div>
+
     <script>
-        // Original installation prompt script
         let deferredPrompt;
 
         window.addEventListener("beforeinstallprompt", (event) => {
@@ -88,27 +106,10 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === "accepted") {
-                        console.log("User installed the app");
-                    }
                     deferredPrompt = null;
                 });
-            } else if (isIos() && !isInStandaloneMode()) {
-                alert("To install, tap the Share button and then 'Add to Home Screen'.");
             }
         });
-
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function isInStandaloneMode() {
-            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-        }
-
-        if (isIos() && !isInStandaloneMode()) {
-            document.getElementById("installIcon").style.display = "inline";
-        }
 
         function checkSubscription() {
             alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 01.03.2025');
