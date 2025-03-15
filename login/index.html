@@ -6,7 +6,6 @@
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
-        /* Original CSS preserved exactly */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -155,7 +154,8 @@
             getAuth, 
             signInWithEmailAndPassword,
             setPersistence,
-            browserLocalPersistence
+            browserLocalPersistence,
+            onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -171,30 +171,47 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        document.querySelector('.login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('username').value.toLowerCase().trim();
-            const password = document.getElementById('password').value;
-
-            try {
-                await setPersistence(auth, browserLocalPersistence);
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                
-                // Redirect based on email
-                if(email === 'info@pha.am') {
-                    window.location.href = '/info/';
+        // 🔹 Check if User is Already Logged In
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email.toLowerCase();
+                if (email === "info@pha.am") {
+                    window.location.href = "/clients/info/index.html"; // Redirect admin
                 } else {
-                    const username = email.split('@')[0];
-                    window.location.href = `/${username}/`;
+                    const username = email.split("@")[0];
+                    window.location.href = `/clients/${username}/index.html`; // Redirect user
                 }
-            } catch (error) {
-                const errorMessage = {
-                    'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
-                    'auth/too-many-requests': 'Չափազանց շատ անհաջող փորձեր',
-                    'auth/network-request-failed': 'Ցանցի սխալ'
-                }[error.code] || 'Մուտքագրման սխալ';
-                alert(errorMessage);
             }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const loginForm = document.querySelector(".login-form");
+
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const email = document.getElementById("username").value.toLowerCase().trim();
+                const password = document.getElementById("password").value;
+
+                try {
+                    await setPersistence(auth, browserLocalPersistence);
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+                    // 🔹 Redirect user to the appropriate page
+                    if (email === "info@pha.am") {
+                        window.location.href = "/clients/info/index.html";
+                    } else {
+                        const username = email.split("@")[0];
+                        window.location.href = `/clients/${username}/index.html`;
+                    }
+                } catch (error) {
+                    const errorMessage = {
+                        "auth/invalid-credential": "Սխալ էլ․ փոստ կամ գաղտնաբառ",
+                        "auth/too-many-requests": "Չափազանց շատ անհաջող փորձեր",
+                        "auth/network-request-failed": "Ցանցի սխալ"
+                    }[error.code] || "Մուտքագրման սխալ";
+                    alert(errorMessage);
+                }
+            });
         });
     </script>
 </head>
