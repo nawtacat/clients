@@ -28,17 +28,29 @@
         const auth = getAuth(app);
 
         onAuthStateChanged(auth, (user) => {
-            if (!user || user.email.toLowerCase() !== 'info@pha.am') {
-                window.location.href = '/login/';
+            if (!user) {
+                window.location.href = "/login/"; // Redirect if not logged in
+                return;
+            }
+
+            const userEmail = user.email.toLowerCase();
+            const userName = userEmail.split("@")[0]; // Extracts 'name' from 'name@pha.am'
+
+            // Get the current URL path (e.g., '/aramasatryan290/')
+            const currentPath = window.location.pathname.replace(/\//g, "").toLowerCase();
+
+            if (userName !== currentPath) {
+                // If logged-in user tries to access another user's page, redirect
+                window.location.href = "/login/";
             }
         });
 
         window.logout = async () => {
             try {
                 await signOut(auth);
-                window.location.href = '/login/';
+                window.location.href = "/login/";
             } catch (error) {
-                console.error('Logout error:', error);
+                console.error("Logout error:", error);
             }
         };
     </script>
@@ -104,3 +116,4 @@
     </script>
 </body>
 </html>
+
