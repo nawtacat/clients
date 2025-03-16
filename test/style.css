@@ -526,11 +526,6 @@ p {
 }
 
 
-.footer-bottom p {
-    max-width: 600px; /* Increased width */
-    width: 90%; /* Ensures responsiveness */
-    text-align: center;
-}
 
 
 
