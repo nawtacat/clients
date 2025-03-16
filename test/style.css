@@ -433,27 +433,47 @@ p {
     background: #307dbb; /* PhA Brand Blue */
     color: white;
     padding: 3rem 2rem;
-    position: relative;
 }
 
 .footer-container {
     display: flex;
-    flex-direction: column; /* Stack items vertically on mobile */
-    align-items: center; /* Center items on mobile */
+    justify-content: space-between; /* Content columns distributed */
+    align-items: flex-start;
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.footer-logo img {
-    height: 100px; /* Increased logo size */
-    margin-bottom: 2rem; /* Space below logo */
-    width: auto; /* Maintain aspect ratio */
+    width: 100%; /* Take full width */
 }
 
 .footer-content {
     display: flex;
+    justify-content: space-between; /* Content columns distributed */
     gap: 3rem;
     width: 100%; /* Take full width */
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-heading {
+    font-family: 'Mardoto-Light', sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-text {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    display: block;
+    margin-top: 0.3rem;
 }
 
 .footer-bottom {
@@ -461,46 +481,11 @@ p {
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
-    width: 100%;
-}
-
-/* Desktop styles */
-@media (min-width: 768px) {
-    .footer-container {
-        flex-direction: row; /* Side by side on desktop */
-        align-items: flex-start; /* Align to top */
-    }
-    
-    .footer-logo img {
-        height: 120px; /* Slightly larger on desktop */
-        margin-bottom: 0;
-        margin-right: 3rem; /* Space between logo and content */
-    }
-    
-    .footer-content {
-        flex-grow: 1; /* Take remaining space */
-    }
-}
-
-/* Mobile adjustments */
-@media (max-width: 767px) {
-    .footer-content {
-        flex-direction: column; /* Stack columns vertically */
-        gap: 2rem;
-        text-align: center; /* Center align content */
-    }
-    
-    .footer-column {
-        align-items: center; /* Center column items */
-    }
-    
-    .footer-logo img {
-        height: 90px; /* Slightly smaller on very small screens */
-    }
+    width: 100%; /* Take full width */
 }
 
 .footer-copyright {
     font-size: 0.9rem;
     margin: 0;
-    color: white; /* Ensure white text */
+    color: white;
 }
