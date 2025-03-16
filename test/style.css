@@ -508,7 +508,6 @@ p {
     opacity: 0.7;
 }
 
-/* Centering Copyright Text */
 .footer-bottom {
     text-align: center;
     font-size: 14px;
@@ -520,11 +519,13 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    white-space: nowrap; /* Prevents text from wrapping */
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
+.footer-bottom p {
+    max-width: 600px; /* Increased width */
+    width: 90%; /* Ensures responsiveness */
+    text-align: center;
+}
 
 
 
