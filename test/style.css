@@ -429,69 +429,54 @@ p {
     background-color: #1f5a87; /* Darker blue hover */
 }
 
-footer {
-    background-color: #f8f8f8;
-    padding: 30px 0; /* Increased padding */
-    font-family: 'Mardoto-Light', sans-serif;
-    border-top: 2px solid #e0e0e0; /* Slightly thicker border */
+.footer {
+    background: white;
+    padding: 50px 20px;
+    border-top: 2px solid var(--accent-coral);
 }
 
 .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    padding: 0 20px;
+    flex-wrap: wrap;
 }
 
-.footer-section { /* New class for centering */
+.footer-logo img {
+    width: 140px;
+}
+
+.footer-section {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    text-align: left;
+    min-width: 200px;
 }
 
-footer h3 {
-    font-size: 1.2rem; /* Larger heading */
-    margin-bottom: 15px;
+.footer-heading {
+    font-family: 'Mardoto-Light', sans-serif;
+    font-size: 18px;
     color: #333;
-    text-align: center; /* Center the heading */
+    margin-bottom: 12px;
 }
 
-footer p {
-    font-size: 1rem; /* Larger text */
-    margin-bottom: 10px;
-    color: #555;
-    text-align: center; /* Center the text */
-}
-
-footer a {
-    color: #007bff;
+.footer-link {
+    font-family: 'Mardoto-Light', sans-serif;
+    color: #333;
     text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 6px;
 }
 
-footer a:hover {
-    text-decoration: underline;
-}
-
-.copyright {
-    grid-column: 1 / -1;
+.footer-bottom {
+    margin-top: 30px;
     text-align: center;
-    font-size: 0.9rem; /* Slightly larger copyright */
-    color: #777;
-    margin-top: 30px; /* Increased margin */
 }
 
-/* Brand Color Integration (Example - Replace with your actual colors) */
-footer h3 {
-    color: #1976D2;  /* Example: Blue from the question block border [cite: 4] */
-}
-
-footer a {
-    color: #F57C00;  /* Example: Orange from the submit button [cite: 4] */
-}
-
-footer a:hover {
-    color: #E65100;  /* A darker orange on hover */
+.footer-copyright {
+    font-family: 'Mardoto-Light', sans-serif;
+    color: #555;
+    font-size: 15px;
 }
