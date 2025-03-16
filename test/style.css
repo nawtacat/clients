@@ -437,18 +437,18 @@ p {
 
 .footer-container {
     display: flex;
-    justify-content: space-between; /* Content columns distributed */
+    justify-content: space-between;
     align-items: flex-start;
     max-width: 1200px;
     margin: 0 auto;
-    width: 100%; /* Take full width */
+    width: 100%;
 }
 
 .footer-content {
     display: flex;
-    justify-content: space-between; /* Content columns distributed */
+    justify-content: space-between;
     gap: 3rem;
-    width: 100%; /* Take full width */
+    width: 100%;
 }
 
 .footer-column {
@@ -481,11 +481,22 @@ p {
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
-    width: 100%; /* Take full width */
+    width: 100%;
 }
 
 .footer-copyright {
     font-size: 0.9rem;
     margin: 0;
     color: white;
+}
+
+/* Media query for desktop screens */
+@media (min-width: 768px) { /* Adjust breakpoint as needed */
+    .footer-content {
+        gap: 1rem; /* Closer spacing on desktop */
+    }
+
+    .footer {
+        padding-bottom: 5rem; /* Added bottom spacing on desktop */
+    }
 }
