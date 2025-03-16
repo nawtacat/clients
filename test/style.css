@@ -437,21 +437,29 @@ p {
 
 .footer-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center; /* Changed to center vertically */
+    flex-direction: column; /* Changed to column layout */
+    align-items: center; /* Center horizontally */
     max-width: 1200px;
     margin: 0 auto;
 }
 
+.footer-logo {
+    width: 100%; /* Take full width */
+    text-align: center; /* Center the logo */
+    margin-bottom: 1.5rem; /* Add spacing below logo */
+}
+
 .footer-logo img {
-    height: auto; /* Changed from fixed height */
-    max-height: 80px; /* Added max-height */
-    /* You might need to adjust max-height based on your logo's proportions */
+    height: auto;
+    max-height: 120px; /* Increased max-height for larger logo */
+    /* Adjust max-height as needed for your logo */
 }
 
 .footer-content {
     display: flex;
+    justify-content: space-between; /* Content columns distributed */
     gap: 3rem;
+    width: 100%; /* Take full width */
 }
 
 .footer-column {
@@ -484,10 +492,11 @@ p {
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
+    width: 100%; /* Take full width */
 }
 
 .footer-copyright {
     font-size: 0.9rem;
     margin: 0;
-    color: white; /* Added color: white; */
+    color: white;
 }
