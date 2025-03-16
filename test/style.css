@@ -430,35 +430,44 @@ p {
 }
 
 footer {
-    background-color: #f8f8f8; /* Light gray background */
-    padding: 20px 0;
-    font-family: 'Mardoto-Light', sans-serif; /* Or a system sans-serif */
-    border-top: 1px solid #e0e0e0; /* Subtle top border */
+    background-color: #f8f8f8;
+    padding: 30px 0; /* Increased padding */
+    font-family: 'Mardoto-Light', sans-serif;
+    border-top: 2px solid #e0e0e0; /* Slightly thicker border */
 }
 
 .footer-container {
-    max-width: 1200px; /* Adjust as needed */
+    max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 20px;
-    padding: 0 20px; /* Add some padding on the sides */
+    padding: 0 20px;
+}
+
+.footer-section { /* New class for centering */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 footer h3 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-    color: #333; /* Dark gray heading */
+    font-size: 1.2rem; /* Larger heading */
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center; /* Center the heading */
 }
 
 footer p {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #555; /* Medium gray text */
+    font-size: 1rem; /* Larger text */
+    margin-bottom: 10px;
+    color: #555;
+    text-align: center; /* Center the text */
 }
 
 footer a {
-    color: #007bff; /* Blue links */
+    color: #007bff;
     text-decoration: none;
 }
 
@@ -467,10 +476,22 @@ footer a:hover {
 }
 
 .copyright {
-    grid-column: 1 / -1; /* Span all columns */
+    grid-column: 1 / -1;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.9rem; /* Slightly larger copyright */
     color: #777;
-    margin-top: 20px;
+    margin-top: 30px; /* Increased margin */
 }
 
+/* Brand Color Integration (Example - Replace with your actual colors) */
+footer h3 {
+    color: #1976D2;  /* Example: Blue from the question block border [cite: 4] */
+}
+
+footer a {
+    color: #F57C00;  /* Example: Orange from the submit button [cite: 4] */
+}
+
+footer a:hover {
+    color: #E65100;  /* A darker orange on hover */
+}
