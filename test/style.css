@@ -438,14 +438,15 @@ p {
 .footer-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center; /* Changed to center vertically */
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .footer-logo img {
-    height: 80px; /* Increased logo size */
-    margin-top: 1rem; /* Better vertical alignment */
+    height: auto; /* Changed from fixed height */
+    max-height: 80px; /* Added max-height */
+    /* You might need to adjust max-height based on your logo's proportions */
 }
 
 .footer-content {
@@ -488,5 +489,5 @@ p {
 .footer-copyright {
     font-size: 0.9rem;
     margin: 0;
-    color: white; /* Added white color for copyright text */
+    color: white; /* Added color: white; */
 }
