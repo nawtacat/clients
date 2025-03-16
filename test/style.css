@@ -520,7 +520,11 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
 
 .footer-bottom p {
     max-width: 600px; /* Increased width */
