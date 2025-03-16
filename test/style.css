@@ -444,7 +444,8 @@ p {
 }
 
 .footer-logo img {
-    height: 60px;
+    height: 80px; /* Increased logo size */
+    margin-top: 1rem; /* Better vertical alignment */
 }
 
 .footer-content {
@@ -487,5 +488,5 @@ p {
 .footer-copyright {
     font-size: 0.9rem;
     margin: 0;
+    color: white; /* Added white color for copyright text */
 }
-
