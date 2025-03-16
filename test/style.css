@@ -437,6 +437,14 @@ p {
     color: #333;
 }
 
+.site-footer {
+    background-color: white;
+    padding: 40px 20px;
+    border-top: 2px solid var(--accent-coral);
+    font-family: 'Mardoto-Light', sans-serif;
+    color: #333;
+}
+
 .footer-container {
     display: flex;
     justify-content: space-between;
@@ -500,6 +508,7 @@ p {
     opacity: 0.7;
 }
 
+/* Centering Copyright Text */
 .footer-bottom {
     text-align: center;
     font-size: 14px;
@@ -507,5 +516,9 @@ p {
     padding-top: 10px;
     border-top: 1px solid var(--light-blue);
     color: #555;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
