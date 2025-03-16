@@ -428,3 +428,84 @@ p {
 .apply-btn:hover {
     background-color: #1f5a87; /* Darker blue hover */
 }
+
+.site-footer {
+    background-color: white;
+    padding: 40px 20px;
+    border-top: 2px solid var(--accent-coral);
+    font-family: 'Mardoto-Light', sans-serif;
+    color: #333;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.footer-column h3 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--accent-coral);
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.footer-column p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.footer-column a {
+    text-decoration: none;
+    color: var(--dark-blue);
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+.footer-column a:hover {
+    color: var(--accent-coral);
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin: 5px 0;
+}
+
+.footer-column ul li a {
+    font-size: 14px;
+}
+
+.social-links a img {
+    width: 24px;
+    margin-right: 10px;
+    transition: opacity 0.3s ease;
+}
+
+.social-links a:hover img {
+    opacity: 0.7;
+}
+
+.footer-bottom {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid var(--light-blue);
+    color: #555;
+}
+
