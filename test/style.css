@@ -176,7 +176,6 @@ p {
 
 .benefits-container {
     max-width: 900px;
-    margin-right: 3rem; 
     margin: 0 auto;
 }
 
@@ -200,6 +199,7 @@ p {
     background: white;
     border: 1px solid var(--accent-coral);
     border-radius: 20px;
+    margin-right: 3rem; 
     padding: 18px;
     text-align: left;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
