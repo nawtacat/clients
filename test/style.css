@@ -176,6 +176,7 @@ p {
 
 .benefits-container {
     max-width: 900px;
+    margin-right: 3rem; 
     margin: 0 auto;
 }
 
