@@ -204,10 +204,6 @@ p {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.benefit-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.03);
-}
 
 .benefit-card h3 {
     font-size: 1.1rem;
