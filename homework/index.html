@@ -16,33 +16,63 @@
       --primary-blue: #307dbb;
       --accent-coral: #ec9172;
     }
+
+    /* Overall page styling */
     body {
-      font-family: 'Mardoto-Light', sans-serif;
-      background-color: #F5F5F5;
+      background-color: white;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      font-size: 18px; /* Larger base font size */
+      font-family: 'Mardoto-Light', sans-serif;
     }
-    .quiz-container {
+
+    /* Center everything inside a wrapper */
+    .wrapper {
       max-width: 700px;
-      background: white;
-      margin: auto;
+      margin: 0 auto;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+
+    /* Header with stopwatch and progress bar */
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #stopwatch {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+    #progress-container {
+      width: 100%;
+      background: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      height: 10px;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--primary-blue);
+      transition: width 0.3s ease;
+    }
+
+    /* Quiz container with no box shadow */
+    .quiz-container {
+      background: white;
+      padding: 20px;
+    }
+
+    /* Question block with no colored box */
     .question-block {
-      padding: 15px;
-      border-radius: 6px;
       margin-bottom: 40px;
-      background: #E3F2FD;
-      border-left: 5px solid var(--primary-blue);
     }
-    .question-block h2 {
-      font-size: 1rem;
-      margin-top: 0.3rem;
-      color: var(--primary-blue);
-      margin-bottom: 0.75rem;
+    .question-block p {
+      color: black;
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
     }
+
+    /* Options styling */
     .options {
       list-style: none;
       padding: 0;
@@ -52,8 +82,8 @@
       margin-bottom: 8px;
       background: #ffffff;
       padding: 10px;
-      border-radius: 6px;
       border: 2px solid var(--primary-blue);
+      border-radius: 6px; /* Rounded corners */
       cursor: pointer;
       transition: 0.3s ease;
       position: relative;
@@ -77,31 +107,39 @@
     .correct {
       background-color: #E8F5E9 !important;
       border-left: 5px solid #4CAF50 !important;
+      color: black;
     }
     .incorrect {
       background-color: #FFEBEE !important;
       border-left: 5px solid #F44336 !important;
+      color: black;
     }
-    .unanswered {
-      background-color: #FFF3E0 !important;
-      border-left: 5px solid #FFA000 !important;
+
+    /* Navigation buttons */
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
     }
-    #submit-btn {
-      display: none;
-      width: 100%;
-      padding: 12px;
+    .action-btn {
+      padding: 12px 20px;
       background: var(--accent-coral);
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      margin-top: 20px;
       transition: 0.3s;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
-    #submit-btn:hover {
+    .action-btn:hover {
       background: #e07555;
     }
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Results text */
     #results {
       margin-top: 1.5rem;
       font-weight: bold;
@@ -109,54 +147,113 @@
       color: #333;
       text-align: center;
     }
+
+    /* Larger text on wider screens */
+    @media (min-width: 768px) {
+      body {
+        font-size: 24px;
+      }
+      .question-block p {
+        font-size: 1.4rem;
+      }
+      #stopwatch {
+        font-size: 1.6rem;
+      }
+      #results {
+        font-size: 1.6rem;
+      }
+      .action-btn {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* Mobile: stack buttons vertically with Submit on top */
+    @media (max-width: 767px) {
+      .button-container {
+        flex-direction: column;
+      }
+      #submit-btn {
+        order: 1;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      #prev-btn {
+        order: 2;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <form id="quiz-form">
-      <div id="quiz"></div>
-      <button type="button" id="submit-btn">Ավարտել աշխատանքը</button>
-    </form>
-    <div id="results"></div>
+  <div class="wrapper">
+    <div class="header">
+      <div id="stopwatch">Time: 00:00</div>
+      <div id="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+    </div>
+    <div class="quiz-container">
+      <form id="quiz-form">
+        <div id="quiz"></div>
+        <div class="button-container">
+          <button type="button" id="prev-btn" class="action-btn" disabled>Նախորդ հարց</button>
+          <button type="button" id="submit-btn" class="action-btn">Հաստատել պատասխան</button>
+        </div>
+      </form>
+      <div id="results"></div>
+    </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const quizDiv = document.getElementById('quiz');
       const submitBtn = document.getElementById('submit-btn');
+      const prevBtn = document.getElementById('prev-btn');
       const resultsDiv = document.getElementById('results');
       const quizForm = document.getElementById('quiz-form');
-
+      const progressBar = document.getElementById('progress-bar');
       const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
-
+      
       let questions = [];
-
+      let currentQuestion = 0;
+      let score = 0;
+      let questionSubmitted = false; // true if current question has been graded
+      let userResponses = []; // stores {selected, correct} for each question
+      
+      // Stopwatch
+      const startTime = Date.now();
+      setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const seconds = Math.floor(elapsed / 1000) % 60;
+        const minutes = Math.floor(elapsed / 60000);
+        document.getElementById('stopwatch').textContent = `Time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }, 1000);
+      
+      // Fetch CSV data and initialize quiz
       fetch(csvUrl)
         .then(response => response.text())
         .then(csv => {
           questions = parseCSV(csv);
-          renderQuestions(questions);
-          submitBtn.style.display = 'block';
+          renderQuestion(currentQuestion);
+          updateProgress();
         })
         .catch(err => {
           console.error('Error loading quiz:', err);
           resultsDiv.textContent = 'Failed to load quiz. Please try again later.';
         });
-
+      
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
         lines.shift();
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
           if (cells.length < 6) return null;
-
           const optA = cells[cells.length - 5];
           const optB = cells[cells.length - 4];
           const optC = cells[cells.length - 3];
           const optD = cells[cells.length - 2];
           const correct = cells[cells.length - 1].toUpperCase();
           const problem = cells.slice(0, cells.length - 5).join(',');
-
           return {
             problem,
             options: { A: optA, B: optB, C: optC, D: optD },
@@ -164,77 +261,146 @@
           };
         }).filter(Boolean);
       }
-
-      function renderQuestions(questions) {
+      
+      function renderQuestion(idx) {
         quizDiv.innerHTML = '';
-        questions.forEach((q, idx) => {
-          if (!q) return;
-
-          // If Option C is just "C)", hide Options C and D
-          const showAllOptions = q.options["C"].trim() !== "C)";
-          const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
-
-          const questionBlock = document.createElement('div');
-          questionBlock.className = 'question-block';
-
-          questionBlock.innerHTML = `
-            <h2>${idx + 1}. ${q.problem}</h2>
-            <ul class="options">
-              ${letters.map(letter => `
-                <li>
-                  <label>
-                    <input type="radio" name="q${idx}" value="${letter}">
-                    ${q.options[letter]}
-                  </label>
-                </li>
-              `).join('')}
-            </ul>
-          `;
-          quizDiv.appendChild(questionBlock);
-        });
-
-        quizDiv.querySelectorAll('.options li').forEach(li => {
-          li.addEventListener('click', () => {
-            const parentUl = li.closest('ul');
-            parentUl.querySelectorAll('li').forEach(sibling => {
-              sibling.classList.remove('selected');
+        const q = questions[idx];
+        if (!q) return;
+        // Determine which options to show (only A and B if Option C is "C)")
+        const showAllOptions = q.options["C"].trim() !== "C)";
+        const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
+        
+        const questionBlock = document.createElement('div');
+        questionBlock.className = 'question-block';
+        questionBlock.innerHTML = `
+          <p>${idx + 1}. ${q.problem}</p>
+          <ul class="options">
+            ${letters.map(letter => `
+              <li>
+                <label>
+                  <input type="radio" name="q" value="${letter}">
+                  ${q.options[letter]}
+                </label>
+              </li>
+            `).join('')}
+          </ul>
+        `;
+        quizDiv.appendChild(questionBlock);
+        
+        // If user hasn't answered this question yet, allow selection
+        if (!userResponses[idx]) {
+          questionSubmitted = false;
+          quizDiv.querySelectorAll('.options li').forEach(li => {
+            li.addEventListener('click', () => {
+              li.parentElement.querySelectorAll('li').forEach(sibling => {
+                sibling.classList.remove('selected');
+              });
+              li.classList.add('selected');
+              const radio = li.querySelector('input[type="radio"]');
+              if (radio) radio.checked = true;
             });
-            li.classList.add('selected');
-            const radio = li.querySelector('input[type="radio"]');
-            if (radio) radio.checked = true;
           });
-        });
+        } else {
+          // If this question was already graded, show the existing response
+          questionSubmitted = true;
+          const response = userResponses[idx];
+          const listItems = quizDiv.querySelectorAll('.options li');
+          listItems.forEach(li => {
+            const input = li.querySelector('input[type="radio"]');
+            if (input) {
+              input.disabled = true;
+              if (input.value === response.selected) {
+                li.classList.remove('selected');
+                li.classList.add(response.correct ? 'correct' : 'incorrect');
+              }
+              if (!response.correct && input.value === q.correct) {
+                li.classList.add('correct');
+              }
+            }
+          });
+        }
+        updateButtonTexts();
+        updatePrevButtonState();
       }
-
+      
+      function updateProgress() {
+        const gradedCount = userResponses.filter(resp => resp !== undefined).length;
+        const percentage = (gradedCount / questions.length) * 100;
+        progressBar.style.width = percentage + '%';
+      }
+      
+      function updateButtonTexts() {
+        if (questionSubmitted) {
+          // If current question is graded, show "Հաջորդ հարց" unless it is the final question
+          submitBtn.textContent = (currentQuestion === questions.length - 1) ? "Ավարտել աշխատանքը" : "Հաջորդ հարց";
+        } else {
+          submitBtn.textContent = "Հաստատել պատասխան";
+        }
+      }
+      
+      function updatePrevButtonState() {
+        prevBtn.disabled = (currentQuestion === 0);
+      }
+      
       submitBtn.addEventListener('click', () => {
-        for (let i = 0; i < questions.length; i++) {
-          if (!quizForm.querySelector(`input[name="q${i}"]:checked`)) {
-            alert("Պատասխանի՛ր բոլոր հարցերին");
+        // If current question is not yet graded, grade it first.
+        if (!questionSubmitted) {
+          const selected = quizForm.querySelector('input[name="q"]:checked');
+          if (!selected) {
+            alert("Պատասխանի՛ր հարցը");
             return;
           }
-        }
-        gradeQuiz();
-      });
-
-      function gradeQuiz() {
-        let score = 0;
-        resultsDiv.innerHTML = '';
-        questions.forEach((q, idx) => {
-          const selected = quizForm.querySelector(`input[name="q${idx}"]:checked`);
-          const listItems = quizDiv.children[idx].querySelectorAll('li');
-          listItems.forEach(li => li.className = '');
-          if (!selected) return;
-          const isCorrect = selected.value === q.correct;
+          // Grade the current question.
+          const currentQ = questions[currentQuestion];
+          const listItems = quizDiv.querySelectorAll('.options li');
+          listItems.forEach(li => {
+            li.classList.remove('correct', 'incorrect');
+          });
+          const isCorrect = selected.value === currentQ.correct;
           if (isCorrect) score++;
+          // Remove the blue "selected" style and then add correct/incorrect feedback
+          selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           if (!isCorrect) {
-            const correctIndex = ['A','B','C','D'].indexOf(q.correct);
-            if (correctIndex >= 0) listItems[correctIndex].classList.add('correct');
+            listItems.forEach(li => {
+              const input = li.querySelector('input[type="radio"]');
+              if (input && input.value === currentQ.correct) {
+                li.classList.add('correct');
+              }
+            });
           }
-        });
-        resultsDiv.innerHTML = `Score: ${score} / ${questions.length} <br>Percentage: ${Math.round((score / questions.length) * 100)}%`;
-      }
+          // Disable all options
+          quizDiv.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+          // Save user response
+          userResponses[currentQuestion] = {
+            selected: selected.value,
+            correct: isCorrect
+          };
+          questionSubmitted = true;
+          updateProgress();
+          updateButtonTexts();
+        } else {
+          // If already graded, then move to next question if available
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            renderQuestion(currentQuestion);
+          } else {
+            // Quiz finished – show final results
+            quizDiv.innerHTML = '';
+            document.querySelector('.button-container').style.display = 'none';
+            resultsDiv.innerHTML = `Score: ${score} / ${questions.length} <br>Percentage: ${Math.round((score / questions.length) * 100)}%`;
+          }
+        }
+      });
+      
+      prevBtn.addEventListener('click', () => {
+        if (currentQuestion > 0) {
+          currentQuestion--;
+          renderQuestion(currentQuestion);
+        }
+      });
     });
   </script>
 </body>
 </html>
+
