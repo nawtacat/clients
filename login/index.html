@@ -6,6 +6,7 @@
     <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <style>
+        /* All previous CSS remains unchanged */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -154,19 +155,19 @@
                 background: white;
                 border-radius: 10px;
                 box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-                padding: 2.5rem; /* Increased padding */
-                margin: 1.5rem; /* Added margin for breathing space */
-                width: 90%; /* Slightly wider container */
-                max-width: none; /* Remove max-width restriction */
+                padding: 2.5rem;
+                margin: 1.5rem;
+                width: 90%;
+                max-width: none;
             }
 
             .login-btn {
-                padding: 12px; /* Slightly larger button */
+                padding: 12px;
             }
         }
     </style>
     
-    <!-- Firebase Authentication -->
+    <!-- Updated Firebase Authentication Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
@@ -190,11 +191,12 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // Fixed redirection logic
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const email = user.email.toLowerCase();
                 const username = email.split('@')[0];  
-                window.location.href = /${username}/;
+                window.location.href = `https://pha.am/${username}`;
             }
         });
 
@@ -208,7 +210,7 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
                 const username = email.split('@')[0];
-                window.location.href = /${username}/;
+                window.location.href = `https://pha.am/${username}`;
 
             } catch (error) {
                 const errorMessage = {
@@ -241,7 +243,6 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="login-btn">Մուտք գործել</button>
-                        <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառս</a>
                     </div>
                 </form>
             </div>
