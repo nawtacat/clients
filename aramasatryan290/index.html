@@ -5,18 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clean Student Dashboard</title>
     <style>
+        /* Use only Mardoto-Light everywhere */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
             font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        @font-face {
-            font-family: 'Mardoto-Medium';
-            src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
-            font-weight: 500;
             font-style: normal;
             font-display: swap;
         }
@@ -73,7 +66,7 @@
         .dashboard-link {
             background: white;
             padding: 1.5rem;  /* Increased padding */
-            border-radius: 10px;
+            border-radius: 15px; /* More rounder buttons */
             text-decoration: none;
             color: var(--primary-blue);
             border: 1px solid var(--light-blue);
@@ -83,20 +76,10 @@
             justify-content: space-between;
         }
 
+        /* General hover effect for non-student links */
         .dashboard-link:hover {
             border-color: var(--dark-blue);
             color: var(--dark-blue);
-        }
-
-        .student-portal {
-            background-color: var(--accent-coral);
-            border-color: var(--accent-coral);
-            color: white;
-        }
-
-        .student-portal:hover {
-            background-color: #e07d5e;
-            border-color: #e07d5e;
         }
 
         /* Text stacked: headline on top, description beneath */
@@ -106,12 +89,13 @@
         }
 
         .link-title {
-            font-family: 'Mardoto-Medium';
+            font-family: 'Mardoto-Light', sans-serif;
             font-size: 1.1rem;
             margin: 0 0 0.4rem 0;
         }
 
         .link-description {
+            font-family: 'Mardoto-Light', sans-serif;
             font-size: 0.9rem;
             color: #666;
             margin: 0;
@@ -120,10 +104,23 @@
 
         /* Slightly smaller large icon on the right */
         .link-icon {
-            width: 45px;  /* Slightly smaller than before */
+            width: 45px;
             height: 45px;
             object-fit: contain;
             margin-left: 1rem;
+        }
+
+        /* Student portal (test link) styling: text remains white always */
+        .dashboard-link.student-portal {
+            background-color: var(--accent-coral);
+            border-color: var(--accent-coral);
+            color: white;
+        }
+
+        .dashboard-link.student-portal:hover {
+            background-color: var(--accent-coral);
+            border-color: var(--accent-coral);
+            color: white;
         }
 
         @media (min-width: 768px) {
@@ -143,9 +140,7 @@
             text-decoration: none;
             text-align: center;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 1.5rem;
+            margin: 1.5rem auto 0;
         }
         .logout-link:hover {
             text-decoration: underline;
@@ -187,7 +182,6 @@
             const currentPath = window.location.pathname.replace(/\//g, "").toLowerCase();
 
             if (userName !== currentPath) {
-                // If logged-in user tries to access another user's page, redirect
                 window.location.href = "/login/";
             }
 
@@ -219,7 +213,7 @@
         </section>
 
         <div class="dashboard-links">
-            <!-- 1. Homework Portal -->
+            <!-- 1. Homework Portal (Student Portal / Test Link) -->
             <a href="https://pha.am/homework" class="dashboard-link student-portal">
                 <div class="text-content">
                     <h3 class="link-title">Թեստային աշխատանք</h3>
