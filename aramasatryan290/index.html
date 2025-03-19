@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clean Student Dashboard</title>
     <style>
-        /* Use only Mardoto-Light everywhere */
+        /* Font Faces */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
             font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Mardoto-Medium';
+            src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+            font-weight: 500;
             font-style: normal;
             font-display: swap;
         }
@@ -37,6 +45,7 @@
             max-width: 800px;
             padding: 2rem var(--mobile-padding);
             box-sizing: border-box;
+            margin-top: 2rem; /* Extra spacing from the top */
         }
 
         .profile-section {
@@ -45,6 +54,9 @@
             align-items: center;
             margin-bottom: 2rem;
             text-align: center;
+        }
+        .profile-section p{
+            color: white;
         }
 
         .profile-image {
@@ -65,8 +77,8 @@
         /* Each link as a flexible row with text on the left and a large icon on the right */
         .dashboard-link {
             background: white;
-            padding: 1.5rem;  /* Increased padding */
-            border-radius: 15px; /* More rounder buttons */
+            padding: 1.5rem; 
+            border-radius: 15px; 
             text-decoration: none;
             color: var(--primary-blue);
             border: 1px solid var(--light-blue);
@@ -76,33 +88,33 @@
             justify-content: space-between;
         }
 
-        /* General hover effect for non-student links */
+        /* General hover effect for normal links */
         .dashboard-link:hover {
             border-color: var(--dark-blue);
             color: var(--dark-blue);
         }
 
-        /* Text stacked: headline on top, description beneath */
+        /* The text content: headline on top, description beneath */
         .text-content {
             display: flex;
             flex-direction: column;
         }
 
         .link-title {
-            font-family: 'Mardoto-Light', sans-serif;
+            font-family: 'Mardoto-Medium'; /* Headlines in Mardoto-Medium */
             font-size: 1.1rem;
             margin: 0 0 0.4rem 0;
         }
 
         .link-description {
-            font-family: 'Mardoto-Light', sans-serif;
+            font-family: 'Mardoto-Light'; /* Descriptions remain Mardoto-Light */
             font-size: 0.9rem;
             color: #666;
             margin: 0;
             line-height: 1.5;
         }
 
-        /* Slightly smaller large icon on the right */
+        /* Icon on the right */
         .link-icon {
             width: 45px;
             height: 45px;
@@ -110,7 +122,7 @@
             margin-left: 1rem;
         }
 
-        /* Student portal (test link) styling: text remains white always */
+        /* Student portal (test link) styling: text always white, darkens on hover */
         .dashboard-link.student-portal {
             background-color: var(--accent-coral);
             border-color: var(--accent-coral);
@@ -118,9 +130,9 @@
         }
 
         .dashboard-link.student-portal:hover {
-            background-color: var(--accent-coral);
-            border-color: var(--accent-coral);
-            color: white;
+            background-color: #d67b60; /* Darker coral on hover */
+            border-color: #d67b60;
+            color: white; 
         }
 
         @media (min-width: 768px) {
@@ -157,13 +169,13 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-            authDomain: "physmathacademy-722b3.firebaseapp.com",
-            projectId: "physmathacademy-722b3",
-            storageBucket: "physmathacademy-722b3.appspot.com",
-            messagingSenderId: "1093649922622",
-            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
-            measurementId: "G-CGVKXTXJLB"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -198,6 +210,10 @@
                 console.error("Logout error:", error);
             }
         };
+
+        function checkSubscription() {
+            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 01.03.2025');
+        }
     </script>
 </head>
 <body>
@@ -262,11 +278,5 @@
         <!-- Logout Link -->
         <a href="#" class="logout-link" onclick="logout()">Logout</a>
     </div>
-
-    <script>
-        function checkSubscription() {
-            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 01.03.2025');
-        }
-    </script>
 </body>
 </html>
