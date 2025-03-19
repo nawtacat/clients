@@ -45,7 +45,7 @@
             max-width: 800px;
             padding: 2rem var(--mobile-padding);
             box-sizing: border-box;
-            margin-top: 2rem; /* Added extra spacing on Desktop */
+            margin-top: 2rem; /* Extra spacing on Desktop */
         }
 
         .profile-section {
@@ -119,7 +119,7 @@
             margin-left: 1rem;
         }
 
-        /* Student portal (test link) styling: text remains white always */
+        /* Student portal (test link) styling: text remains white always and darkens on hover */
         .dashboard-link.student-portal {
             background-color: var(--accent-coral);
             border-color: var(--accent-coral);
@@ -184,19 +184,10 @@
                 return;
             }
 
-            const userEmail = user.email.toLowerCase();
-            const userName = userEmail.split("@")[0];
-
-            // Get the current URL path (e.g., '/aramasatryan290/')
-            const currentPath = window.location.pathname.replace(/\//g, "").toLowerCase();
-
-            if (userName !== currentPath) {
-                window.location.href = "/login/";
-            }
-
-            // Update profile text
-            document.getElementById('profile-name').textContent = userName;
-            document.getElementById('profile-email').textContent = userEmail;
+            // Instead of pulling the profile info from the user object,
+            // we hardcode the values.
+            document.getElementById('profile-name').textContent = "RandomUser";
+            document.getElementById('profile-email').textContent = "random@example.com";
         });
 
         window.logout = async () => {
