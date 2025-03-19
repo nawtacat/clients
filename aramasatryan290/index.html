@@ -100,17 +100,20 @@
 
         /* Logout link style */
         .logout-link {
-            font-family: 'Mardoto-Light', sans-serif;
-            font-size: 0.9rem;
-            color: #dc3545;
-            text-decoration: none;
-            text-align: center;
-            margin-top: 1.5rem; /* Adjust margin to separate from the buttons */
-        }
+    font-family: 'Mardoto-Light', sans-serif;
+    font-size: 0.9rem;
+    color: #dc3545;
+    text-decoration: none;
+    text-align: center;
+    display: block;  /* Ensures it's a block element for centering */
+    margin-top: 1.5rem;  /* Adds spacing from the buttons */
+    margin-left: auto;  /* Centers the element horizontally */
+    margin-right: auto; /* Centers the element horizontally */
+}
 
-        .logout-link:hover {
-            text-decoration: underline;
-        }
+.logout-link:hover {
+    text-decoration: underline;
+}
 
         .link-title {
             font-size: 1.1rem;
