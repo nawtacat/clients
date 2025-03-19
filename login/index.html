@@ -1,292 +1,251 @@
 <!DOCTYPE html>
 <html lang="hy">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
-  <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png" />
-  <style>
-    @font-face {
-      font-family: 'Mardoto-Light';
-      src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
-      font-weight: 300;
-      font-style: normal;
-      font-display: swap;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Մուտք - Ֆիզմաթ Ակադեմիա</title>
+    <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
+    <style>
+        @font-face {
+            font-family: 'Mardoto-Light';
+            src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
 
-    @font-face {
-      font-family: 'Mardoto-Medium';
-      src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
-      font-weight: 500;
-      font-style: normal;
-      font-display: swap;
-    }
+        @font-face {
+            font-family: 'Mardoto-Medium';
+            src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
 
-    :root {
-      --primary-blue: #307dbb;
-      --accent-coral: #ec9172;
-    }
+        :root {
+            --primary-blue: #307dbb;
+            --accent-coral: #ec9172;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Mardoto-Light', sans-serif;
-      background-color: white; /* default for desktop */
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
+        body {
+            font-family: 'Mardoto-Light', sans-serif;
+            background-color: white;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
 
-    .login-container {
-      display: flex;
-      min-height: 100vh;
-    }
+        .login-container {
+            display: flex;
+            min-height: 100vh;
+        }
 
-    .login-left {
-      width: 50%;
-      background-image: url('https://pha.am/loginphoto.jpg');
-      background-size: cover;
-      background-position: center;
-    }
+        .login-left {
+            width: 50%;
+            background-image: url('https://pha.am/loginphoto.jpg');
+            background-size: cover;
+            background-position: center;
+        }
 
-    .login-right {
-      width: 50%;
-      background-color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        .login-right {
+            width: 50%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .login-form-container {
-      width: 80%;
-      max-width: 400px;
-      padding: 2rem;
-    }
+        .login-form-container {
+            width: 80%;
+            max-width: 400px;
+            padding: 2rem;
+        }
 
-    .card-header {
-      margin-bottom: 2rem;
-      text-align: left;
-    }
+        .card-header {
+            margin-bottom: 2rem;
+            text-align: left;
+        }
 
-    .card-header h2 {
-      font-size: 1.8rem;
-      color: #333;
-      margin-bottom: 0.5rem;
-      font-family: 'Mardoto-Light', sans-serif;
-    }
+        .card-header .title {
+            font-size: 2rem;
+            color: #000;
+            margin-bottom: 0.5rem;
+            font-family: 'Mardoto-Medium', sans-serif;
+        }
 
-    .card-header p {
-      color: #666;
-      font-size: 1rem;
-    }
+        .card-header p {
+            color: #666;
+            font-size: 1rem;
+        }
 
-    .login-form .form-group {
-      margin-bottom: 1.5rem;
-      text-align: left;
-    }
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
 
-    .login-form label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #555;
-      font-size: 0.9rem;
-      font-family: 'Mardoto-Medium', sans-serif;
-    }
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.9rem;
+            font-family: 'Mardoto-Medium', sans-serif;
+        }
 
-    .login-form input {
-      width: calc(100% - 20px);
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
 
-    .form-actions {
-      text-align: center;
-    }
+        .form-actions {
+            text-align: left;
+        }
 
-    .login-btn {
-      background-color: var(--primary-blue);
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      /* Increase the button's roundness */
-      border-radius: 16px; 
-      cursor: pointer;
-      font-size: 1rem;
-      font-family: 'Mardoto-Medium', sans-serif;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      margin-top: 1rem;
-    }
+        .login-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Mardoto-Medium', sans-serif;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
 
-    .login-btn:hover {
-      background-color: #1f5a87;
-    }
+        .login-btn:hover {
+            background-color: #1f5a87;
+        }
 
-    .forgot-password {
-      display: block;
-      margin-top: 1rem;
-      color: #007bff;
-      text-decoration: none;
-      font-size: 0.9rem;
-      text-align: center;
-    }
+        .forgot-password {
+            display: block;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-align: left;
+        }
 
-    /* ===== Mobile-Only Styles ===== */
-    @media (max-width: 768px) {
-      /* 1. Subtle top-to-bottom gradient */
-      body {
-        background: linear-gradient(
-          to bottom,
-          var(--primary-blue) 0%,
-          var(--accent-coral) 100%
-        );
-      }
+        @media (max-width: 768px) {
+            body {
+                background-color: var(--primary-blue);
+            }
 
-      /* 2. Hide the left image, stack layout vertically */
-      .login-left {
-        display: none;
-      }
+            .login-left {
+                display: none;
+            }
 
-      /* 3. Center everything, remove white background to show gradient */
-      .login-container {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-      .login-right {
-        width: 100%;
-        background-color: transparent;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 1rem;
-      }
+            .login-right {
+                width: 100%;
+                background-color: transparent;
+            }
 
-      /* 4. Create a "card" for the form */
-      .login-form-container {
-        background-color: rgba(255, 255, 255, 0.92);
-        /* Increase the card's roundness */
-        border-radius: 16px; 
-        padding: 2rem;
-        margin: 2rem 1rem; /* some margin on sides */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        max-width: 360px;
-      }
+            .login-form-container {
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+                padding: 2.5rem; /* Increased padding */
+                margin: 1.5rem; /* Added margin for breathing space */
+                width: 90%; /* Slightly wider container */
+                max-width: none; /* Remove max-width restriction */
+            }
 
-      /* 5. Center the headings for a cleaner look on mobile */
-      .card-header h2,
-      .card-header p {
-        text-align: center;
-      }
+            .login-btn {
+                padding: 12px; /* Slightly larger button */
+            }
+        }
+    </style>
+    
+    <!-- Firebase Authentication -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            setPersistence, 
+            browserLocalPersistence, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-      /* 6. Adjust spacing for inputs */
-      .login-form .form-group {
-        margin-bottom: 1rem;
-      }
-    }
-  </style>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+            authDomain: "physmathacademy-722b3.firebaseapp.com",
+            projectId: "physmathacademy-722b3",
+            storageBucket: "physmathacademy-722b3.appspot.com",
+            messagingSenderId: "1093649922622",
+            appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+            measurementId: "G-CGVKXTXJLB"
+        };
 
-  <!-- Firebase Authentication -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      setPersistence,
-      browserLocalPersistence,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAb...",
-      authDomain: "physmathacademy-722b3.firebaseapp.com",
-      projectId: "physmathacademy-722b3",
-      storageBucket: "physmathacademy-722b3.appspot.com",
-      messagingSenderId: "1093649922622",
-      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
-      measurementId: "G-CGVKXTXJLB"
-    };
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email.toLowerCase();
+                const username = email.split('@')[0];  
+                window.location.href = /${username}/;
+            }
+        });
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+        document.querySelector('.login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value;
 
-    // Check if user is already authenticated
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const email = user.email.toLowerCase();
-        const username = email.split('@')[0];
-        window.location.href = `/${username}/`;
-      }
-    });
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                const username = email.split('@')[0];
+                window.location.href = /${username}/;
 
-    // Login Function
-    document.querySelector('.login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('username').value.toLowerCase().trim();
-      const password = document.getElementById('password').value;
-
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth, email, password);
-
-        const username = email.split('@')[0];
-        window.location.href = `/${username}/`;
-      } catch (error) {
-        const errorMessage = {
-          'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
-          'auth/too-many-requests': 'Չափազանց շատ անհաջող փորձեր',
-          'auth/network-request-failed': 'Ցանցի սխալ'
-        }[error.code] || 'Մուտքագրման սխալ';
-        alert(errorMessage);
-      }
-    });
-  </script>
+            } catch (error) {
+                const errorMessage = {
+                    'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
+                    'auth/too-many-requests': 'Չափազանց շատ անհաջող փորձեր',
+                    'auth/network-request-failed': 'Ցանցի սխալ'
+                }[error.code] || 'Մուտքագրման սխալ';
+                alert(errorMessage);
+            }
+        });
+    </script>
 </head>
 <body>
-  <div class="login-container">
-    <div class="login-left"></div>
-    <div class="login-right">
-      <div class="login-form-container">
-        <div class="card-header">
-          <h2>Մուտք գործել էլ. փոստով</h2>
-          <p>Ստեղծե՞լ նոր հաշիվ։ Ձեր փաստաթղթերը, տողերը և թիմերը միասին։ Անվճար։</p>
+    <div class="login-container">
+        <div class="login-left"></div>
+        <div class="login-right">
+            <div class="login-form-container">
+                <div class="card-header">
+                    <p class="title">Մուտք գործել էլ. փոստով</p>
+                    <p>Ստեղծե՞լ նոր հաշիվ։ Ձեր փաստաթղթերը, տողերը և թիմերը միասին։ Անվճար։</p>
+                </div>
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="username">Էլ. փոստ</label>
+                        <input type="text" id="username" name="username" placeholder="Էլ. փոստ" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Գաղտնաբառ</label>
+                        <input type="password" id="password" name="password" placeholder="Գաղտնաբառ" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="login-btn">Մուտք գործել</button>
+                        <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառս</a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form class="login-form">
-          <div class="form-group">
-            <label for="username">Էլ. փոստ</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Էլ. փոստ"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="password">Գաղտնաբառ</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Գաղտնաբառ"
-              required
-            />
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="login-btn">Մուտք գործել</button>
-            <a href="#" class="forgot-password">Ես մոռացել եմ գաղտնաբառս</a>
-          </div>
-        </form>
-      </div>
     </div>
-  </div>
 </body>
 </html>
