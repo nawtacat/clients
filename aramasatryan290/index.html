@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clean Student Dashboard</title>
     <style>
-        /* Font Faces */
         @font-face {
             font-family: 'Mardoto-Light';
             src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
@@ -38,51 +37,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* To make room for the logout at the bottom */
         }
-        .dashboard-link {
-    background: white;
-    padding: 1.2rem;
-    border-radius: 10px;
-    text-decoration: none;
-    color: var(--primary-blue);
-    border: 1px solid var(--light-blue);
-    transition: all 0.2s ease;
-    display: flex;
-    justify-content: space-between; /* This will space out the text and the icon */
-    align-items: center; /* Vertically aligns the text and icon */
-}
-
-.dashboard-link:hover {
-    border-color: var(--dark-blue);
-    color: var(--dark-blue);
-}
-
-.link-icon {
-    width: 20px; /* Adjust size as needed */
-    height: 20px;
-    margin-left: 1rem; /* Adds space between text and icon */
-    object-fit: contain; /* Ensures icon maintains its aspect ratio */
-}
-
-.dashboard-link.student-portal {
-    background-color: var(--accent-coral);
-    border-color: var(--accent-coral);
-    color: white;
-}
-
-.dashboard-link.student-portal:hover {
-    background-color: #e07d5e;
-    border-color: #e07d5e;
-}
-
 
         .dashboard {
             width: 100%;
             max-width: 800px;
             padding: 2rem var(--mobile-padding);
             box-sizing: border-box;
-            flex-grow: 1; /* Allow content to take up space */
         }
 
         .profile-section {
@@ -108,6 +69,7 @@
             gap: 1rem;
         }
 
+        /* Each link acts as a flexible row with text on the left, icon on the right */
         .dashboard-link {
             background: white;
             padding: 1.2rem;
@@ -116,6 +78,9 @@
             color: var(--primary-blue);
             border: 1px solid var(--light-blue);
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .dashboard-link:hover {
@@ -123,60 +88,75 @@
             color: var(--dark-blue);
         }
 
-        .dashboard-link.student-portal {
+        .student-portal {
             background-color: var(--accent-coral);
             border-color: var(--accent-coral);
             color: white;
         }
 
-        .dashboard-link.student-portal:hover {
+        .student-portal:hover {
             background-color: #e07d5e;
             border-color: #e07d5e;
         }
 
-        /* Logout link style */
-        .logout-link {
-    font-family: 'Mardoto-Light', sans-serif;
-    font-size: 0.9rem;
-    color: #dc3545;
-    text-decoration: none;
-    text-align: center;
-    display: block;  /* Ensures it's a block element for centering */
-    margin-top: 1.5rem;  /* Adds spacing from the buttons */
-    margin-left: auto;  /* Centers the element horizontally */
-    margin-right: auto; /* Centers the element horizontally */
-}
-
-.logout-link:hover {
-    text-decoration: underline;
-}
+        /* Text stacked: headline on top, description beneath */
+        .text-content {
+            display: flex;
+            flex-direction: column;
+        }
 
         .link-title {
+            font-family: 'Mardoto-Medium';
             font-size: 1.1rem;
-            margin-bottom: 0.4rem;
+            margin: 0 0 0.4rem 0;
         }
 
         .link-description {
             font-size: 0.9rem;
             color: #666;
+            margin: 0;
             line-height: 1.5;
+        }
+
+        /* Large icon on the right */
+        .link-icon {
+            width: 50px;   /* Adjust as needed for your design */
+            height: 50px;
+            object-fit: contain;
+            margin-left: 1rem;
         }
 
         @media (min-width: 768px) {
             .dashboard-links {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
             .student-portal {
                 grid-column: span 2;
             }
         }
+
+        /* Logout link style */
+        .logout-link {
+            font-family: 'Mardoto-Light', sans-serif;
+            font-size: 0.9rem;
+            color: #dc3545;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 1.5rem;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
     </style>
+
     <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    
-    <!-- Authentication Script -->
+
+    <!-- Firebase Authentication -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -201,7 +181,7 @@
             }
 
             const userEmail = user.email.toLowerCase();
-            const userName = userEmail.split("@")[0]; // Extracts 'name' from 'name@pha.am'
+            const userName = userEmail.split("@")[0];
 
             // Get the current URL path (e.g., '/aramasatryan290/')
             const currentPath = window.location.pathname.replace(/\//g, "").toLowerCase();
@@ -211,7 +191,7 @@
                 window.location.href = "/login/";
             }
 
-            // Update Profile Info
+            // Update profile text
             document.getElementById('profile-name').textContent = userName;
             document.getElementById('profile-email').textContent = userEmail;
         });
@@ -233,45 +213,59 @@
                  alt="Student Profile" 
                  class="profile-image">
             <div class="profile-info">
-                <h2 id="profile-name" style="color: var(--primary-blue); margin: 0 0 0.3rem 0;">Username</h2>
-                <p id="profile-email" style="color: var(--accent-coral); margin: 0;">Email</p>
+                <h2 id="profile-name" style="color: var(--primary-blue); margin: 0 0 0.3rem 0;">username</h2>
+                <p id="profile-email" style="color: var(--accent-coral); margin: 0;">user@example.com</p>
             </div>
         </section>
 
         <div class="dashboard-links">
+            <!-- 1. Homework Portal -->
             <a href="https://pha.am/homework" class="dashboard-link student-portal">
-    <h3 class="link-title">Homework Portal</h3>
-    <p class="link-description">Access assignments and learning resources</p>
-    <img src="https://pha.am/assignment.png" alt="Assignment Icon" class="link-icon">
-</a>
+                <div class="text-content">
+                    <h3 class="link-title">Թեստային աշխատանք</h3>
+                    <p class="link-description">Access assignments and learning resources</p>
+                </div>
+                <img src="https://pha.am/assignment.png" alt="Assignment Icon" class="link-icon">
+            </a>
 
-<a href="https://pha.am/meeting4/" class="dashboard-link">
-    <h3 class="link-title">Join Class</h3>
-    <p class="link-description">Enter your class session</p>
-    <img src="https://pha.am/online-meeting.png" alt="Online Meeting Icon" class="link-icon">
-</a>
+            <!-- 2. Join Class -->
+            <a href="https://pha.am/meeting4/" class="dashboard-link">
+                <div class="text-content">
+                    <h3 class="link-title">Միանալ դասին</h3>
+                    <p class="link-description">Enter your class session</p>
+                </div>
+                <img src="https://pha.am/online-meeting.png" alt="Online Meeting Icon" class="link-icon">
+            </a>
 
-<a href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan" class="dashboard-link">
-    <h3 class="link-title">Attendance</h3>
-    <p class="link-description">Check your attendance history</p>
-    <img src="https://pha.am/attendance.png" alt="Attendance Icon" class="link-icon">
-</a>
+            <!-- 3. Attendance -->
+            <a href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan" class="dashboard-link">
+                <div class="text-content">
+                    <h3 class="link-title">Հաճախություն</h3>
+                    <p class="link-description">Check your attendance history</p>
+                </div>
+                <img src="https://pha.am/attendance.png" alt="Attendance Icon" class="link-icon">
+            </a>
 
-<a href="#" class="dashboard-link" onclick="checkSubscription()">
-    <h3 class="link-title">Subscription</h3>
-    <p class="link-description">View your subscription details</p>
-    <img src="https://pha.am/subscription-model.png" alt="Subscription Icon" class="link-icon">
-</a>
+            <!-- 4. Subscription -->
+            <a href="#" class="dashboard-link" onclick="checkSubscription()">
+                <div class="text-content">
+                    <h3 class="link-title">Բաժանորդագրություն</h3>
+                    <p class="link-description">View your subscription details</p>
+                </div>
+                <img src="https://pha.am/subscription-model.png" alt="Subscription Icon" class="link-icon">
+            </a>
 
-<a href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX" class="dashboard-link">
-    <h3 class="link-title">Community</h3>
-    <p class="link-description">Join the PhA community</p>
-    <img src="https://pha.am/communities.png" alt="Community Icon" class="link-icon">
-</a>
-
+            <!-- 5. Community -->
+            <a href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX" class="dashboard-link">
+                <div class="text-content">
+                    <h3 class="link-title">Համայնք</h3>
+                    <p class="link-description">Join the PhA community</p>
+                </div>
+                <img src="https://pha.am/communities.png" alt="Community Icon" class="link-icon">
+            </a>
         </div>
 
-        <!-- Logout link placed right after the buttons -->
+        <!-- Logout Link -->
         <a href="#" class="logout-link" onclick="logout()">Logout</a>
     </div>
 
@@ -282,3 +276,4 @@
     </script>
 </body>
 </html>
+
