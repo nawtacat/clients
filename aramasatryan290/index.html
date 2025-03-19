@@ -40,6 +40,42 @@
             align-items: center;
             justify-content: space-between; /* To make room for the logout at the bottom */
         }
+        .dashboard-link {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--primary-blue);
+    border: 1px solid var(--light-blue);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between; /* This will space out the text and the icon */
+    align-items: center; /* Vertically aligns the text and icon */
+}
+
+.dashboard-link:hover {
+    border-color: var(--dark-blue);
+    color: var(--dark-blue);
+}
+
+.link-icon {
+    width: 20px; /* Adjust size as needed */
+    height: 20px;
+    margin-left: 1rem; /* Adds space between text and icon */
+    object-fit: contain; /* Ensures icon maintains its aspect ratio */
+}
+
+.dashboard-link.student-portal {
+    background-color: var(--accent-coral);
+    border-color: var(--accent-coral);
+    color: white;
+}
+
+.dashboard-link.student-portal:hover {
+    background-color: #e07d5e;
+    border-color: #e07d5e;
+}
+
 
         .dashboard {
             width: 100%;
@@ -204,29 +240,35 @@
 
         <div class="dashboard-links">
             <a href="https://pha.am/homework" class="dashboard-link student-portal">
-                <h3 class="link-title">Թեստային աշխատանք</h3>
-                <p class="link-description">Access assignments and learning resources</p>
-            </a>
-            
-            <a href="https://pha.am/meeting4/" class="dashboard-link">
-                <h3 class="link-title">Միանալ դասին</h3>
-                <p class="link-description">Enter your class session</p>
-            </a>
+    <h3 class="link-title">Homework Portal</h3>
+    <p class="link-description">Access assignments and learning resources</p>
+    <img src="https://pha.am/assignment.png" alt="Assignment Icon" class="link-icon">
+</a>
 
-            <a href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan" class="dashboard-link">
-                <h3 class="link-title">Հաճախություն</h3>
-                <p class="link-description">Check your attendance history</p>
-            </a>
+<a href="https://pha.am/meeting4/" class="dashboard-link">
+    <h3 class="link-title">Join Class</h3>
+    <p class="link-description">Enter your class session</p>
+    <img src="https://pha.am/online-meeting.png" alt="Online Meeting Icon" class="link-icon">
+</a>
 
-            <a href="#" class="dashboard-link" onclick="checkSubscription()">
-                <h3 class="link-title">Բաժանորդագրություն</h3>
-                <p class="link-description">View your subscription details</p>
-            </a>
+<a href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan" class="dashboard-link">
+    <h3 class="link-title">Attendance</h3>
+    <p class="link-description">Check your attendance history</p>
+    <img src="https://pha.am/attendance.png" alt="Attendance Icon" class="link-icon">
+</a>
 
-            <a href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX" class="dashboard-link">
-                <h3 class="link-title">Community</h3>
-                <p class="link-description">Join the PhA community</p>
-            </a>
+<a href="#" class="dashboard-link" onclick="checkSubscription()">
+    <h3 class="link-title">Subscription</h3>
+    <p class="link-description">View your subscription details</p>
+    <img src="https://pha.am/subscription-model.png" alt="Subscription Icon" class="link-icon">
+</a>
+
+<a href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX" class="dashboard-link">
+    <h3 class="link-title">Community</h3>
+    <p class="link-description">Join the PhA community</p>
+    <img src="https://pha.am/communities.png" alt="Community Icon" class="link-icon">
+</a>
+
         </div>
 
         <!-- Logout link placed right after the buttons -->
