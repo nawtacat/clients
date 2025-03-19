@@ -187,11 +187,6 @@
                 window.location.href = "/login/"; // Redirect if not logged in
                 return;
             }
-
-            // Instead of pulling the profile info from the user object,
-            // we hardcode the values.
-            document.getElementById('profile-name').textContent = "RandomUser";
-            document.getElementById('profile-email').textContent = "random@example.com";
         });
 
         window.logout = async () => {
