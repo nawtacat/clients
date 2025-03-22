@@ -436,20 +436,12 @@ p {
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    gap: 4rem;
+    gap: 4rem; /* Adjust the gap as needed */
     padding: 0 1rem;
 }
 
 .footer-section {
-    width: 300px;
-}
-
-.footer-section:first-child {
-    margin-right: auto;
-}
-
-.footer-section:last-child {
-    margin-left: auto;
+    width: 300px; /* Adjust the width as needed */
 }
 
 .footer-heading {
