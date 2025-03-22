@@ -230,8 +230,6 @@ p {
     }
 }
 
-
-
 /* Responsive Fix */
 @media (max-width: 998px) {
     .nav-links {
@@ -424,25 +422,24 @@ p {
 .apply-btn:hover {
     background-color: #1f5a87; /* Darker blue hover */
 }
+
+/* Footer Styles */
 .footer {
     background: #ffffff;
     padding: 3rem 1rem;
     border-top: 1px solid #e0e0e0;
 }
 
-/* 
-   1) A narrower container (max-width: 700px) so the columns 
-      do not stretch the full width of the browser.
-   2) Center the container with margin: 0 auto.
-   3) Use space-between to pin columns to the left & right 
-      edges of this container.
+/* Updated footer symmetry:
+   - The container is centered and the two footer sections are grouped with a gap.
 */
 .footer-container {
-    max-width: 700px; 
+    max-width: 700px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-start;
+    gap: 4rem;
     padding: 0 1rem;
 }
 
@@ -472,7 +469,7 @@ p {
     border-top: 1px solid #e0e0e0;
     margin-top: 3rem;
     padding-top: 1.5rem;
-    text-align: center; /* Center the copyright */
+    text-align: center;
 }
 
 .footer-bottom p {
@@ -480,7 +477,6 @@ p {
     font-size: 0.8rem;
     margin: 0;
 }
-
 
 @media (max-width: 998px) {
     .footer-container {
@@ -499,3 +495,4 @@ p {
     .footer-link {
         text-align: center;
     }
+}
