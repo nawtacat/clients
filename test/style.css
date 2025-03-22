@@ -222,7 +222,7 @@ p {
 }
 
 /* Responsive */
-@media (min-width: 768px) {
+@media (min-width: 998px) {
     .benefits-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -233,7 +233,7 @@ p {
 
 
 /* Responsive Fix */
-@media (max-width: 768px) {
+@media (max-width: 998px) {
     .nav-links {
         gap: 1.5rem;
     }
