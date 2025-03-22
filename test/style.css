@@ -424,25 +424,31 @@ p {
 .apply-btn:hover {
     background-color: #1f5a87; /* Darker blue hover */
 }
-
 .footer {
     background: #ffffff;
     padding: 3rem 1rem;
     border-top: 1px solid #e0e0e0;
 }
 
+/* 
+   1) A narrower container (max-width: 700px) so the columns 
+      do not stretch the full width of the browser.
+   2) Center the container with margin: 0 auto.
+   3) Use space-between to pin columns to the left & right 
+      edges of this container.
+*/
 .footer-container {
-    max-width: 1200px;
+    max-width: 700px; 
     margin: 0 auto;
     display: flex;
-    justify-content: space-between; /* Spread sections to edges */
-    align-items: flex-start;       /* or center, depending on your preference */
+    justify-content: space-between;
+    align-items: flex-start;
     padding: 0 1rem;
 }
 
 .footer-section {
     width: 300px;
-    margin: 0; /* Remove large horizontal margins */
+    margin: 0;
 }
 
 .footer-heading {
@@ -466,14 +472,15 @@ p {
     border-top: 1px solid #e0e0e0;
     margin-top: 3rem;
     padding-top: 1.5rem;
+    text-align: center; /* Center the copyright */
 }
 
 .footer-bottom p {
     color: #666;
     font-size: 0.8rem;
-    text-align: center;
     margin: 0;
 }
+
 
 @media (max-width: 998px) {
     .footer-container {
