@@ -434,16 +434,26 @@ p {
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    gap: 4rem; /* Adjust the gap as needed */
+    display: grid;
+    grid-template-columns: 1fr auto auto 1fr; /* Symmetrical outer spacing */
+    gap: 4rem; /* Space between sections */
     padding: 0 1rem;
 }
 
 .footer-section {
-    width: 300px; /* Adjust the width as needed */
+    width: 300px; /* Fixed width for sections */
 }
 
+/* Position sections in the 2nd and 3rd columns */
+.footer-section:first-child {
+    grid-column: 2;
+}
+
+.footer-section:last-child {
+    grid-column: 3;
+}
+
+/* Rest of your styles remain unchanged */
 .footer-heading {
     font-family: 'Mardoto-Light', sans-serif;
     color: #333;
@@ -473,7 +483,6 @@ p {
     text-align: center;
     margin: 0;
 }
-
 @media (max-width: 998px) {
     .footer-container {
         flex-direction: column;
