@@ -434,26 +434,18 @@ p {
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr auto auto 1fr; /* Symmetrical outer spacing */
-    gap: 4rem; /* Space between sections */
+    display: flex;
+    justify-content: center;
     padding: 0 1rem;
 }
 
 .footer-section {
-    width: 300px; /* Fixed width for sections */
+    width: 300px;
+    margin: 0 6rem; /* Horizontal spacing between sections */
+    /* 6rem = space to the RIGHT of first section, LEFT of second section */
+    /* Total space between sections = 6rem * 2 = 12rem */
 }
 
-/* Position sections in the 2nd and 3rd columns */
-.footer-section:first-child {
-    grid-column: 2;
-}
-
-.footer-section:last-child {
-    grid-column: 3;
-}
-
-/* Rest of your styles remain unchanged */
 .footer-heading {
     font-family: 'Mardoto-Light', sans-serif;
     color: #333;
