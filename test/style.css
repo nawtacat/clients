@@ -435,15 +435,14 @@ p {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* Spread sections to edges */
+    align-items: flex-start;       /* or center, depending on your preference */
     padding: 0 1rem;
 }
 
 .footer-section {
     width: 300px;
-    margin: 0 6rem; /* Horizontal spacing between sections */
-    /* 6rem = space to the RIGHT of first section, LEFT of second section */
-    /* Total space between sections = 6rem * 2 = 12rem */
+    margin: 0; /* Remove large horizontal margins */
 }
 
 .footer-heading {
@@ -469,12 +468,13 @@ p {
     padding-top: 1.5rem;
 }
 
-.footer-copyright {
+.footer-bottom p {
     color: #666;
     font-size: 0.8rem;
     text-align: center;
     margin: 0;
 }
+
 @media (max-width: 998px) {
     .footer-container {
         flex-direction: column;
