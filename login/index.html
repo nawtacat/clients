@@ -191,15 +191,16 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Fixed redirection logic
+        // On authentication state change, redirect to the user's page.
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const email = user.email.toLowerCase();
+                const email = user.email.toLowerCase().trim();
                 const username = email.split('@')[0];  
-                window.location.href = https://pha.am/${username};
+                window.location.href = `https://pha.am/${username}`;
             }
         });
 
+        // When the login form is submitted, sign in and then redirect.
         document.querySelector('.login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('username').value.toLowerCase().trim();
@@ -207,11 +208,10 @@
 
             try {
                 await setPersistence(auth, browserLocalPersistence);
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, email, password);
                 
                 const username = email.split('@')[0];
-                window.location.href = https://pha.am/${username};
-
+                window.location.href = `https://pha.am/${username}`;
             } catch (error) {
                 const errorMessage = {
                     'auth/invalid-credential': 'Սխալ էլ․ փոստ կամ գաղտնաբառ',
@@ -250,4 +250,5 @@
     </div>
 </body>
 </html>
+
 
