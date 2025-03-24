@@ -13,15 +13,14 @@
     h1 {
       text-align: center;
     }
-    /* Simple top-right container for the login button */
-    .login-container {
+    .logout-container {
       text-align: right;
       margin-bottom: 10px;
     }
-    .login-btn {
+    .logout-btn {
       padding: 5px 10px;
       cursor: pointer;
-      background: #307dbb;
+      background: #ff6a00;
       color: #fff;
       border: none;
       border-radius: 4px;
@@ -54,9 +53,9 @@
 </head>
 <body>
   <div class="container">
-    <!-- Login Button (also used to check if user is 'info') -->
-    <div class="login-container">
-      <button id="login-btn" class="login-btn">Login</button>
+    <!-- Logout Button (only meaningful if user is authenticated) -->
+    <div class="logout-container">
+      <button id="logout-btn" class="logout-btn">Logout</button>
     </div>
 
     <h1>Admin Panel - Applications</h1>
@@ -118,7 +117,8 @@
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         // No one is signed in => must log in
-        return; // We won't auto-redirect here; user can click "Login" button
+        window.location.href = "/login/";
+        return;
       }
 
       const email = user.email.toLowerCase().trim();
@@ -138,26 +138,15 @@
     });
 
     /********************************************************
-     * 3) LOGIN BUTTON BEHAVIOR
+     * 3) LOGOUT BUTTON
      ********************************************************/
-    document.getElementById("login-btn").addEventListener("click", () => {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          // If not authenticated, go to login
-          window.location.href = "/login/";
-        } else {
-          // If authenticated, check if admin
-          const email = user.email.toLowerCase().trim();
-          const username = email.split('@')[0];
-          if (username === "info") {
-            // Already on admin panel
-            alert("You are already logged in as admin!");
-          } else {
-            // If normal user, go to user dashboard
-            window.location.href = `/${username}/`;
-          }
-        }
-      });
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        window.location.href = "/login/";
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
     });
 
     /********************************************************
