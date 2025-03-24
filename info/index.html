@@ -136,28 +136,8 @@
     const applicationsRef = collection(db, "applications");
     const q = query(applicationsRef, orderBy("timestamp", "desc"));
 
-    // Flag to prevent notifications on initial load.
-    let initialLoad = true;
-
-    // Listen for realtime updates and add notifications for new applications.
+    // Listen for realtime updates
     onSnapshot(q, (snapshot) => {
-      // Process changes for notifications.
-      snapshot.docChanges().forEach(change => {
-        if (!initialLoad && change.type === "added") {
-          const newApp = change.doc.data();
-          if (Notification.permission === "granted") {
-            new Notification("New Application", { body: `New application from ${newApp.parentName}` });
-          } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(permission => {
-              if (permission === "granted") {
-                new Notification("New Application", { body: `New application from ${newApp.parentName}` });
-              }
-            });
-          }
-        }
-      });
-
-      // Clear and rebuild the table.
       const tbody = document.getElementById("applicationsTable").querySelector("tbody");
       tbody.innerHTML = ""; // Clear the table
 
@@ -221,14 +201,9 @@
 
         tbody.appendChild(tr);
       });
-
-      // After processing the initial snapshot, disable initialLoad flag.
-      initialLoad = false;
     }, (error) => {
       console.error("Error loading applications: ", error);
     });
   </script>
 </body>
-</html>
-
 </html>
