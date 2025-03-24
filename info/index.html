@@ -13,14 +13,15 @@
     h1 {
       text-align: center;
     }
-    .logout-container {
+    /* Simple top-right container for the login button */
+    .login-container {
       text-align: right;
       margin-bottom: 10px;
     }
-    .logout-btn {
+    .login-btn {
       padding: 5px 10px;
       cursor: pointer;
-      background: #ff6a00;
+      background: #307dbb;
       color: #fff;
       border: none;
       border-radius: 4px;
@@ -50,64 +51,14 @@
       cursor: pointer;
     }
   </style>
-
-  <!-- Firebase Authentication and Dashboard Protection -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-      authDomain: "physmathacademy-722b3.firebaseapp.com",
-      projectId: "physmathacademy-722b3",
-      storageBucket: "physmathacademy-722b3.appspot.com",
-      messagingSenderId: "1093649922622",
-      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
-      measurementId: "G-CGVKXTXJLB"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Protect the admin dashboard:
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Not authenticated, redirect to login.
-        window.location.href = "/login/";
-        return;
-      }
-      const email = user.email.toLowerCase().trim();
-      const username = email.split('@')[0]; 
-      // Get current path without leading/trailing slashes (e.g. "info")
-      const currentPath = window.location.pathname.replace(/^\/+|\/+$/g, '');
-      if (username !== "info") {
-        // Not an admin, redirect to the correct user dashboard.
-        window.location.href = `/${username}/`;
-        return;
-      }
-      // If admin but the URL is not "info", force it.
-      if (currentPath !== "info") {
-        window.location.href = `/info/`;
-        return;
-      }
-    });
-
-    // Expose logout function globally.
-    window.logout = async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "/login/";
-      } catch (error) {
-        console.error("Logout error:", error);
-      }
-    };
-  </script>
 </head>
 <body>
   <div class="container">
-    <div class="logout-container">
-      <button id="logout-btn" class="logout-btn" onclick="logout()">Logout</button>
+    <!-- Login Button (also used to check if user is 'info') -->
+    <div class="login-container">
+      <button id="login-btn" class="login-btn">Login</button>
     </div>
+
     <h1>Admin Panel - Applications</h1>
     <table id="applicationsTable">
       <thead>
@@ -128,18 +79,96 @@
   </div>
 
   <script type="module">
-    import { getFirestore, collection, onSnapshot, query, orderBy, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    /********************************************************
+     * 1) IMPORT & INITIALIZE FIREBASE
+     ********************************************************/
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      onSnapshot, 
+      query, 
+      orderBy, 
+      updateDoc, 
+      doc 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Reference the "applications" collection and order by timestamp descending
+    /********************************************************
+     * 2) PAGE PROTECTION: ALLOW ONLY 'info@pha.am'
+     ********************************************************/
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // No one is signed in => must log in
+        return; // We won't auto-redirect here; user can click "Login" button
+      }
+
+      const email = user.email.toLowerCase().trim();
+      const username = email.split('@')[0];
+
+      // If the user is not "info", redirect them to their own dashboard
+      if (username !== "info") {
+        window.location.href = `/${username}/`;
+        return;
+      }
+
+      // If path is not "info", fix it
+      const currentPath = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      if (currentPath !== "info") {
+        window.location.href = "/info/";
+      }
+    });
+
+    /********************************************************
+     * 3) LOGIN BUTTON BEHAVIOR
+     ********************************************************/
+    document.getElementById("login-btn").addEventListener("click", () => {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          // If not authenticated, go to login
+          window.location.href = "/login/";
+        } else {
+          // If authenticated, check if admin
+          const email = user.email.toLowerCase().trim();
+          const username = email.split('@')[0];
+          if (username === "info") {
+            // Already on admin panel
+            alert("You are already logged in as admin!");
+          } else {
+            // If normal user, go to user dashboard
+            window.location.href = `/${username}/`;
+          }
+        }
+      });
+    });
+
+    /********************************************************
+     * 4) REAL-TIME APPLICATIONS LOADING
+     ********************************************************/
     const applicationsRef = collection(db, "applications");
     const q = query(applicationsRef, orderBy("timestamp", "desc"));
 
-    // Listen for realtime updates
     onSnapshot(q, (snapshot) => {
       const tbody = document.getElementById("applicationsTable").querySelector("tbody");
-      tbody.innerHTML = ""; // Clear the table
+      tbody.innerHTML = ""; // Clear the table each time
 
       snapshot.forEach((docSnapshot) => {
         const data = docSnapshot.data();
