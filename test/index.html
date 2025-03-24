@@ -83,6 +83,7 @@
       </div>
     </div>
   </div>
+  
   <section class="benefits-section">
     <div class="benefits-container">
         <h2 class="benefits-title">Հակիրճ տեղեկություններ</h2>
@@ -91,23 +92,21 @@
                 <h3>Դասերի տևողությունը</h3>
                 <p>Դասերն անց են կացվում շաբաթական 3 անգամ, 45 րոպե տևողությամբ։</p>
             </div>
-          <div class="benefit-card">
+            <div class="benefit-card">
                 <h3>Նվիրված ուսուցիչներ</h3>
                 <p>Մեր ուսուցիչները ստեղծում ընկերական մթնոլորտ և առանձնանում անհատական մոտեցմամբ։</p>
             </div>
-
             <div class="benefit-card">
                 <h3>Բաժանորդագրության արժեքը</h3>
-                <p>Մեկ ամսվա բաժանորդագրության արժեքը (12 դաս)` 9.500 դրամ։</p>
+                <p>Մեկ ամսվա բաժանորդագրության արժեքը (12 դաս) 9.500 դրամ։</p>
             </div>
         </div>
     </div>
-</section>
-
-
+  </section>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Scroll button functionality
       document.getElementById("scroll-btn").addEventListener("click", function () {
         window.scrollTo({
           top: document.getElementById("second-section").offsetTop,
@@ -115,9 +114,31 @@
         });
       });
 
+      // Register link scroll
       document.getElementById("register-link").addEventListener("click", function (e) {
         e.preventDefault();
         document.getElementById("application-form-container").scrollIntoView({ behavior: "smooth" });
+      });
+
+      // Application form submission handler using AJAX (Fetch API)
+      document.querySelector('.application-form').addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        try {
+          const response = await fetch("submitForm.php", {
+            method: "POST",
+            body: formData
+          });
+          if (response.ok) {
+            alert("Ձեր հայտը հաջողությամբ ուղարկվեց:");
+            this.reset();
+          } else {
+            alert("Կապի սխալ: Փորձեք կրկին:");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Կապի սխալ: Փորձեք կրկին:");
+        }
       });
     });
   </script>
@@ -161,25 +182,23 @@
       <button type="submit" class="apply-btn">Ուղարկել</button>
     </form>
   </div>
-<footer class="footer">
+
+  <footer class="footer">
     <div class="footer-container">
         <div class="footer-section">
             <h4 class="footer-heading">Կապ մեզ հետ</h4>
             <a href="mailto:info@pha.am" class="footer-link">info@pha.am</a>
             <a href="tel:+37477411749" class="footer-link">077-411-749</a>
         </div>
-
         <div class="footer-section">
             <h4 class="footer-heading">Հետևեք մեզ</h4>
             <a href="https://www.youtube.com/@PhysmathAcademy" target="_blank" class="footer-link">YouTube</a>
             <a href="https://www.facebook.com/profile.php?id=61566938010237" target="_blank" class="footer-link">Facebook</a>
         </div>
     </div>
-
     <div class="footer-bottom">
         <p class="footer-copyright">© 2025 Physmath Academy | Բոլոր իրավունքները պաշտպանված են</p>
     </div>
-</footer>
-
+  </footer>
 </body>
 </html>
