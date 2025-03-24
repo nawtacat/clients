@@ -124,8 +124,14 @@
       document.querySelector('.application-form').addEventListener("submit", async function(e) {
         e.preventDefault();
         const formData = new FormData(this);
+
+        // For production, use your endpoint:
+        const endpoint = "submitForm.php";
+        // For testing without a backend, you can uncomment the following line:
+        // const endpoint = "https://jsonplaceholder.typicode.com/posts";
+
         try {
-          const response = await fetch("submitForm.php", {
+          const response = await fetch(endpoint, {
             method: "POST",
             body: formData
           });
