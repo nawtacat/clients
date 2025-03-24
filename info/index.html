@@ -50,11 +50,63 @@
       cursor: pointer;
     }
   </style>
+
+  <!-- Firebase Authentication and Dashboard Protection -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Protect the admin dashboard:
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Not authenticated, redirect to login.
+        window.location.href = "/login/";
+        return;
+      }
+      const email = user.email.toLowerCase().trim();
+      const username = email.split('@')[0]; 
+      // Get current path without leading/trailing slashes (e.g. "info")
+      const currentPath = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      if (username !== "info") {
+        // Not an admin, redirect to the correct user dashboard.
+        window.location.href = `/${username}/`;
+        return;
+      }
+      // If admin but the URL is not "info", force it.
+      if (currentPath !== "info") {
+        window.location.href = `/info/`;
+        return;
+      }
+    });
+
+    // Expose logout function globally.
+    window.logout = async () => {
+      try {
+        await signOut(auth);
+        window.location.href = "/login/";
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    };
+  </script>
 </head>
 <body>
   <div class="container">
     <div class="logout-container">
-      <button id="logout-btn" class="logout-btn">Logout</button>
+      <button id="logout-btn" class="logout-btn" onclick="logout()">Logout</button>
     </div>
     <h1>Admin Panel - Applications</h1>
     <table id="applicationsTable">
@@ -76,39 +128,9 @@
   </div>
 
   <script type="module">
-    // Import Firebase modules from CDN
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { 
-      getFirestore, collection, onSnapshot, query, orderBy, updateDoc, doc 
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-      authDomain: "physmathacademy-722b3.firebaseapp.com",
-      projectId: "physmathacademy-722b3",
-      storageBucket: "physmathacademy-722b3.appspot.com",
-      messagingSenderId: "1093649922622",
-      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
-      measurementId: "G-CGVKXTXJLB"
-    };
-
-    // Initialize Firebase and Firestore
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
-
-    // Logout functionality
-    document.getElementById("logout-btn").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "/login/"; // Redirect to login page after sign-out
-      } catch (error) {
-        console.error("Error signing out:", error);
-        alert("Error signing out. Please try again.");
-      }
-    });
 
     // Reference the "applications" collection and order by timestamp descending
     const applicationsRef = collection(db, "applications");
