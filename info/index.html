@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Panel - Applications</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+    }
+    .logout-container {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .logout-btn {
+      padding: 5px 10px;
+      cursor: pointer;
+      background: #ff6a00;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logout-container">
+      <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+    <h1>Admin Panel - Applications</h1>
+    <table id="applicationsTable">
+      <thead>
+        <tr>
+          <th>Parent Name</th>
+          <th>Phone</th>
+          <th>Child Name</th>
+          <th>Location</th>
+          <th>Class</th>
+          <th>Timestamp</th>
+          <th>Contacted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Application entries will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    // Import Firebase modules from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+      getFirestore, collection, onSnapshot, query, orderBy, updateDoc, doc 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+
+    // Initialize Firebase and Firestore
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Logout functionality
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        window.location.href = "/login/"; // Redirect to login page after sign-out
+      } catch (error) {
+        console.error("Error signing out:", error);
+        alert("Error signing out. Please try again.");
+      }
+    });
+
+    // Reference the "applications" collection and order by timestamp descending
+    const applicationsRef = collection(db, "applications");
+    const q = query(applicationsRef, orderBy("timestamp", "desc"));
+
+    // Listen for realtime updates
+    onSnapshot(q, (snapshot) => {
+      const tbody = document.getElementById("applicationsTable").querySelector("tbody");
+      tbody.innerHTML = ""; // Clear the table
+
+      snapshot.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        const tr = document.createElement("tr");
+
+        // Parent Name
+        const parentNameTd = document.createElement("td");
+        parentNameTd.textContent = data.parentName || "";
+        tr.appendChild(parentNameTd);
+
+        // Phone
+        const phoneTd = document.createElement("td");
+        phoneTd.textContent = data.phone || "";
+        tr.appendChild(phoneTd);
+
+        // Child Name
+        const childNameTd = document.createElement("td");
+        childNameTd.textContent = data.childName || "";
+        tr.appendChild(childNameTd);
+
+        // Location
+        const locationTd = document.createElement("td");
+        locationTd.textContent = data.location || "";
+        tr.appendChild(locationTd);
+
+        // Class
+        const classTd = document.createElement("td");
+        classTd.textContent = data.class || "";
+        tr.appendChild(classTd);
+
+        // Timestamp
+        const timestampTd = document.createElement("td");
+        if (data.timestamp && data.timestamp.toDate) {
+          timestampTd.textContent = data.timestamp.toDate().toLocaleString();
+        } else {
+          timestampTd.textContent = "";
+        }
+        tr.appendChild(timestampTd);
+
+        // Contacted Column
+        const checkTd = document.createElement("td");
+        if (data.checked) {
+          checkTd.textContent = "Checked";
+        } else {
+          const checkBtn = document.createElement("button");
+          checkBtn.textContent = "Check";
+          checkBtn.addEventListener("click", async () => {
+            try {
+              await updateDoc(doc(db, "applications", docSnapshot.id), { checked: true });
+              alert("Application marked as contacted.");
+            } catch (error) {
+              console.error("Error updating document:", error);
+              alert("Error marking as contacted. Please try again.");
+            }
+          });
+          checkTd.appendChild(checkBtn);
+        }
+        tr.appendChild(checkTd);
+
+        tbody.appendChild(tr);
+      });
+    }, (error) => {
+      console.error("Error loading applications: ", error);
+    });
+  </script>
+</body>
+</html>
