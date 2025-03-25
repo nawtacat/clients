@@ -15,9 +15,9 @@
 }
 
 :root {
-    --primary-blue: #307dbb;
-    --accent-coral: #ec9172;
-    --dark-blue: #1f5a87;
+    --primary-blue: #1155d4;
+    --accent-orange: #f47c2b;
+    --dark-blue: #0e47af;
     --light-blue: #9fc5e8;
 }
 
@@ -36,7 +36,7 @@ body {
     display: flex;
     justify-content: center;
     padding: 1.5rem;
-    background: #3d71ac;
+    background: var(--primary-blue);
 }
 
 .nav-links {
@@ -87,7 +87,7 @@ p {
 }
 
 .get-started-btn {
-    background-color: var(--accent-coral);
+    background-color: var(--accent-orange);
     color: white;
     padding: 12px 24px;
     border: none;
@@ -110,7 +110,6 @@ p {
 }
 
 .image-container img {
-    /* Control image size here */
     max-width: 90%;
     max-height: 500px;
     margin-top: 1.5rem;
@@ -167,6 +166,7 @@ p {
     text-align: left;
     font-weight: 400;
 }
+
 .benefits-section {
     background: white;
     padding: 50px 20px;
@@ -183,7 +183,7 @@ p {
     font-size: 1.6rem;
     font-weight: 400;
     color: var(--primary-blue);
-    border-bottom: 1px solid var(--accent-coral);
+    border-bottom: 1px solid var(--accent-orange);
     display: inline-block;
     padding-bottom: 5px;
     margin-bottom: 30px;
@@ -197,13 +197,12 @@ p {
 
 .benefit-card {
     background: white;
-    border: 1px solid var(--accent-coral);
+    border: 1px solid var(--accent-orange);
     border-radius: 20px;
     padding: 18px;
     text-align: left;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 
 .benefit-card h3 {
     font-size: 1.1rem;
@@ -230,7 +229,6 @@ p {
     }
 }
 
-/* Responsive Fix */
 @media (max-width: 998px) {
     .nav-links {
         gap: 1.5rem;
@@ -265,28 +263,27 @@ p {
         max-width: 80%;
     }
 
-    /* Responsive for Hero Section */
     .hero-section {
-        flex-direction: column; /* Stack on smaller screens */
+        flex-direction: column;
         align-items: center;
     }
 
     .content-wrapper,
     .image-container {
-        max-width: 100%; /* Take up full width */
+        max-width: 100%;
     }
 
     .content-wrapper {
-        text-align: center; /* Center text */
-        padding-left: 0; /* Remove left padding */
+        text-align: center;
+        padding-left: 0;
     }
 
     .image-container {
-        display: none; /* Hide the image container */
+        display: none;
     }
 }
 
-/* New Styles for the Boxes (Full Width, Spaced) */
+/* Boxes */
 .boxes-container {
     display: flex;
     width: 100%;
@@ -296,7 +293,7 @@ p {
 }
 
 .blue-box {
-    background-color: #307dbb;
+    background-color: var(--primary-blue);
     width: 50%;
     height: 100%;
     padding: 1rem;
@@ -308,7 +305,6 @@ p {
 }
 
 .blue-box img {
-    /* More specific sizing */
     width: auto;
     height: auto;
     max-width: 60%;
@@ -316,13 +312,12 @@ p {
 }
 
 .orange-box {
-    background-color: #ec9172;
+    background-color: var(--accent-orange);
     width: 50%;
     height: 100%;
     padding: 1rem;
     box-sizing: border-box;
     color: white;
-    /* Center the text */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -330,61 +325,58 @@ p {
 }
 
 .orange-box h2 {
-    /* Style the heading */
     font-size: 1.6rem;
     font-weight: 500;
     line-height: 1.2;
     margin: 0;
 }
 
-/* Minimalistic Application Form Styles (Updated) */
+/* Application Form */
 .application-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center horizontally */
+    align-items: center;
     justify-content: flex-start;
     padding: 2rem;
     min-height: calc(100vh - 80px);
-    background-color: #f0f0f0; /* Light gray background */
+    background-color: #f0f0f0;
 }
 
 .application-form {
-    width: 600px; /* Wider form */
-    max-width: 90%; /* Responsive width */
-    margin: 2rem auto; /* Center the form */
+    width: 600px;
+    max-width: 90%;
+    margin: 2rem auto;
 }
 
 .application-container h1 {
-    color: #333; /* Darker heading */
+    color: #333;
     margin-bottom: 0.5rem;
     margin-top: 5rem;
     font-family: 'Mardoto-Medium', sans-serif;
-    font-size: 2rem; /* Larger heading */
-    text-align: center; /* Center the heading */
+    font-size: 2rem;
+    text-align: center;
 }
 
 .application-container p {
-  margin-top: 0.5rem; /* reduce gap above the paragraph */
+    margin-top: 0.5rem;
 }
 
-
 .application-form .form-group {
-    margin-bottom: 2rem; /* Increased spacing between form groups */
+    margin-bottom: 2rem;
     width: 100%;
 }
 
 .radio-group {
-    margin-bottom: 1rem; /* Adds spacing between individual radio options */
+    margin-bottom: 1rem;
 }
-
 
 .application-form label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #333; /* Darker label color */
-    font-family: 'Mardoto-Light', sans-serif; /* Lighter font */
+    color: #333;
+    font-family: 'Mardoto-Light', sans-serif;
     font-size: 1rem;
-    text-align: left; /* Align labels left */
+    text-align: left;
 }
 
 .application-form input[type="text"],
@@ -393,7 +385,7 @@ p {
 .application-form textarea {
     width: calc(100% - 22px);
     padding: 10px;
-    border: 1px solid #ccc; /* Light gray border */
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-family: 'Mardoto-Light', sans-serif;
     font-size: 1rem;
@@ -401,15 +393,15 @@ p {
 }
 
 .application-form textarea {
-    resize: vertical; /* Allow vertical resizing */
+    resize: vertical;
 }
 
 .apply-btn {
-    background-color: #307dbb;
+    background-color: var(--primary-blue);
     color: #fff;
     padding: 12px 20px;
     border: none;
-    border-radius: 25px; /* Updated for a rounder look */
+    border-radius: 25px;
     cursor: pointer;
     font-size: 1rem;
     font-family: 'Mardoto-Light', sans-serif;
@@ -420,19 +412,16 @@ p {
 }
 
 .apply-btn:hover {
-    background-color: #1f5a87; /* Darker blue hover */
+    background-color: var(--dark-blue);
 }
 
-/* Footer Styles */
+/* Footer */
 .footer {
     background: #ffffff;
     padding: 3rem 1rem;
     border-top: 1px solid #e0e0e0;
 }
 
-/* Updated footer symmetry:
-   - The container is centered and the two footer sections are grouped with a gap.
-*/
 .footer-container {
     max-width: 700px;
     margin: 0 auto;
@@ -484,13 +473,13 @@ p {
         gap: 2rem;
         align-items: center;
     }
-    
+
     .footer-section {
         width: 100%;
         max-width: 300px;
         margin: 0 !important;
     }
-    
+
     .footer-heading,
     .footer-link {
         text-align: center;
