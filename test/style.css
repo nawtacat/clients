@@ -16,10 +16,11 @@
 
 :root {
     --primary-blue: #1155d4;
-    --accent-orange: #f47c2b;
+    --accent-orange: #f76c5e;
     --dark-blue: #0e47af;
     --light-blue: #9fc5e8;
 }
+
 
 body {
     margin: 0;
