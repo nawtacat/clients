@@ -30,10 +30,10 @@
       max-width: 700px;
       margin: 0 auto;
       padding: 20px;
+      text-align: center; /* helps center child elements like #results */
     }
 
     .header {
-      text-align: center;
       margin-bottom: 20px;
     }
 
@@ -64,6 +64,7 @@
 
     .question-block {
       margin-bottom: 40px;
+      text-align: left; /* so questions/options don’t get centered */
     }
 
     .question-block p {
@@ -147,45 +148,29 @@
       cursor: not-allowed;
     }
 
-    /* Results Container Styles */
-    .results-container {
-      background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
-      border: 3px solid var(--primary-blue);
-      border-radius: 15px;
-      padding: 2rem;
-      margin: 2rem 0;
-      box-shadow: 0 4px 15px rgba(17, 85, 212, 0.1);
-      text-align: center;
+    /* Results Styles */
+    #results {
+      margin: 1rem auto;
+      max-width: 500px;
     }
 
-    .results-container h2 {
+    .result-message {
       color: var(--primary-blue);
       font-size: 2rem;
-      margin-bottom: 1.5rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    .results-container h2:after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60%;
-      height: 3px;
-      background: var(--accent-coral);
+      margin-bottom: 1rem;
+      font-weight: bold;
     }
 
     .result-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 1.5rem;
-      margin: 2rem 0;
+      margin: 1.5rem 0;
+      text-align: center;
     }
 
     .stat-item {
-      background: rgba(255, 255, 255, 0.9);
+      background: #f9f9f9;
       padding: 1rem;
       border-radius: 10px;
       border: 2px solid var(--primary-blue);
@@ -239,13 +224,12 @@
       #submit-btn { order: 1; width: 100%; margin-bottom: 10px; }
       #prev-btn { order: 2; width: 100%; }
 
-      /* Mobile adjustments for results container */
-      .results-container {
-        padding: 1.5rem;
-        margin: 1rem;
-        box-shadow: 0 2px 8px rgba(17, 85, 212, 0.1);
+      /* Mobile adjustments for results */
+      #results {
+        width: 90%;
+        margin: 1rem auto;
       }
-      .results-container h2 {
+      .result-message {
         font-size: 1.5rem;
       }
       .result-stats {
@@ -275,8 +259,9 @@
           <button type="button" id="submit-btn" class="action-btn">Հաստատել պատասխան</button>
         </div>
       </form>
-      <div id="results"></div>
     </div>
+
+    <div id="results"></div>
   </div>
 
   <script>
@@ -288,6 +273,8 @@
       const quizForm = document.getElementById('quiz-form');
       const progressBar = document.getElementById('progress-bar');
       const stopwatchEl = document.getElementById('stopwatch');
+
+      // Replace with your CSV URL
       const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
 
       let questions = [];
@@ -304,6 +291,7 @@
         stopwatchEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
       }, 1000);
 
+      // Load CSV
       fetch(csvUrl)
         .then(response => response.text())
         .then(csv => {
@@ -318,7 +306,7 @@
 
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
-        lines.shift();
+        lines.shift(); // remove header line
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
           if (cells.length < 6) return null;
@@ -337,6 +325,7 @@
         const q = questions[idx];
         if (!q) return;
 
+        // If option C is actually "C)" it might indicate no real C or D answers
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -357,6 +346,7 @@
         `;
         quizDiv.appendChild(questionBlock);
 
+        // If user hasn't answered yet, allow selecting
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -370,6 +360,7 @@
             });
           });
         } else {
+          // If user has answered, show correct/incorrect states
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -381,6 +372,7 @@
                 li.classList.remove('selected');
                 li.classList.add(response.correct ? 'correct' : 'incorrect');
               }
+              // Also show the correct one if user was wrong
               if (!response.correct && input.value === q.correct) {
                 li.classList.add('correct');
               }
@@ -409,6 +401,7 @@
 
       submitBtn.addEventListener('click', () => {
         if (!questionSubmitted) {
+          // Submit the current question
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
             alert("Պատասխանի՛ր հարցը");
@@ -424,6 +417,7 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
+          // Highlight the correct answer if user was wrong
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -438,40 +432,49 @@
           questionSubmitted = true;
           updateProgress();
           updateButtonTexts();
+
         } else {
+          // Go to the next question or show results
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
           } else {
+            // End of quiz
             clearInterval(timerInterval);
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
-            
-            // Updated dashboard URL to directly point to pha.am/login
+
+            // Hide the quiz form so only results are shown
+            quizForm.style.display = 'none';
+
+            // Prepare final result
             const dashboardURL = "https://pha.am/login";
+            const percentageScore = Math.round((score / questions.length) * 100);
+            const resultMessage = percentageScore >= 75 
+              ? "Ապրես!" 
+              : "Կարող ես փորձել կրկին!";
 
             resultsDiv.innerHTML = `
-              <div class="results-container">
-                <h2>Շնորհավորում եմ 🎉</h2>
-                <div class="result-stats">
-                  <div class="stat-item">
-                    <span class="stat-label">Ճիշտ պատասխաններ</span>
-                    <span class="stat-value correct">${score}/${questions.length}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Ժամանակ</span>
-                    <span class="stat-value time">${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Հարցաթերթիկի բալ</span>
-                    <span class="stat-value percentage">${Math.round((score / questions.length) * 100)}%</span>
-                  </div>
+              <p class="result-message">${resultMessage}</p>
+              <div class="result-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Ճիշտ պատասխաններ</span>
+                  <span class="stat-value correct">${score}/${questions.length}</span>
                 </div>
-                <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշխբորդ</a>
+                <div class="stat-item">
+                  <span class="stat-label">Ժամանակ</span>
+                  <span class="stat-value time">
+                    ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
+                  </span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Հարցաթերթիկի բալ</span>
+                  <span class="stat-value percentage">${percentageScore}%</span>
+                </div>
               </div>
+              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշխբորդ</a>
             `;
-            document.querySelector('.button-container').style.display = 'none';
           }
         }
       });
@@ -486,4 +489,3 @@
   </script>
 </body>
 </html>
-
