@@ -433,27 +433,15 @@
             const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
             const username = pathSegments[0];
             const dashboardURL = "https://pha.am/login"; // Static login URL
-
-            resultsDiv.innerHTML = `
-              <div class="results-container">
-                <h2>Շնորհավորում եմ 🎉</h2>
-                <div class="result-stats">
-                  <div class="stat-item">
-                    <span class="stat-label">Ճիշտ պատասխաններ</span>
-                    <span class="stat-value correct">${score}/${questions.length}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Ժամանակ</span>
-                    <span class="stat-value time">${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-label">Հարցաթերթիկի բալ</span>
-                    <span class="stat-value percentage">${Math.round((score / questions.length) * 100)}%</span>
-                  </div>
-                </div>
-                <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշխբորդ</a>
-              </div>
-            `;
+resultsDiv.innerHTML = `
+  <div class="results-container">
+    <h2>Շնորհավորում եմ 🎉</h2>
+    <div class="result-stats">
+      <!-- ... keep existing stat items ... -->
+    </div>
+    <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Մուտքէջ</a>
+  </div>
+`;
             document.querySelector('.button-container').style.display = 'none';
           }
         }
