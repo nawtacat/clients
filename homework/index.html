@@ -227,18 +227,67 @@
       box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
 
-    @media (min-width: 768px) {
-      body { font-size: 24px; }
-      .question-block p { font-size: 1.4rem; }
-      #stopwatch { font-size: 1.6rem; }
-      .action-btn { font-size: 1.3rem; }
-    }
+@media (max-width: 768px) {
+  .results-container {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
 
-    @media (max-width: 767px) {
-      .button-container { flex-direction: column; }
-      #submit-btn { order: 1; width: 100%; margin-bottom: 10px; }
-      #prev-btn { order: 2; width: 100%; }
-    }
+  .results-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .result-stats {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .stat-item {
+    padding: 0.8rem;
+    margin: 0 10px;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+
+  .dashboard-btn {
+    width: fit-content;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    margin: 1rem auto 0;
+    display: block;
+  }
+
+  /* Ensure proper scaling of all elements */
+  .quiz-container {
+    padding: 10px;
+  }
+
+  .wrapper {
+    padding: 10px;
+  }
+}
+
+/* Add this to your base CSS */
+.results-container {
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+
+.dashboard-btn {
+  width: fit-content;
+  margin: 0 auto;
+  white-space: nowrap;
+}
+
   </style>
 </head>
 <body>
