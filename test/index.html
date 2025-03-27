@@ -54,6 +54,24 @@
         });
       });
 
+      // "Մասին" link scroll functionality (same as "Իմանալ ավելին")
+      document.getElementById("about-link").addEventListener("click", function (e) {
+        e.preventDefault();
+        window.scrollTo({
+          top: document.getElementById("second-section").offsetTop,
+          behavior: "smooth"
+        });
+      });
+
+      // "Կապ" link scroll functionality (scroll to footer)
+      document.getElementById("contact-link").addEventListener("click", function (e) {
+        e.preventDefault();
+        window.scrollTo({
+          top: document.querySelector("footer").offsetTop,
+          behavior: "smooth"
+        });
+      });
+
       // Register link scroll functionality
       document.getElementById("register-link").addEventListener("click", function (e) {
         e.preventDefault();
@@ -97,8 +115,8 @@
   <nav class="nav-bar">
     <div class="nav-links">
       <a href="#" id="register-link" class="nav-link">Գրանցվել</a>
-      <a href="#" class="nav-link">Մասին</a>
-      <a href="#" class="nav-link">Կապ</a>
+      <a href="#" id="about-link" class="nav-link">Մասին</a>
+      <a href="#" id="contact-link" class="nav-link">Կապ</a>
       <a href="#" id="loginButton" class="nav-link">Մուտք</a>
     </div>
   </nav>
