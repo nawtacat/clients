@@ -66,6 +66,7 @@
           <th>Phone</th>
           <th>Child Name</th>
           <th>Location</th>
+          <th>School</th>
           <th>Class</th>
           <th>Timestamp</th>
           <th>Contacted</th>
@@ -183,6 +184,13 @@
         locationTd.textContent = data.location || "";
         tr.appendChild(locationTd);
 
+        // School (new column)
+        const schoolTd = document.createElement("td");
+        schoolTd.textContent = data.school || "";
+        schoolTd.setAttribute("name", "school");
+        schoolTd.setAttribute("id", "school");
+        tr.appendChild(schoolTd);
+
         // Class
         const classTd = document.createElement("td");
         classTd.textContent = data.class || "";
@@ -225,3 +233,4 @@
   </script>
 </body>
 </html>
+
