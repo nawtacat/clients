@@ -36,7 +36,10 @@
             height: 100%;
             object-fit: contain;
             pointer-events: none;
+            /* Use multiple image-rendering properties for the best quality */
             image-rendering: crisp-edges;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: pixelated;
         }
 
         .resize-handle {
@@ -92,6 +95,16 @@
         let isResizing = false;
         const BASE_DPI = 300;
         const MIN_SIZE = 50;
+        // Global variables for drag/resize calculations
+        let offsetX = 0, offsetY = 0, startX = 0, startY = 0, startWidth = 0, startHeight = 0;
+
+        // Helper functions to get clientX/Y whether mouse or touch
+        function getClientX(e) {
+            return e.touches ? e.touches[0].clientX : e.clientX;
+        }
+        function getClientY(e) {
+            return e.touches ? e.touches[0].clientY : e.clientY;
+        }
 
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -144,8 +157,12 @@
                 container.appendChild(img);
                 container.appendChild(resizeHandle);
                 
+                // Add both mouse and touch event listeners for dragging
                 container.addEventListener('mousedown', startDragging);
+                container.addEventListener('touchstart', startDragging, {passive: false});
+                // Add both mouse and touch event listeners for resizing
                 resizeHandle.addEventListener('mousedown', startResizing);
+                resizeHandle.addEventListener('touchstart', startResizing, {passive: false});
                 
                 a4Container.appendChild(container);
             };
@@ -194,28 +211,35 @@
             });
         }
 
-        // Drag and resize functions
+        // Drag functions (supports both mouse and touch)
         function startDragging(e) {
             if (isResizing) return;
             selectedElement = e.currentTarget;
             const rect = selectedElement.getBoundingClientRect();
-            const containerRect = document.getElementById('a4-container').getBoundingClientRect();
             
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
+            // Prevent default for touch events to avoid scrolling
+            if (e.touches) e.preventDefault();
+            offsetX = getClientX(e) - rect.left;
+            offsetY = getClientY(e) - rect.top;
             
-            document.addEventListener('mousemove', dragElement);
-            document.addEventListener('mouseup', stopDragging);
+            if (e.type === 'touchstart') {
+                document.addEventListener('touchmove', dragElement, {passive: false});
+                document.addEventListener('touchend', stopDragging);
+            } else {
+                document.addEventListener('mousemove', dragElement);
+                document.addEventListener('mouseup', stopDragging);
+            }
         }
 
         function dragElement(e) {
             if (!selectedElement || isResizing) return;
+            if (e.touches) e.preventDefault();
             
             const container = document.getElementById('a4-container');
             const containerRect = container.getBoundingClientRect();
             
-            let newX = e.clientX - containerRect.left - offsetX;
-            let newY = e.clientY - containerRect.top - offsetY;
+            let newX = getClientX(e) - containerRect.left - offsetX;
+            let newY = getClientY(e) - containerRect.top - offsetY;
 
             newX = Math.max(0, Math.min(newX, container.offsetWidth - selectedElement.offsetWidth));
             newY = Math.max(0, Math.min(newY, container.offsetHeight - selectedElement.offsetHeight));
@@ -228,31 +252,39 @@
             selectedElement = null;
             document.removeEventListener('mousemove', dragElement);
             document.removeEventListener('mouseup', stopDragging);
+            document.removeEventListener('touchmove', dragElement);
+            document.removeEventListener('touchend', stopDragging);
         }
 
+        // Resize functions (supports both mouse and touch)
         function startResizing(e) {
             e.stopPropagation();
             isResizing = true;
             selectedElement = e.currentTarget.parentElement;
             const rect = selectedElement.getBoundingClientRect();
             
-            startX = e.clientX;
-            startY = e.clientY;
+            if (e.touches) e.preventDefault();
+            startX = getClientX(e);
+            startY = getClientY(e);
             startWidth = rect.width;
             startHeight = rect.height;
             
-            document.addEventListener('mousemove', resizeElement);
-            document.addEventListener('mouseup', stopResizing);
+            if (e.type === 'touchstart') {
+                document.addEventListener('touchmove', resizeElement, {passive: false});
+                document.addEventListener('touchend', stopResizing);
+            } else {
+                document.addEventListener('mousemove', resizeElement);
+                document.addEventListener('mouseup', stopResizing);
+            }
         }
 
         function resizeElement(e) {
             if (!isResizing || !selectedElement) return;
+            if (e.touches) e.preventDefault();
             
-            const container = document.getElementById('a4-container');
             const aspect = parseFloat(selectedElement.dataset.aspect);
-            
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
+            const deltaX = getClientX(e) - startX;
+            const deltaY = getClientY(e) - startY;
             
             let newWidth = startWidth + deltaX;
             let newHeight = startHeight + deltaY;
@@ -274,6 +306,8 @@
             selectedElement = null;
             document.removeEventListener('mousemove', resizeElement);
             document.removeEventListener('mouseup', stopResizing);
+            document.removeEventListener('touchmove', resizeElement);
+            document.removeEventListener('touchend', stopResizing);
         }
     </script>
 </body>
