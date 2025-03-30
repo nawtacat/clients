@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Professional Image Editor</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        #a4-container {
+            width: 8.27in;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 20px;
+            position: relative;
+            overflow: auto;
+            min-height: 11.69in;
+            max-height: 90vh;
+        }
+
+        .resizable {
+            position: absolute;
+            cursor: move;
+            transform-origin: top left;
+            box-sizing: border-box;
+        }
+
+        .resizable img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            image-rendering: crisp-edges;
+        }
+
+        .resize-handle {
+            position: absolute;
+            right: -8px;
+            bottom: -8px;
+            width: 16px;
+            height: 16px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            z-index: 2;
+        }
+
+        .hide-handles .resize-handle {
+            display: none !important;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px;
+            z-index: 100;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #extendPage {
+            background-color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <input type="file" id="imageUpload" accept="image/*">
+        <button id="extendPage" onclick="extendPage()">Extend Page</button>
+        <button onclick="saveAsPNG()">Save as PNG</button>
+    </div>
+    <div id="a4-container"></div>
+
+    <script>
+        let selectedElement = null;
+        let isResizing = false;
+        const BASE_DPI = 300;
+        const MIN_SIZE = 50;
+
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const container = document.createElement('div');
+                container.className = 'resizable';
+                
+                const img = new Image();
+                const a4Container = document.getElementById('a4-container');
+                
+                // Capture current viewport position
+                const containerRect = a4Container.getBoundingClientRect();
+                const scrollLeft = a4Container.scrollLeft;
+                const scrollTop = a4Container.scrollTop;
+                
+                // Calculate viewport center in container coordinates
+                const viewportCenterX = window.innerWidth / 2;
+                const viewportCenterY = window.innerHeight / 2;
+                const containerCenterX = viewportCenterX - containerRect.left + scrollLeft;
+                const containerCenterY = viewportCenterY - containerRect.top + scrollTop;
+
+                img.onload = function() {
+                    const aspect = img.naturalWidth / img.naturalHeight;
+                    container.dataset.aspect = aspect;
+                    const imgWidth = 200;
+                    const imgHeight = 200 / aspect;
+                    
+                    // Calculate position
+                    let posX = containerCenterX - (imgWidth/2);
+                    let posY = containerCenterY - (imgHeight/2);
+                    
+                    // Ensure stays within container bounds
+                    posX = Math.max(0, Math.min(posX, a4Container.scrollWidth - imgWidth));
+                    posY = Math.max(0, Math.min(posY, a4Container.scrollHeight - imgHeight));
+
+                    container.style.width = imgWidth + 'px';
+                    container.style.height = imgHeight + 'px';
+                    container.style.left = posX + 'px';
+                    container.style.top = posY + 'px';
+                };
+                img.src = event.target.result;
+                
+                const resizeHandle = document.createElement('div');
+                resizeHandle.className = 'resize-handle';
+                
+                container.appendChild(img);
+                container.appendChild(resizeHandle);
+                
+                container.addEventListener('mousedown', startDragging);
+                resizeHandle.addEventListener('mousedown', startResizing);
+                
+                a4Container.appendChild(container);
+            };
+            
+            reader.readAsDataURL(file);
+        });
+
+        // Modified extendPage function:
+        function extendPage() {
+            const container = document.getElementById('a4-container');
+            // Remove the max-height restriction to allow expansion
+            container.style.maxHeight = "none";
+            // Increase the container height by one A4 page height in pixels (11.69in * 96px/in)
+            container.style.height = (container.offsetHeight + 11.69 * 96) + "px";
+        }
+
+        function enforceBoundaries(element, newWidth, newHeight) {
+            const container = document.getElementById('a4-container');
+            const maxX = container.offsetWidth - element.offsetLeft;
+            const maxY = container.offsetHeight - element.offsetTop;
+            
+            return {
+                width: Math.max(MIN_SIZE, Math.min(newWidth, maxX)),
+                height: Math.max(MIN_SIZE, Math.min(newHeight, maxY))
+            };
+        }
+
+        async function saveAsPNG() {
+            const container = document.getElementById('a4-container');
+            container.classList.add('hide-handles');
+            
+            await html2canvas(container, {
+                scale: 3,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#FFFFFF',
+                allowTaint: true,
+                windowWidth: container.scrollWidth,
+                windowHeight: container.scrollHeight
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'document.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+                container.classList.remove('hide-handles');
+            });
+        }
+
+        // Drag and resize functions
+        function startDragging(e) {
+            if (isResizing) return;
+            selectedElement = e.currentTarget;
+            const rect = selectedElement.getBoundingClientRect();
+            const containerRect = document.getElementById('a4-container').getBoundingClientRect();
+            
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            
+            document.addEventListener('mousemove', dragElement);
+            document.addEventListener('mouseup', stopDragging);
+        }
+
+        function dragElement(e) {
+            if (!selectedElement || isResizing) return;
+            
+            const container = document.getElementById('a4-container');
+            const containerRect = container.getBoundingClientRect();
+            
+            let newX = e.clientX - containerRect.left - offsetX;
+            let newY = e.clientY - containerRect.top - offsetY;
+
+            newX = Math.max(0, Math.min(newX, container.offsetWidth - selectedElement.offsetWidth));
+            newY = Math.max(0, Math.min(newY, container.offsetHeight - selectedElement.offsetHeight));
+            
+            selectedElement.style.left = newX + 'px';
+            selectedElement.style.top = newY + 'px';
+        }
+
+        function stopDragging() {
+            selectedElement = null;
+            document.removeEventListener('mousemove', dragElement);
+            document.removeEventListener('mouseup', stopDragging);
+        }
+
+        function startResizing(e) {
+            e.stopPropagation();
+            isResizing = true;
+            selectedElement = e.currentTarget.parentElement;
+            const rect = selectedElement.getBoundingClientRect();
+            
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = rect.width;
+            startHeight = rect.height;
+            
+            document.addEventListener('mousemove', resizeElement);
+            document.addEventListener('mouseup', stopResizing);
+        }
+
+        function resizeElement(e) {
+            if (!isResizing || !selectedElement) return;
+            
+            const container = document.getElementById('a4-container');
+            const aspect = parseFloat(selectedElement.dataset.aspect);
+            
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            
+            let newWidth = startWidth + deltaX;
+            let newHeight = startHeight + deltaY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                newHeight = newWidth / aspect;
+            } else {
+                newWidth = newHeight * aspect;
+            }
+
+            const constrained = enforceBoundaries(selectedElement, newWidth, newHeight);
+            
+            selectedElement.style.width = constrained.width + 'px';
+            selectedElement.style.height = constrained.height + 'px';
+        }
+
+        function stopResizing() {
+            isResizing = false;
+            selectedElement = null;
+            document.removeEventListener('mousemove', resizeElement);
+            document.removeEventListener('mouseup', stopResizing);
+        }
+    </script>
+</body>
+</html>
