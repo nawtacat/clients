@@ -42,7 +42,7 @@
       overflow: auto;
     }
 
-    /* Calendar Table (desktop) */
+    /* Desktop Calendar Table Styling */
     table.calendar {
       width: 90%;
       max-width: 1200px;
@@ -66,8 +66,8 @@
       color: #fff;
       font-weight: bold;
     }
-    /* Day header abbreviations (first three letters) */
-    /* We'll generate these in JS, but here’s a default style */
+    /* Use abbreviated day names (first three letters) */
+    /* We'll generate these using JS, but style them here */
     table.calendar th {
       text-transform: uppercase;
     }
@@ -177,7 +177,7 @@
     <table class="calendar">
       <thead>
         <tr id="day-header">
-          <!-- Day abbreviations will be inserted here -->
+          <!-- Abbreviated day names will be inserted here -->
         </tr>
       </thead>
       <tbody id="calendar-body">
@@ -228,7 +228,7 @@
     // Abbreviated Armenian day names (first three letters)
     const dayAbbreviations = ["Կիր", "Երկ", "Երե", "Չոր", "Հին", "Ուր", "Շաբ"];
 
-    // Helper: format a Date as YYYY-MM-DD
+    // Helper: Format a Date as YYYY-MM-DD
     function formatDate(date) {
       const year = date.getFullYear();
       const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -236,13 +236,13 @@
       return `${year}-${month}-${day}`;
     }
 
-    // Helper: display month name & year in Armenian locale
+    // Helper: Display only the month name (in Armenian)
     function displayMonth(date) {
-      const options = { year: 'numeric', month: 'long' };
+      const options = { month: 'long' };
       return date.toLocaleDateString('hy', options);
     }
 
-    // Render day header with abbreviated names
+    // Render day header with abbreviated names.
     function renderDayHeader() {
       const headerRow = document.getElementById("day-header");
       headerRow.innerHTML = "";
@@ -278,7 +278,7 @@
             spanDay.textContent = dateCounter;
             td.appendChild(spanDay);
 
-            // Container for attendance data.
+            // Add a container for attendance data.
             const divAttendance = document.createElement("div");
             divAttendance.className = "attendance";
             td.appendChild(divAttendance);
@@ -293,7 +293,7 @@
         calendarBody.appendChild(tr);
       }
 
-      // Update the month display.
+      // Update the month display in the center.
       document.getElementById("current-month").textContent = displayMonth(currentDate);
     }
 
@@ -350,9 +350,9 @@
       }
     });
 
-    // Dashboard button: redirect to the dashboard page.
+    // Dashboard button: redirect to pha.am/login
     document.getElementById("dashboard-btn").addEventListener("click", () => {
-      window.location.href = "/dashboard/"; // Adjust URL as needed
+      window.location.href = "https://pha.am/login";
     });
 
     // On authentication, render day header, calendar, and load attendance.
