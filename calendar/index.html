@@ -5,88 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Հաճախության Ցանկ</title>
   <style>
-    /* Import Mardoto-Light from your local fonts folder */
+    /* Import Mardoto-Light font (assumed available locally) */
     @font-face {
-            font-family: 'Mardoto-Light';
-            src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
+      font-family: 'Mardoto-Light';
+      src: url('Mardoto-Light.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
     
-    /* Global Styles */
-    body {
+    html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
       font-family: 'Mardoto-Light', sans-serif;
       background-color: #f4f4f4;
       color: #333;
+      display: flex;
+      flex-direction: column;
     }
-    header {
-      background-color: #1155d4;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-    /* Month Navigation */
-    .month-nav {
+    
+    /* Calendar container fills most of the screen */
+    .calendar-container {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 20px 0;
+      overflow: auto;
+      padding: 10px;
     }
-    .month-nav button {
-      background-color: #eb783f;
-      border: none;
-      color: #fff;
-      padding: 12px 20px;
-      margin: 0 20px;
-      font-size: 1.1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    .month-nav button:hover {
-      background-color: #d06e38; /* slightly darker orange */
-    }
-    .month-nav span {
-      font-size: 1.3rem;
-      color: #1155d4;
-      font-weight: bold;
-    }
-    /* Calendar Container */
-    .calendar-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    
+    /* Calendar table styling */
     table.calendar {
       width: 100%;
+      max-width: 1200px;
       border-collapse: collapse;
       background-color: #fff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
+    
     table.calendar th,
     table.calendar td {
       border: 1px solid #ddd;
       text-align: center;
-      padding: 15px;
+      padding: 10px;
       min-width: 80px;
       vertical-align: top;
+      position: relative;
     }
+    
     table.calendar th {
       background-color: #1155d4;
       color: #fff;
       font-size: 1.1rem;
     }
-    table.calendar td {
-      position: relative;
-      font-size: 1rem;
-    }
+    
+    /* Date number shown in the top-left of each cell */
     table.calendar td .date-number {
       position: absolute;
       top: 8px;
@@ -94,54 +68,65 @@
       font-weight: bold;
       color: #1155d4;
     }
+    
+    /* Attendance code display styling */
     table.calendar td .attendance {
       margin-top: 30px;
       font-size: 1.3rem;
       font-weight: bold;
     }
-    /* Responsive adjustments for mobile */
+    
+    /* Navigation buttons fixed at the bottom */
+    .nav-buttons {
+      width: 100%;
+      background: #fff;
+      padding: 10px 0;
+      border-top: 2px solid #1155d4;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+    
+    .nav-buttons button {
+      background-color: #eb783f;
+      border: none;
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .nav-buttons button:hover {
+      background-color: #d06e38;
+    }
+    
+    .nav-buttons span {
+      font-size: 1.2rem;
+      color: #1155d4;
+      font-weight: bold;
+    }
+    
+    /* Responsive adjustments */
     @media (max-width: 768px) {
-      header h1 {
-        font-size: 1.8rem;
-      }
-      .month-nav button {
-        padding: 8px 16px;
-        margin: 0 10px;
-        font-size: 1rem;
-      }
-      .month-nav span {
-        font-size: 1.1rem;
-      }
       table.calendar th,
       table.calendar td {
-        padding: 10px;
+        padding: 8px;
         min-width: 50px;
         font-size: 0.9rem;
       }
-      body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+      .nav-buttons button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
       }
-      .calendar-container {
-        flex: 1;
+      .nav-buttons span {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>Հաճախության Ցանկ</h1>
-  </header>
-
-  <!-- Month Navigation -->
-  <div class="month-nav">
-    <button id="prev-month">Նախորդ ամիս</button>
-    <span id="current-month"></span>
-    <button id="next-month">Հաջորդ ամիս</button>
-  </div>
-
   <!-- Calendar Container -->
   <div class="calendar-container">
     <table class="calendar">
@@ -157,17 +142,24 @@
         </tr>
       </thead>
       <tbody id="calendar-body">
-        <!-- Calendar rows will be dynamically generated -->
+        <!-- Calendar rows will be generated dynamically -->
       </tbody>
     </table>
   </div>
-
-  <!-- Firebase SDKs -->
+  
+  <!-- Navigation Buttons (fixed at the bottom) -->
+  <div class="nav-buttons">
+    <button id="prev-month">Նախորդ ամիս</button>
+    <span id="current-month"></span>
+    <button id="next-month">Հաջորդ ամիս</button>
+  </div>
+  
+  <!-- Firebase SDKs: Auth & Firestore -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
+    
     // Firebase configuration (update if needed)
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
@@ -178,29 +170,30 @@
       appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
       measurementId: "G-CGVKXTXJLB"
     };
-
+    
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
-    // Helper: Format Date as YYYY-MM-DD
+    
+    // Global variable: currentDate holds the first day of the displayed month.
+    let currentDate = new Date();
+    currentDate.setDate(1);
+    
+    // Helper: format date as YYYY-MM-DD
     function formatDate(date) {
       const year = date.getFullYear();
       const month = ('0' + (date.getMonth() + 1)).slice(-2);
       const day = ('0' + date.getDate()).slice(-2);
       return `${year}-${month}-${day}`;
     }
-    // Helper: Return month name and year in Armenian locale
+    
+    // Helper: display the month name and year (in Armenian)
     function displayMonth(date) {
       const options = { year: 'numeric', month: 'long' };
       return date.toLocaleDateString('hy', options);
     }
-
-    // Global variable: currentDate holds the first day of the displayed month.
-    let currentDate = new Date();
-    currentDate.setDate(1);
-
-    // Render the calendar body for the current month.
+    
+    // Render the calendar body dynamically.
     function renderCalendar() {
       const calendarBody = document.getElementById("calendar-body");
       calendarBody.innerHTML = "";
@@ -209,8 +202,8 @@
       const firstDay = new Date(year, month, 1).getDay();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       let dateCounter = 1;
-
-      // Create 6 rows to cover all possible weeks.
+      
+      // Create 6 rows for the calendar.
       for (let row = 0; row < 6; row++) {
         const tr = document.createElement("tr");
         for (let col = 0; col < 7; col++) {
@@ -220,18 +213,18 @@
           } else if (dateCounter > daysInMonth) {
             td.textContent = "";
           } else {
-            // Create and append the date number.
+            // Add the day number.
             const spanDay = document.createElement("span");
             spanDay.className = "date-number";
             spanDay.textContent = dateCounter;
             td.appendChild(spanDay);
-
-            // Create a div for attendance data.
+            
+            // Add a container for attendance data.
             const divAttendance = document.createElement("div");
             divAttendance.className = "attendance";
             td.appendChild(divAttendance);
-
-            // Set a data attribute to help match Firestore records.
+            
+            // Set data attribute for matching Firestore records.
             const cellDate = new Date(year, month, dateCounter);
             td.setAttribute("data-date", formatDate(cellDate));
             dateCounter++;
@@ -240,39 +233,38 @@
         }
         calendarBody.appendChild(tr);
       }
+      
       // Update the month display in the navigation.
       document.getElementById("current-month").textContent = displayMonth(currentDate);
     }
-
-    // Load attendance records for the authenticated parent's email.
+    
+    // Load attendance records for the parent's email.
     async function loadAttendance(userEmail) {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       const startDate = formatDate(new Date(year, month, 1));
       const endDate = formatDate(new Date(year, month, daysInMonth));
-
+      
       const attendanceQuery = query(
         collection(db, "attendance"),
         where("studentEmail", "==", userEmail)
       );
-
+      
       try {
         const querySnapshot = await getDocs(attendanceQuery);
         querySnapshot.forEach(docSnap => {
           const data = docSnap.data();
           if (data.date && data.date >= startDate && data.date <= endDate) {
-            // Find the cell that matches the record's date.
             const cells = document.querySelectorAll("td[data-date]");
             cells.forEach(cell => {
               if (cell.getAttribute("data-date") === data.date) {
-                // Update attendance info.
                 const attDiv = cell.querySelector(".attendance");
                 attDiv.textContent = data.attendanceCode;
                 if (data.attendanceCode.toUpperCase().startsWith("P")) {
-                  cell.style.backgroundColor = "#c8e6c9"; // light green
+                  cell.style.backgroundColor = "#c8e6c9";
                 } else if (data.attendanceCode.toUpperCase().startsWith("A")) {
-                  cell.style.backgroundColor = "#ffcdd2"; // light red
+                  cell.style.backgroundColor = "#ffcdd2";
                 }
               }
             });
@@ -282,8 +274,8 @@
         console.error("Error loading attendance:", error);
       }
     }
-
-    // Month navigation button event handlers.
+    
+    // Set up month navigation buttons.
     document.getElementById("prev-month").addEventListener("click", () => {
       currentDate.setMonth(currentDate.getMonth() - 1);
       renderCalendar();
@@ -298,21 +290,18 @@
         loadAttendance(auth.currentUser.email.toLowerCase().trim());
       }
     });
-
-    // Wait for the user to be authenticated.
+    
+    // Wait for the user to be authenticated, then render calendar and load data.
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = "/login/"; // redirect if not logged in
+        window.location.href = "/login/";
         return;
       }
       const userEmail = user.email.toLowerCase().trim();
-      // Update header text with the user's email.
-      document.querySelector("header h1").textContent = "Հաճախության Ցանկ: " + userEmail;
       renderCalendar();
       loadAttendance(userEmail);
     });
   </script>
 </body>
 </html>
-
 
