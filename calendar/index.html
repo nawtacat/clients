@@ -25,7 +25,7 @@
       flex-direction: column;
     }
     
-    /* Calendar container fills most of the screen */
+    /* Calendar container takes full remaining height */
     .calendar-container {
       flex: 1;
       display: flex;
@@ -35,9 +35,9 @@
       padding: 10px;
     }
     
-    /* Calendar table styling */
+    /* Calendar table styling for desktop */
     table.calendar {
-      width: 100%;
+      width: 90%;
       max-width: 1200px;
       border-collapse: collapse;
       background-color: #fff;
@@ -48,31 +48,33 @@
     table.calendar td {
       border: 1px solid #ddd;
       text-align: center;
-      padding: 10px;
-      min-width: 80px;
+      padding: 20px;
+      min-width: 150px;
+      min-height: 150px;
       vertical-align: top;
       position: relative;
+      font-size: 1.2rem;
     }
     
     table.calendar th {
       background-color: #1155d4;
       color: #fff;
-      font-size: 1.1rem;
     }
     
     /* Date number shown in the top-left of each cell */
     table.calendar td .date-number {
       position: absolute;
-      top: 8px;
-      left: 8px;
+      top: 10px;
+      left: 10px;
       font-weight: bold;
       color: #1155d4;
+      font-size: 1.4rem;
     }
     
     /* Attendance code display styling */
     table.calendar td .attendance {
-      margin-top: 30px;
-      font-size: 1.3rem;
+      margin-top: 40px;
+      font-size: 1.6rem;
       font-weight: bold;
     }
     
@@ -91,8 +93,8 @@
       background-color: #eb783f;
       border: none;
       color: #fff;
-      padding: 12px 20px;
-      font-size: 1rem;
+      padding: 16px 24px;
+      font-size: 1.2rem;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
@@ -103,25 +105,36 @@
     }
     
     .nav-buttons span {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       color: #1155d4;
       font-weight: bold;
     }
     
-    /* Responsive adjustments */
+    /* Mobile adjustments: for smaller screens, use full width and slightly smaller cells */
     @media (max-width: 768px) {
+      table.calendar {
+        width: 100%;
+      }
       table.calendar th,
       table.calendar td {
-        padding: 8px;
-        min-width: 50px;
-        font-size: 0.9rem;
+        padding: 10px;
+        min-width: 70px;
+        min-height: 70px;
+        font-size: 1rem;
+      }
+      table.calendar td .date-number {
+        font-size: 1.2rem;
+      }
+      table.calendar td .attendance {
+        margin-top: 20px;
+        font-size: 1.2rem;
       }
       .nav-buttons button {
-        padding: 8px 16px;
-        font-size: 0.9rem;
+        padding: 10px 16px;
+        font-size: 1rem;
       }
       .nav-buttons span {
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -147,7 +160,7 @@
     </table>
   </div>
   
-  <!-- Navigation Buttons (fixed at the bottom) -->
+  <!-- Navigation Buttons fixed at the bottom -->
   <div class="nav-buttons">
     <button id="prev-month">Նախորդ ամիս</button>
     <span id="current-month"></span>
@@ -160,7 +173,7 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     
-    // Firebase configuration (update if needed)
+    // Firebase configuration (adjust if needed)
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
       authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -179,7 +192,7 @@
     let currentDate = new Date();
     currentDate.setDate(1);
     
-    // Helper: format date as YYYY-MM-DD
+    // Helper: Format a Date as YYYY-MM-DD
     function formatDate(date) {
       const year = date.getFullYear();
       const month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -187,7 +200,7 @@
       return `${year}-${month}-${day}`;
     }
     
-    // Helper: display the month name and year (in Armenian)
+    // Helper: Return the month name and year (in Armenian locale)
     function displayMonth(date) {
       const options = { year: 'numeric', month: 'long' };
       return date.toLocaleDateString('hy', options);
@@ -238,7 +251,7 @@
       document.getElementById("current-month").textContent = displayMonth(currentDate);
     }
     
-    // Load attendance records for the parent's email.
+    // Load attendance records for the authenticated parent's email.
     async function loadAttendance(userEmail) {
       const year = currentDate.getFullYear();
       const month = currentDate.getMonth();
@@ -275,7 +288,7 @@
       }
     }
     
-    // Set up month navigation buttons.
+    // Month navigation button event handlers.
     document.getElementById("prev-month").addEventListener("click", () => {
       currentDate.setMonth(currentDate.getMonth() - 1);
       renderCalendar();
@@ -291,7 +304,7 @@
       }
     });
     
-    // Wait for the user to be authenticated, then render calendar and load data.
+    // Wait for the user to be authenticated, then render calendar and load attendance.
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = "/login/";
