@@ -19,7 +19,7 @@
             /* Leave room for the sidebar */
             padding-left: 220px;
         }
-        /* Sidebar styling similar to the other pages */
+        /* Sidebar */
         .nav-links {
           position: fixed;
           left: 0;
@@ -70,15 +70,15 @@
             cursor: pointer;
         }
         #extendPage { background-color: #2196F3; }
+        /* Fixed A4 container dimensions */
         #a4-container {
             width: 8.27in;
+            height: 11.69in;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             margin: 20px auto;
             position: relative;
-            overflow: auto;
-            min-height: 11.69in;
-            max-height: 90vh;
+            overflow: hidden;
         }
         .resizable {
             position: absolute;
@@ -91,6 +91,7 @@
             height: 100%;
             object-fit: contain;
             pointer-events: none;
+            /* Crisp image rendering */
             image-rendering: crisp-edges;
             image-rendering: -moz-crisp-edges;
             image-rendering: pixelated;
@@ -153,6 +154,7 @@
         let offsetX = 0, offsetY = 0, startX = 0, startY = 0, startWidth = 0, startHeight = 0;
         function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
         function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+        
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -162,19 +164,16 @@
                 container.className = 'resizable';
                 const img = new Image();
                 const a4Container = document.getElementById('a4-container');
-                const containerRect = a4Container.getBoundingClientRect();
-                const scrollLeft = a4Container.scrollLeft, scrollTop = a4Container.scrollTop;
-                const viewportCenterX = window.innerWidth / 2, viewportCenterY = window.innerHeight / 2;
-                const containerCenterX = viewportCenterX - containerRect.left + scrollLeft;
-                const containerCenterY = viewportCenterY - containerRect.top + scrollTop;
+                // Use container dimensions to center the image
+                const containerWidth = a4Container.clientWidth;
+                const containerHeight = a4Container.clientHeight;
                 img.onload = function() {
                     const aspect = img.naturalWidth / img.naturalHeight;
                     container.dataset.aspect = aspect;
-                    const imgWidth = 200, imgHeight = 200 / aspect;
-                    let posX = containerCenterX - (imgWidth/2);
-                    let posY = containerCenterY - (imgHeight/2);
-                    posX = Math.max(0, Math.min(posX, a4Container.scrollWidth - imgWidth));
-                    posY = Math.max(0, Math.min(posY, a4Container.scrollHeight - imgHeight));
+                    const imgWidth = 200;
+                    const imgHeight = 200 / aspect;
+                    const posX = (containerWidth - imgWidth) / 2;
+                    const posY = (containerHeight - imgHeight) / 2;
                     container.style.width = imgWidth + 'px';
                     container.style.height = imgHeight + 'px';
                     container.style.left = posX + 'px';
@@ -193,11 +192,13 @@
             };
             reader.readAsDataURL(file);
         });
+        
         function extendPage() {
             const container = document.getElementById('a4-container');
-            container.style.maxHeight = "none";
+            // Increase the container's height by one A4 page (11.69in * 96px/in)
             container.style.height = (container.offsetHeight + 11.69 * 96) + "px";
         }
+        
         function enforceBoundaries(element, newWidth, newHeight) {
             const container = document.getElementById('a4-container');
             const maxX = container.offsetWidth - element.offsetLeft;
@@ -207,17 +208,16 @@
                 height: Math.max(MIN_SIZE, Math.min(newHeight, maxY))
             };
         }
+        
         async function saveAsPNG() {
             const container = document.getElementById('a4-container');
             container.classList.add('hide-handles');
             await html2canvas(container, {
-                scale: 3,
+                scale: 1, // use a lower scale to reduce file size
                 useCORS: true,
-                logging: false,
                 backgroundColor: '#FFFFFF',
-                allowTaint: true,
-                windowWidth: container.scrollWidth,
-                windowHeight: container.scrollHeight
+                width: container.clientWidth,
+                height: container.clientHeight
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'document.png';
@@ -226,6 +226,7 @@
                 container.classList.remove('hide-handles');
             });
         }
+        
         function startDragging(e) {
             if (isResizing) return;
             selectedElement = e.currentTarget;
@@ -241,6 +242,7 @@
                 document.addEventListener('mouseup', stopDragging);
             }
         }
+        
         function dragElement(e) {
             if (!selectedElement || isResizing) return;
             if (e.touches) e.preventDefault();
@@ -253,6 +255,7 @@
             selectedElement.style.left = newX + 'px';
             selectedElement.style.top = newY + 'px';
         }
+        
         function stopDragging() {
             selectedElement = null;
             document.removeEventListener('mousemove', dragElement);
@@ -260,6 +263,7 @@
             document.removeEventListener('touchmove', dragElement);
             document.removeEventListener('touchend', stopDragging);
         }
+        
         function startResizing(e) {
             e.stopPropagation();
             isResizing = true;
@@ -278,6 +282,7 @@
                 document.addEventListener('mouseup', stopResizing);
             }
         }
+        
         function resizeElement(e) {
             if (!isResizing || !selectedElement) return;
             if (e.touches) e.preventDefault();
@@ -295,6 +300,7 @@
             selectedElement.style.width = constrained.width + 'px';
             selectedElement.style.height = constrained.height + 'px';
         }
+        
         function stopResizing() {
             isResizing = false;
             selectedElement = null;
