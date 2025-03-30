@@ -32,7 +32,7 @@
       flex-direction: column;
     }
 
-    /* Calendar container fills available space */
+    /* Calendar container fills available space on desktop; on mobile, it stretches from top until nav buttons */
     .calendar-container {
       flex: 1;
       display: flex;
@@ -42,7 +42,7 @@
       overflow: auto;
     }
 
-    /* Desktop: spacious calendar table */
+    /* Desktop Calendar Table Styling */
     table.calendar {
       width: 90%;
       max-width: 1200px;
@@ -66,7 +66,7 @@
       color: #fff;
       font-weight: bold;
     }
-    /* Date number in top-left */
+    /* Date number in the top-left of each cell */
     table.calendar td .date-number {
       position: absolute;
       top: 10px;
@@ -111,11 +111,19 @@
       font-weight: bold;
     }
 
-    /* Mobile adjustments: squeeze columns to fit the screen */
+    /* Mobile adjustments: compress columns and have calendar fill viewport above nav buttons */
     @media (max-width: 768px) {
+      /* Let the container fill the space from top until nav buttons */
+      .calendar-container {
+        height: calc(100vh - 60px); /* assuming nav buttons take ~60px */
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 0 5px;
+      }
       table.calendar {
         width: 100%;
-        table-layout: fixed; /* Equal column widths */
+        table-layout: fixed; /* equal column widths */
+        height: 100%;
       }
       table.calendar th,
       table.calendar td {
@@ -190,7 +198,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Global: currentDate holds the first day of the displayed month.
+    // Global variable: currentDate holds the first day of the displayed month.
     let currentDate = new Date();
     currentDate.setDate(1);
 
@@ -228,13 +236,13 @@
           } else if (dateCounter > daysInMonth) {
             td.textContent = "";
           } else {
-            // Create and append the date number.
+            // Add the day number.
             const spanDay = document.createElement("span");
             spanDay.className = "date-number";
             spanDay.textContent = dateCounter;
             td.appendChild(spanDay);
             
-            // Create a container for attendance data.
+            // Add a container for attendance data.
             const divAttendance = document.createElement("div");
             divAttendance.className = "attendance";
             td.appendChild(divAttendance);
@@ -306,7 +314,7 @@
       }
     });
 
-    // On authentication, render calendar and load attendance.
+    // On authentication, render the calendar and load attendance.
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = "/login/";
