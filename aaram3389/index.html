@@ -3,18 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="icon" type="image/jpg" href="https://pha.am/rounded_favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="stylesheet" href="/thestyle.css">
+    <title>Անձնական էջ</title>
+    <style>
+        /* Use only Mardoto-Light everywhere */
+        @font-face {
+            font-family: 'Mardoto-Light';
+            src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        /* Load Mardoto-Medium for headlines */
+        @font-face {
+            font-family: 'Mardoto-Medium';
+            src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --primary-blue: #1155d4;      /* Updated primary blue */
+            --accent-orange: #eb783f;       /* Updated accent orange */
+            --dark-blue: #1f5a87;
+            --light-blue: #9fc5e8;
+            --mobile-padding: 1.5rem;
+        }
+
+        /* Optional: Set default base font size */
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Mardoto-Light', sans-serif;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 800px;
+            padding: 2rem var(--mobile-padding);
+            box-sizing: border-box;
+            margin-top: 4.5rem; /* Extra spacing on Desktop */
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-links {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        /* Each link as a flexible row with text on the left and a large icon on the right */
+        .dashboard-link {
+            background: white;
+            padding: 1.5rem;  /* Increased padding */
+            border-radius: 17px; /* Rounder buttons */
+            text-decoration: none;
+            color: var(--primary-blue);
+            border: 1px solid var(--light-blue);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .dashboard-link.student-portal .link-description {
+            color: white;
+        }
+
+        /* General hover effect for non-student links */
+        .dashboard-link:hover {
+            border-color: var(--dark-blue);
+            color: var(--dark-blue);
+        }
+
+        /* Text stacked: headline on top, description beneath */
+        .text-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .link-title {
+            font-family: 'Mardoto-Medium', sans-serif; /* Headlines in Mardoto-Medium */
+            font-size: 1.1rem;
+            margin: 0 0 0.4rem 0;
+        }
+
+        .link-description {
+            font-family: 'Mardoto-Light', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Slightly smaller large icon on the right */
+        .link-icon {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            margin-left: 1rem;
+        }
+
+        /* Student portal (test link) styling: text remains white always and darkens on hover */
+        .dashboard-link.student-portal {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: white;
+        }
+
+        .dashboard-link.student-portal:hover {
+            background-color: #d67b60; /* Darkened coral on hover */
+            border-color: #d67b60;
+            color: white;
+        }
+
+        /* Logout link style */
+        .logout-link {
+            font-family: 'Mardoto-Light', sans-serif;
+            font-size: 0.9rem;
+            color: #dc3545;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            margin: 1.5rem auto 0;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Desktop-only adjustments */
+        @media (min-width: 768px) {
+            html {
+                font-size: 18px;
+            }
+            .dashboard-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .student-portal {
+                grid-column: span 2;
+            }
+        }
+    </style>
+
+    <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-iconB.png">
     <link rel="manifest" href="/manifest.json">
 
-    <!-- Authentication -->
+    <!-- Firebase Authentication and Dashboard Protection -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
             authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -33,17 +194,20 @@
                 window.location.href = "/login/"; // Redirect if not logged in
                 return;
             }
-
-            const userEmail = user.email.toLowerCase();
-            const userName = userEmail.split("@")[0]; // Extracts username from 'username@pha.am'
-
-            // Get the current page path (e.g., '/info/' or '/aramasatryan290/')
-            const currentPath = window.location.pathname.replace(/\//g, "").toLowerCase();
-
-            if (userName !== currentPath) {
-                // If logged-in user tries to access another user's page, redirect
-                window.location.href = "/login/";
+            const email = user.email.toLowerCase().trim();
+            const username = email.split('@')[0];
+            // Get the current URL path (e.g., "aramasatryan290" for pha.am/aramasatryan290)
+            let currentPath = window.location.pathname.replace(/^\/+|\/+$/g, '');
+            // If the current path does not match the authenticated username, redirect.
+            if (currentPath !== username) {
+                window.location.href = `/${username}/`;
+                return;
             }
+            // Optionally populate profile info
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById("profile-name").textContent = user.displayName || username;
+                document.getElementById("profile-email").textContent = user.email;
+            });
         });
 
         window.logout = async () => {
@@ -57,63 +221,73 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <img src="https://yt3.ggpht.com/_E7rfQLqO3yvWXrLXnS-3rN_BScG9RiZJQuv2rON7vPDZTKkuxkCQ_oa0Kv8R2D2SzSMTmr7mA=s176-c-k-c0x00ffffff-no-rj-mo" alt="PhA Logo" class="profile-image">
-        
-        <div class="id-container">
-            <h2>511639</h2>
-            <img src="https://pha.am/cloud.png" alt="Install App" class="install-icon" id="installIcon">
+    <div class="dashboard">
+        <section class="profile-section">
+            <img src="https://img.freepik.com/free-photo/smiling-little-boy-face-portrait-close-up_53876-153276.jpg" 
+                 alt="Student Profile" 
+                 class="profile-image">
+            <div class="profile-info">
+                <p id="profile-name" style="color: var(--primary-blue); margin: 0 0 0.3rem 0; font-family: 'Mardoto-Medium', sans-serif; font-size: 1.28rem;">PEDRO</p>
+                <p id="profile-email" style="color: var(--accent-orange); margin: 0;">david.baghdasaryan@pha.am</p>
+            </div>
+             </section>
+
+        <div class="dashboard-links">
+            <!-- 1. Homework Portal (Student Portal / Test Link) -->
+            <a href="https://pha.am/homework/01" target="_blank" class="dashboard-link student-portal">
+                <div class="text-content">
+                    <p class="link-title">Ինքնուրույն դաս</p>
+                    <p class="link-description">Կատարել ինքնուրույն դասը</p>
+                </div>
+                <img src="https://pha.am/assignment.png" alt="Assignment Icon" class="link-icon">
+            </a>
+
+            <!-- 2. Join Class -->
+            <a href="https://pha.am/meeting4/" target="_blank" class="dashboard-link">
+                <div class="text-content">
+                    <p class="link-title">Միանալ դասին</p>
+                    <p class="link-description">Մուտք դեպի Zoom</p>
+                </div>
+                <img src="https://pha.am/online-meeting.png" alt="Online Meeting Icon" class="link-icon">
+            </a>
+
+            <!-- 3. Attendance -->
+            <a href="https://pha.am/calendar/" target="_blank" class="dashboard-link">
+                <div class="text-content">
+                    <p class="link-title">Հաճախություն</p>
+                    <p class="link-description">Ստուգել հաճախությունը</p>
+                </div>
+                <img src="https://pha.am/attendance.png" alt="Attendance Icon" class="link-icon">
+            </a>
+
+            <!-- 4. Subscription -->
+            <a href="#" class="dashboard-link" onclick="checkSubscription()">
+                <div class="text-content">
+                    <p class="link-title">Բաժանորդագրություն</p>
+                    <p class="link-description">Ստուգել կարգավիճակը</p>
+                </div>
+                <img src="https://pha.am/subscription-model.png" alt="Subscription Icon" class="link-icon">
+            </a>
+
+            <!-- 5. Community -->
+            <a href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08mWDP2P%2BFcabN3fX" target="_blank" class="dashboard-link">
+                <div class="text-content">
+                    <p class="link-title">Համայնք</p>
+                    <p class="link-description">Միանալ մեր համայնքին</p>
+                </div>
+                <img src="https://pha.am/communities.png" alt="Community Icon" class="link-icon">
+            </a>
         </div>
 
-        <p class="description">YAOOOOO VLAD</p>
-        
-        <a class="buttonO" href="https://pha.am/homework/">Թեստային աշխատանք</a>
-        <a class="button" href="https://meet.google.com/uko-nxgb-nuf">Միանալ դասին</a>
-        <a class="button" href="https://calendar.google.com/calendar/embed?src=441cbb27cfab02a3190e10174dcfeab17f03d8a67da61df498b57918a56f0270%40group.calendar.google.com&ctz=Asia%2FYerevan">Հաճախություն</a>
-        <a class="button" href="#" onclick="checkSubscription()">Բաժանորդագրություն</a>
-        <a class="button" href="https://invite.viber.com/?g2=AQAYUchWgqzljlQ7yDrGFe13X2ZDWJdjYJJtUvzMw9UWb08m7dWDP2P%2BFcabN3fX">Համայնք</a>
-        <button class="button" onclick="logout()" style="background: #dc3545;">Դուրս գալ</button>
+        <!-- Logout Link -->
+        <a href="#" class="logout-link" onclick="logout()">Դուրս գալ</a>
     </div>
 
     <script>
-        // Installation prompt script
-        let deferredPrompt;
-
-        window.addEventListener("beforeinstallprompt", (event) => {
-            event.preventDefault();
-            deferredPrompt = event;
-            document.getElementById("installIcon").style.display = "inline";
-        });
-
-        document.getElementById("installIcon").addEventListener("click", () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === "accepted") {
-                        console.log("User installed the app");
-                    }
-                    deferredPrompt = null;
-                });
-            } else if (isIos() && !isInStandaloneMode()) {
-                alert("To install, tap the Share button and then 'Add to Home Screen'.");
-            }
-        });
-
-        function isIos() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function isInStandaloneMode() {
-            return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
-        }
-
-        if (isIos() && !isInStandaloneMode()) {
-            document.getElementById("installIcon").style.display = "inline";
-        }
-
         function checkSubscription() {
-            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչև 01.03.2025');
+            alert('Ձեր բաժանորդագրությունը ԱԿՏԻՎ է մինչեւ 01.03.2025');
         }
     </script>
+    
 </body>
 </html>
