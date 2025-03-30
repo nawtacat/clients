@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Attendance Calendar</title>
+  <style>
+    body {
+      font-family: 'Mardoto-Light', sans-serif;
+      margin: 20px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+    #calendar-title {
+      margin-bottom: 20px;
+      font-family: 'Mardoto-Medium', sans-serif;
+      font-size: 1.5rem;
+      color: #1155d4;
+    }
+    #calendar {
+      margin: 0 auto;
+      max-width: 600px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 8px;
+      min-width: 40px;
+    }
+    td {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h3 id="calendar-title">Attendance Calendar</h3>
+  <div id="calendar"></div>
+
+  <!-- Firebase SDKs (Auth and Firestore) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Firebase configuration (update as needed)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Format Date as YYYY-MM-DD
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      return `${year}-${month}-${day}`;
+    }
+
+    // Display month header (e.g., "March 2025")
+    function displayMonth(date) {
+      const options = { year: 'numeric', month: 'long' };
+      return date.toLocaleDateString(undefined, options);
+    }
+
+    // Set currentDate to the first day of the current month
+    const currentDate = new Date();
+    currentDate.setDate(1);
+
+    // Generate a simple, read-only calendar for the current month
+    function generateCalendar() {
+      const calendarDiv = document.getElementById("calendar");
+      calendarDiv.innerHTML = "";
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      // Display month header above the calendar
+      const header = document.createElement("h4");
+      header.textContent = displayMonth(currentDate);
+      calendarDiv.appendChild(header);
+
+      const table = document.createElement("table");
+      const headerRow = document.createElement("tr");
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      daysOfWeek.forEach(day => {
+        const th = document.createElement("th");
+        th.textContent = day;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+
+      let date = 1;
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j < 7; j++) {
+          const cell = document.createElement("td");
+          if (i === 0 && j < firstDay) {
+            cell.textContent = "";
+          } else if (date > daysInMonth) {
+            cell.textContent = "";
+          } else {
+            cell.textContent = date;
+            const cellDate = new Date(year, month, date);
+            cell.setAttribute("data-date", formatDate(cellDate));
+            date++;
+          }
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+      calendarDiv.appendChild(table);
+    }
+
+    // Load attendance for the authenticated parent's email
+    async function loadAttendance(userEmail) {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const startDate = formatDate(new Date(year, month, 1));
+      const endDate = formatDate(new Date(year, month, daysInMonth));
+
+      const attendanceQuery = query(
+        collection(db, "attendance"),
+        where("studentEmail", "==", userEmail)
+      );
+
+      try {
+        const querySnapshot = await getDocs(attendanceQuery);
+        querySnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data.date && data.date >= startDate && data.date <= endDate) {
+            const cells = document.querySelectorAll("[data-date]");
+            cells.forEach(cell => {
+              if (cell.getAttribute("data-date") === data.date) {
+                cell.textContent = cell.textContent.split(" - ")[0] + " - " + data.attendanceCode;
+                if (data.attendanceCode.toUpperCase().startsWith("P")) {
+                  cell.style.backgroundColor = "#c8e6c9";
+                } else if (data.attendanceCode.toUpperCase().startsWith("A")) {
+                  cell.style.backgroundColor = "#ffcdd2";
+                }
+              }
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error loading attendance:", error);
+      }
+    }
+
+    // Wait for the parent user to be authenticated, then load calendar data
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "/login/";
+        return;
+      }
+      const userEmail = user.email.toLowerCase().trim();
+      document.getElementById("calendar-title").textContent = "Attendance Calendar for " + userEmail;
+      generateCalendar();
+      loadAttendance(userEmail);
+    });
+  </script>
+</body>
+</html>
