@@ -1,47 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <title>Professional Image Editor</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        body {
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            margin: 0;
+        @font-face {
+          font-family: 'Mardoto-Light';
+          src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
+          font-weight: 300;
+          font-style: normal;
+          font-display: swap;
         }
-
+        body {
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: 'Mardoto-Light', sans-serif;
+            /* Leave room for the sidebar */
+            padding-left: 220px;
+        }
+        /* Sidebar styling similar to the other pages */
+        .nav-links {
+          position: fixed;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 200px;
+          background: #f5f5f5;
+          padding: 2rem 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .nav-links a {
+          text-decoration: none;
+          font-size: 1rem;
+          color: #000;
+          padding: 0.8rem 1.2rem;
+          border: 1px solid #000;
+          border-radius: 8px;
+          transition: all 0.3s;
+        }
+        .nav-links a.active {
+          background: #000;
+          color: white;
+        }
+        .nav-links a:hover {
+          background: #000;
+          color: white;
+        }
+        .logout-link {
+          margin-top: auto;
+          font-size: 0.9rem;
+          color: #dc3545;
+          text-decoration: none;
+        }
+        /* Main Content */
+        .controls {
+            margin: 20px auto;
+            text-align: center;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #extendPage { background-color: #2196F3; }
         #a4-container {
             width: 8.27in;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin: 20px;
+            margin: 20px auto;
             position: relative;
             overflow: auto;
             min-height: 11.69in;
             max-height: 90vh;
         }
-
         .resizable {
             position: absolute;
             cursor: move;
             transform-origin: top left;
             box-sizing: border-box;
         }
-
         .resizable img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             pointer-events: none;
-            /* Use multiple image-rendering properties for the best quality */
             image-rendering: crisp-edges;
             image-rendering: -moz-crisp-edges;
             image-rendering: pixelated;
         }
-
         .resize-handle {
             position: absolute;
             right: -8px;
@@ -53,147 +106,110 @@
             cursor: nwse-resize;
             z-index: 2;
         }
-
-        .hide-handles .resize-handle {
-            display: none !important;
-        }
-
-        .controls {
-            margin-bottom: 20px;
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 10px;
-            z-index: 100;
-        }
-
-        button {
-            padding: 8px 16px;
-            margin: 0 5px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        #extendPage {
-            background-color: #2196F3;
-        }
+        .hide-handles .resize-handle { display: none !important; }
     </style>
 </head>
 <body>
+    <!-- Navigation Sidebar -->
+    <nav class="nav-links">
+      <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
+      <a href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
+      <a href="https://pha.am/editor" class="active">Դասի խմբագրիչ</a>
+      <a href="#" class="logout-link" onclick="logout()">Դուրս գալ</a>
+    </nav>
+    
     <div class="controls">
         <input type="file" id="imageUpload" accept="image/*">
         <button id="extendPage" onclick="extendPage()">Extend Page</button>
         <button onclick="saveAsPNG()">Save as PNG</button>
     </div>
     <div id="a4-container"></div>
-
+    
+    <!-- Firebase Authentication (for logout functionality) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        const firebaseConfig = {
+          apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+          authDomain: "physmathacademy-722b3.firebaseapp.com",
+          projectId: "physmathacademy-722b3",
+          storageBucket: "physmathacademy-722b3.appspot.com",
+          messagingSenderId: "1093649922622",
+          appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+          measurementId: "G-CGVKXTXJLB"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "/login/"; });
+        window.logout = async () => {
+          try { await signOut(auth); window.location.href = "/login/"; }
+          catch (error) { console.error("Logout error:", error); }
+        };
+    </script>
     <script>
         let selectedElement = null;
         let isResizing = false;
-        const BASE_DPI = 300;
         const MIN_SIZE = 50;
-        // Global variables for drag/resize calculations
         let offsetX = 0, offsetY = 0, startX = 0, startY = 0, startWidth = 0, startHeight = 0;
-
-        // Helper functions to get clientX/Y whether mouse or touch
-        function getClientX(e) {
-            return e.touches ? e.touches[0].clientX : e.clientX;
-        }
-        function getClientY(e) {
-            return e.touches ? e.touches[0].clientY : e.clientY;
-        }
-
+        function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
+        function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            
             reader.onload = function(event) {
                 const container = document.createElement('div');
                 container.className = 'resizable';
-                
                 const img = new Image();
                 const a4Container = document.getElementById('a4-container');
-                
-                // Capture current viewport position
                 const containerRect = a4Container.getBoundingClientRect();
-                const scrollLeft = a4Container.scrollLeft;
-                const scrollTop = a4Container.scrollTop;
-                
-                // Calculate viewport center in container coordinates
-                const viewportCenterX = window.innerWidth / 2;
-                const viewportCenterY = window.innerHeight / 2;
+                const scrollLeft = a4Container.scrollLeft, scrollTop = a4Container.scrollTop;
+                const viewportCenterX = window.innerWidth / 2, viewportCenterY = window.innerHeight / 2;
                 const containerCenterX = viewportCenterX - containerRect.left + scrollLeft;
                 const containerCenterY = viewportCenterY - containerRect.top + scrollTop;
-
                 img.onload = function() {
                     const aspect = img.naturalWidth / img.naturalHeight;
                     container.dataset.aspect = aspect;
-                    const imgWidth = 200;
-                    const imgHeight = 200 / aspect;
-                    
-                    // Calculate position
+                    const imgWidth = 200, imgHeight = 200 / aspect;
                     let posX = containerCenterX - (imgWidth/2);
                     let posY = containerCenterY - (imgHeight/2);
-                    
-                    // Ensure stays within container bounds
                     posX = Math.max(0, Math.min(posX, a4Container.scrollWidth - imgWidth));
                     posY = Math.max(0, Math.min(posY, a4Container.scrollHeight - imgHeight));
-
                     container.style.width = imgWidth + 'px';
                     container.style.height = imgHeight + 'px';
                     container.style.left = posX + 'px';
                     container.style.top = posY + 'px';
                 };
                 img.src = event.target.result;
-                
                 const resizeHandle = document.createElement('div');
                 resizeHandle.className = 'resize-handle';
-                
                 container.appendChild(img);
                 container.appendChild(resizeHandle);
-                
-                // Add both mouse and touch event listeners for dragging
                 container.addEventListener('mousedown', startDragging);
                 container.addEventListener('touchstart', startDragging, {passive: false});
-                // Add both mouse and touch event listeners for resizing
                 resizeHandle.addEventListener('mousedown', startResizing);
                 resizeHandle.addEventListener('touchstart', startResizing, {passive: false});
-                
                 a4Container.appendChild(container);
             };
-            
             reader.readAsDataURL(file);
         });
-
-        // Modified extendPage function:
         function extendPage() {
             const container = document.getElementById('a4-container');
-            // Remove the max-height restriction to allow expansion
             container.style.maxHeight = "none";
-            // Increase the container height by one A4 page height in pixels (11.69in * 96px/in)
             container.style.height = (container.offsetHeight + 11.69 * 96) + "px";
         }
-
         function enforceBoundaries(element, newWidth, newHeight) {
             const container = document.getElementById('a4-container');
             const maxX = container.offsetWidth - element.offsetLeft;
             const maxY = container.offsetHeight - element.offsetTop;
-            
             return {
                 width: Math.max(MIN_SIZE, Math.min(newWidth, maxX)),
                 height: Math.max(MIN_SIZE, Math.min(newHeight, maxY))
             };
         }
-
         async function saveAsPNG() {
             const container = document.getElementById('a4-container');
             container.classList.add('hide-handles');
-            
             await html2canvas(container, {
                 scale: 3,
                 useCORS: true,
@@ -210,18 +226,13 @@
                 container.classList.remove('hide-handles');
             });
         }
-
-        // Drag functions (supports both mouse and touch)
         function startDragging(e) {
             if (isResizing) return;
             selectedElement = e.currentTarget;
             const rect = selectedElement.getBoundingClientRect();
-            
-            // Prevent default for touch events to avoid scrolling
             if (e.touches) e.preventDefault();
             offsetX = getClientX(e) - rect.left;
             offsetY = getClientY(e) - rect.top;
-            
             if (e.type === 'touchstart') {
                 document.addEventListener('touchmove', dragElement, {passive: false});
                 document.addEventListener('touchend', stopDragging);
@@ -230,24 +241,18 @@
                 document.addEventListener('mouseup', stopDragging);
             }
         }
-
         function dragElement(e) {
             if (!selectedElement || isResizing) return;
             if (e.touches) e.preventDefault();
-            
             const container = document.getElementById('a4-container');
             const containerRect = container.getBoundingClientRect();
-            
             let newX = getClientX(e) - containerRect.left - offsetX;
             let newY = getClientY(e) - containerRect.top - offsetY;
-
             newX = Math.max(0, Math.min(newX, container.offsetWidth - selectedElement.offsetWidth));
             newY = Math.max(0, Math.min(newY, container.offsetHeight - selectedElement.offsetHeight));
-            
             selectedElement.style.left = newX + 'px';
             selectedElement.style.top = newY + 'px';
         }
-
         function stopDragging() {
             selectedElement = null;
             document.removeEventListener('mousemove', dragElement);
@@ -255,20 +260,16 @@
             document.removeEventListener('touchmove', dragElement);
             document.removeEventListener('touchend', stopDragging);
         }
-
-        // Resize functions (supports both mouse and touch)
         function startResizing(e) {
             e.stopPropagation();
             isResizing = true;
             selectedElement = e.currentTarget.parentElement;
             const rect = selectedElement.getBoundingClientRect();
-            
             if (e.touches) e.preventDefault();
             startX = getClientX(e);
             startY = getClientY(e);
             startWidth = rect.width;
             startHeight = rect.height;
-            
             if (e.type === 'touchstart') {
                 document.addEventListener('touchmove', resizeElement, {passive: false});
                 document.addEventListener('touchend', stopResizing);
@@ -277,30 +278,23 @@
                 document.addEventListener('mouseup', stopResizing);
             }
         }
-
         function resizeElement(e) {
             if (!isResizing || !selectedElement) return;
             if (e.touches) e.preventDefault();
-            
             const aspect = parseFloat(selectedElement.dataset.aspect);
             const deltaX = getClientX(e) - startX;
             const deltaY = getClientY(e) - startY;
-            
             let newWidth = startWidth + deltaX;
             let newHeight = startHeight + deltaY;
-
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 newHeight = newWidth / aspect;
             } else {
                 newWidth = newHeight * aspect;
             }
-
             const constrained = enforceBoundaries(selectedElement, newWidth, newHeight);
-            
             selectedElement.style.width = constrained.width + 'px';
             selectedElement.style.height = constrained.height + 'px';
         }
-
         function stopResizing() {
             isResizing = false;
             selectedElement = null;
