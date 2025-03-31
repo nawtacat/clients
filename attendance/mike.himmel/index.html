@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Ֆիզմաթ Ակադեմիա - Հաճախություն</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     @font-face {
       font-family: 'Mardoto-Light';
@@ -18,7 +19,6 @@
       font-style: normal;
       font-display: swap;
     }
-
     :root {
       --primary-blue: #1155d4;
       --accent-orange: #eb783f;
@@ -26,7 +26,6 @@
       --light-blue: #9fc5e8;
       --text-gray: #666;
     }
-
     body {
       font-family: 'Mardoto-Light', sans-serif;
       margin: 0;
@@ -34,7 +33,6 @@
       height: 100vh;
       background: #f8f9fa;
     }
-
     /* Sidebar */
     #sidebar {
       width: 240px;
@@ -46,7 +44,6 @@
       gap: 1rem;
       box-shadow: 2px 0 8px rgba(0,0,0,0.05);
     }
-
     #sidebar a {
       text-decoration: none;
       font-size: 1rem;
@@ -57,16 +54,14 @@
       transition: all 0.3s ease;
       font-family: 'Mardoto-Medium', sans-serif;
     }
-
-    #sidebar a.active {
+    #sidebar a.active { 
       background: var(--primary-blue);
       color: white;
     }
-
-    #sidebar a:hover {
+    #sidebar a:hover { 
       opacity: 0.8;
     }
-
+    /* Logout Button */
     .logout-link {
       margin-top: auto;
       font-size: 0.9rem;
@@ -78,11 +73,9 @@
       text-align: center;
       transition: all 0.3s ease;
     }
-
     .logout-link:hover {
       background: rgba(220, 53, 69, 0.1);
     }
-
     /* Main Content */
     #calendar-container {
       flex: 1;
@@ -90,14 +83,12 @@
       overflow: auto;
       background: white;
     }
-
     #calendar-nav { 
       margin-bottom: 2rem;
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
     #calendar-nav button {
       padding: 10px 20px;
       border: none;
@@ -108,24 +99,20 @@
       transition: transform 0.3s ease;
       font-family: 'Mardoto-Medium', sans-serif;
     }
-
     #calendar-nav button:hover {
       transform: translateY(-2px);
     }
-
     #current-month {
       font-size: 1.2rem;
       color: var(--primary-blue);
       font-family: 'Mardoto-Medium', sans-serif;
     }
-
     table {
       border-collapse: collapse;
       width: 100%;
       margin: 1rem 0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-
     th, td {
       border: 1px solid var(--light-blue);
       text-align: center;
@@ -133,22 +120,18 @@
       min-width: 50px;
       background: white;
     }
-
     th {
       background: var(--primary-blue);
       color: white;
       font-family: 'Mardoto-Medium', sans-serif;
     }
-
     td.clickable { 
       cursor: pointer;
       transition: background 0.2s ease;
     }
-
     td.clickable:hover {
       background: var(--light-blue);
     }
-
     /* Student Grouping Section */
     #student-grouping {
       margin-top: 3rem;
@@ -156,7 +139,6 @@
       background: #f8f9fa;
       border-radius: 12px;
     }
-
     #group-select {
       padding: 10px 15px;
       margin-bottom: 1.5rem;
@@ -165,7 +147,6 @@
       width: 100%;
       font-family: 'Mardoto-Light', sans-serif;
     }
-
     .student-item {
       padding: 12px 20px;
       margin: 8px 0;
@@ -175,17 +156,14 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     .student-item.selected {
       background-color: var(--light-blue);
       border-color: var(--primary-blue);
     }
-
     @media (max-width: 768px) {
       body {
         flex-direction: column;
       }
-      
       #sidebar {
         width: 100%;
         height: auto;
@@ -194,7 +172,6 @@
         border-right: none;
         border-bottom: 1px solid var(--light-blue);
       }
-      
       #calendar-container {
         padding: 1rem;
       }
@@ -203,11 +180,11 @@
 </head>
 <body>
   <!-- Navigation Sidebar -->
-  <div id="sidebar">
-    <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
+  <nav id="sidebar">
+    <a href="https://pha.am/tutorcal" class="active">Հարցերի տվյալներ</a>
     <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
     <a href="#" class="logout-link" id="logoutLink">Դուրս գալ</a>
-  </div>
+  </nav>
   
   <!-- Main Content (Attendance Calendar) -->
   <div id="calendar-container">
@@ -217,7 +194,6 @@
       <span id="current-month"></span>
     </div>
     <div id="calendar"></div>
-    
     <div id="student-grouping">
       <select id="group-select">
         <option value="All">Բոլոր ուսանողները</option>
@@ -228,11 +204,11 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs: Auth, Firestore -->
+  <!-- Firebase SDKs: Auth and Firestore -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
@@ -248,16 +224,21 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Function to log out
-    document.getElementById("logoutLink").addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "/login/";
+    // Attach logout handler
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutLink");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+          await signOut(auth);
+          window.location.href = "/login/";
+        });
+      }
     });
 
-    // Extract the expected username from the URL.
-    // Assume the URL is: https://pha.am/attendance/{username}
-    const pathParts = window.location.pathname.split("/");
-    const expectedUsername = pathParts[pathParts.length - 1].trim(); // e.g., "mike.himmel"
+    // Extract expected username from URL.
+    // This handles possible trailing slashes by filtering empty parts.
+    const pathParts = window.location.pathname.split("/").filter(part => part !== "");
+    const expectedUsername = pathParts[pathParts.length - 1]; // e.g., "mike.himmel"
 
     // Listen for auth state changes and validate access.
     onAuthStateChanged(auth, (user) => {
@@ -268,16 +249,16 @@
         const email = user.email.toLowerCase().trim();
         const loggedInUsername = email.split('@')[0];
         if (loggedInUsername !== expectedUsername) {
-          // The logged-in user's username does not match the URL.
+          // Logged-in user does not match the attendance URL: redirect to login.
           window.location.href = "/login/";
         }
-        // Else: user is authenticated and accessing their own attendance page.
+        // Else, user is properly authenticated and can view this page.
       }
     });
   </script>
 
-  <script>
-    // Attendance page: calendar and student grouping functionality.
+  <script type="module">
+    // Attendance Calendar and Student Grouping functionality.
     const armMonths = [
       "Հունվար", "Փետրվար", "Մարտ", "Ապրիլ",
       "Մայիս", "Հունիս", "Հուլիս", "Օգոստոս",
@@ -472,3 +453,4 @@
   </script>
 </body>
 </html>
+
