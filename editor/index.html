@@ -73,21 +73,7 @@
             opacity: 0.8;
         }
 
-        .logout-link {
-            margin-top: auto;
-            font-size: 0.9rem;
-            color: #dc3545 !important;
-            text-decoration: none;
-            padding: 12px 20px;
-            border: 1px solid #dc3545 !important;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .logout-link:hover {
-            background: rgba(220, 53, 69, 0.1);
-        }
+    
 
         /* Controls */
         .controls {
@@ -206,11 +192,7 @@
                 height: auto;
             }
             
-            .logout-link {
-                margin-top: 0;
-                order: 99;
-                width: 100%;
-            }
+        
             
             .controls {
                 left: 0;
@@ -233,7 +215,6 @@
       <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
       <a href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
       <a href="https://pha.am/editor" class="active">Դասի խմբագրիչ</a>
-      <a href="#" class="logout-link" onclick="logout()">Դուրս գալ</a>
     </nav>
     
     <!-- Fixed Controls with Armenian File Input -->
@@ -264,14 +245,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "/login/"; });
-        window.logout = async () => {
-          try { 
-              await signOut(auth); 
-              window.location.href = "/login/"; 
-          } catch (error) { 
-              console.error("Դուրս գալու սխալ:", error); 
-          }
-        };
     </script>
     <script>
         let selectedElement = null;
