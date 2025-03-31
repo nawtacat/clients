@@ -194,12 +194,7 @@
         border-right: none;
         border-bottom: 1px solid var(--light-blue);
       }
-      
-      .logout-link {
-        margin-top: 0;
-        order: 99;
-        width: 100%;
-      }
+    
       
       #calendar-container {
         padding: 1rem;
@@ -212,7 +207,6 @@
     <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
     <a href="https://pha.am/tutorcal/attendance" class="active">Հաճախություն</a>
     <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
-    <a href="#" class="logout-link" onclick="logout()">Դուրս գալ</a>
   </div>
   
   <div id="calendar-container">
@@ -252,14 +246,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     
-    window.logout = async () => {
-      try { 
-        await signOut(auth); 
-        window.location.href = "/login/"; 
-      } catch (error) { 
-        console.error("Սխալ դուրս գալու ժամանակ:", error); 
-      }
-    };
 
     const studentGroups = {
       "All": [
