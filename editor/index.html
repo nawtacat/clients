@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="hy">
 <head>
     <meta charset="utf-8">
-    <title>Professional Image Editor</title>
+    <title>Ֆիզմաթ Ակադեմիա - Դասի խմբագրիչ</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         @font-face {
@@ -12,132 +12,243 @@
           font-style: normal;
           font-display: swap;
         }
+        @font-face {
+          font-family: 'Mardoto-Medium';
+          src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+          font-weight: 500;
+          font-style: normal;
+          font-display: swap;
+        }
+
+        :root {
+            --primary-blue: #1155d4;
+            --accent-orange: #eb783f;
+            --dark-blue: #0e47af;
+            --light-blue: #9fc5e8;
+            --text-gray: #666;
+            --sidebar-width: 240px;
+        }
+
         body {
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
             font-family: 'Mardoto-Light', sans-serif;
-            /* Leave room for the sidebar */
-            padding-left: 220px;
+            padding-left: var(--sidebar-width);
         }
-        /* Sidebar */
-        .nav-links {
-          position: fixed;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 200px;
-          background: #f5f5f5;
-          padding: 2rem 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
+
+        /* Unified Sidebar */
+        #sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: white;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            border-right: 1px solid var(--light-blue);
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+            z-index: 1000;
         }
-        .nav-links a {
-          text-decoration: none;
-          font-size: 1rem;
-          color: #000;
-          padding: 0.8rem 1.2rem;
-          border: 1px solid #000;
-          border-radius: 8px;
-          transition: all 0.3s;
+
+        #sidebar a {
+            text-decoration: none;
+            font-size: 1rem;
+            color: var(--primary-blue);
+            padding: 12px 20px;
+            border: 1px solid var(--primary-blue);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Mardoto-Medium', sans-serif;
         }
-        .nav-links a.active {
-          background: #000;
-          color: white;
+
+        #sidebar a.active {
+            background: var(--primary-blue);
+            color: white;
         }
-        .nav-links a:hover {
-          background: #000;
-          color: white;
+
+        #sidebar a:hover {
+            opacity: 0.8;
         }
+
         .logout-link {
-          margin-top: auto;
-          font-size: 0.9rem;
-          color: #dc3545;
-          text-decoration: none;
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: #dc3545 !important;
+            text-decoration: none;
+            padding: 12px 20px;
+            border: 1px solid #dc3545 !important;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
         }
-        /* Fixed Controls at Top */
+
+        .logout-link:hover {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        /* Controls */
         .controls {
             position: fixed;
             top: 0;
-            left: 220px;
-            width: calc(100% - 220px);
-            background-color: #f0f0f0;
-            padding: 10px;
-            text-align: center;
-            z-index: 1000;
+            left: var(--sidebar-width);
+            right: 0;
+            background-color: white;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .controls input[type="file"],
-        .controls button {
-            margin: 0 5px;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .custom-file-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 25px;
             cursor: pointer;
+            font-family: 'Mardoto-Medium', sans-serif;
+            transition: transform 0.3s ease;
         }
+
+        .custom-file-button:hover {
+            transform: translateY(-2px);
+            background-color: var(--dark-blue);
+        }
+
         .controls button {
-            background-color: #4CAF50;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Mardoto-Medium', sans-serif;
+            transition: transform 0.3s ease;
+            background-color: var(--accent-orange);
             color: white;
         }
-        #extendPage { background-color: #2196F3; }
+
+        .controls button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
         /* A4 Container */
         #a4-container {
             width: 8.27in;
             height: 11.69in;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin: 80px auto 20px auto; /* Increased top margin to avoid fixed toolbar */
+            margin: 80px auto 20px auto;
             position: relative;
             overflow: hidden;
         }
+
         .resizable {
             position: absolute;
             cursor: move;
             transform-origin: top left;
             box-sizing: border-box;
         }
+
         .resizable img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             pointer-events: none;
-            /* Crisp image rendering */
             image-rendering: crisp-edges;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: pixelated;
         }
+
         .resize-handle {
             position: absolute;
             right: -8px;
             bottom: -8px;
             width: 16px;
             height: 16px;
-            background-color: #4CAF50;
+            background-color: var(--accent-orange);
             border-radius: 50%;
             cursor: nwse-resize;
             z-index: 2;
         }
+
         .hide-handles .resize-handle { display: none !important; }
+
+        @media (max-width: 768px) {
+            body {
+                padding-left: 0;
+            }
+            
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                flex-wrap: wrap;
+                border-right: none;
+                border-bottom: 1px solid var(--light-blue);
+                height: auto;
+            }
+            
+            .logout-link {
+                margin-top: 0;
+                order: 99;
+                width: 100%;
+            }
+            
+            .controls {
+                left: 0;
+                top: 60px;
+                flex-wrap: wrap;
+            }
+            
+            #a4-container {
+                margin-top: 140px;
+                width: 95%;
+                height: auto;
+                min-height: 11.69in;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Navigation Sidebar -->
-    <nav class="nav-links">
+    <nav id="sidebar">
       <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
       <a href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
       <a href="https://pha.am/editor" class="active">Դասի խմբագրիչ</a>
       <a href="#" class="logout-link" onclick="logout()">Դուրս գալ</a>
     </nav>
     
-    <!-- Fixed Controls -->
+    <!-- Fixed Controls with Armenian File Input -->
     <div class="controls">
-        <input type="file" id="imageUpload" accept="image/*">
-        <button id="extendPage" onclick="extendPage()">Extend Page</button>
-        <button onclick="saveAsPNG()">Save as PNG</button>
+        <div class="file-input-wrapper">
+            <input type="file" id="imageUpload" accept="image/*">
+            <label for="imageUpload" class="custom-file-button">Ընտրել Նկար</label>
+        </div>
+        <button id="extendPage" onclick="extendPage()">Ընդլայնել Էջը</button>
+        <button onclick="saveAsPNG()">Պահպանել PNG</button>
     </div>
     
     <div id="a4-container"></div>
     
-    <!-- Firebase Authentication (for logout functionality) -->
+    <!-- Firebase Authentication -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -158,7 +269,7 @@
               await signOut(auth); 
               window.location.href = "/login/"; 
           } catch (error) { 
-              console.error("Logout error:", error); 
+              console.error("Դուրս գալու սխալ:", error); 
           }
         };
     </script>
@@ -170,7 +281,6 @@
         function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
         function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
         
-        // When an image is uploaded, place it relative to the user's current viewport
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -183,10 +293,8 @@
                 img.onload = function() {
                     const aspect = img.naturalWidth / img.naturalHeight;
                     container.dataset.aspect = aspect;
-                    // Set default dimensions without squeezing the image
                     const imgWidth = 200;
                     const imgHeight = 200 / aspect;
-                    // Calculate position based on the current viewport center relative to the A4 container
                     const containerRect = a4Container.getBoundingClientRect();
                     const viewportCenterX = window.innerWidth / 2;
                     const viewportCenterY = window.innerHeight / 2;
@@ -211,13 +319,11 @@
             reader.readAsDataURL(file);
         });
         
-        // Extend the A4 container's height by one A4 page (11.69in * 96px/in)
         function extendPage() {
             const container = document.getElementById('a4-container');
             container.style.height = (container.offsetHeight + 11.69 * 96) + "px";
         }
         
-        // Ensure new dimensions remain within the container bounds
         function enforceBoundaries(element, newWidth, newHeight) {
             const container = document.getElementById('a4-container');
             const maxX = container.offsetWidth - element.offsetLeft;
@@ -228,14 +334,11 @@
             };
         }
         
-        // Save the A4 container as a PNG with high quality yet reasonable file size.
         async function saveAsPNG() {
             const container = document.getElementById('a4-container');
             container.classList.add('hide-handles');
-            // Remove box-shadow temporarily to avoid a black rectangle in the export
             const originalBoxShadow = container.style.boxShadow;
             container.style.boxShadow = "none";
-            // Use a scale factor based on devicePixelRatio, but cap it at 2 for reasonable weight.
             const scaleFactor = Math.min(window.devicePixelRatio || 1, 2);
             await html2canvas(container, {
                 scale: scaleFactor,
@@ -246,13 +349,11 @@
                 link.download = 'document.png';
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
-                // Restore original styling after export
                 container.style.boxShadow = originalBoxShadow;
                 container.classList.remove('hide-handles');
             });
         }
         
-        // Drag functionality for moving uploaded elements
         function startDragging(e) {
             if (isResizing) return;
             selectedElement = e.currentTarget;
@@ -290,7 +391,6 @@
             document.removeEventListener('touchend', stopDragging);
         }
         
-        // Resizing functionality for the uploaded images
         function startResizing(e) {
             e.stopPropagation();
             isResizing = true;
@@ -318,7 +418,6 @@
             const deltaY = getClientY(e) - startY;
             let newWidth = startWidth + deltaX;
             let newHeight = startHeight + deltaY;
-            // Maintain the original aspect ratio without squeezing the image
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 newHeight = newWidth / aspect;
             } else {
@@ -337,6 +436,7 @@
             document.removeEventListener('touchmove', resizeElement);
             document.removeEventListener('touchend', stopResizing);
         }
+    </script>
     </script>
 </body>
 </html>
