@@ -55,12 +55,18 @@
           color: #dc3545;
           text-decoration: none;
         }
-        /* Main Content */
+        /* Fixed Controls at Top */
         .controls {
-            margin: 20px auto;
+            position: fixed;
+            top: 0;
+            left: 220px;
+            width: calc(100% - 220px);
+            background-color: #f0f0f0;
+            padding: 10px;
             text-align: center;
+            z-index: 1000;
         }
-        button {
+        .controls button {
             padding: 8px 16px;
             margin: 0 5px;
             background-color: #4CAF50;
@@ -76,7 +82,7 @@
             height: 11.69in;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin: 20px auto;
+            margin: 80px auto 20px auto; /* Increased top margin so content starts below fixed toolbar */
             position: relative;
             overflow: hidden;
         }
@@ -119,11 +125,13 @@
       <a href="#" class="logout-link" onclick="logout()">Դուրս գալ</a>
     </nav>
     
+    <!-- Fixed Controls -->
     <div class="controls">
         <input type="file" id="imageUpload" accept="image/*">
         <button id="extendPage" onclick="extendPage()">Extend Page</button>
         <button onclick="saveAsPNG()">Save as PNG</button>
     </div>
+    
     <div id="a4-container"></div>
     
     <!-- Firebase Authentication (for logout functionality) -->
@@ -164,16 +172,17 @@
                 container.className = 'resizable';
                 const img = new Image();
                 const a4Container = document.getElementById('a4-container');
-                // Use container dimensions to center the image
-                const containerWidth = a4Container.clientWidth;
-                const containerHeight = a4Container.clientHeight;
                 img.onload = function() {
                     const aspect = img.naturalWidth / img.naturalHeight;
                     container.dataset.aspect = aspect;
                     const imgWidth = 200;
                     const imgHeight = 200 / aspect;
-                    const posX = (containerWidth - imgWidth) / 2;
-                    const posY = (containerHeight - imgHeight) / 2;
+                    // Calculate position relative to where the user is currently viewing
+                    const containerRect = a4Container.getBoundingClientRect();
+                    const viewportCenterX = window.innerWidth / 2;
+                    const viewportCenterY = window.innerHeight / 2;
+                    const posX = viewportCenterX - containerRect.left - (imgWidth / 2);
+                    const posY = viewportCenterY - containerRect.top - (imgHeight / 2);
                     container.style.width = imgWidth + 'px';
                     container.style.height = imgHeight + 'px';
                     container.style.left = posX + 'px';
