@@ -19,36 +19,50 @@
       font-style: normal;
       font-display: swap;
     }
+
     :root {
+      --primary-blue: #1155d4;
+      --accent-orange: #eb783f;
+      --dark-blue: #0e47af;
+      --light-blue: #9fc5e8;
       --text-gray: #666;
     }
-    html { font-size: 16px; }
+
     body {
       margin: 0;
-      background: white;
+      padding: 2rem 2rem 2rem 220px;
+      min-height: 100vh;
       font-family: 'Mardoto-Light', sans-serif;
+      background-color: white;
       color: #333;
-      padding: 2rem 2rem 2rem 220px; /* leave room for sidebar */
+      display: flex;
+      flex-direction: column;
     }
+
     .dashboard {
       max-width: 70%;
       margin: 0 auto;
+      flex: 1;
     }
+
     .dashboard-header {
       text-align: center;
       margin-bottom: 2rem;
     }
+
     .dashboard-header h1 {
       font-family: 'Mardoto-Medium', sans-serif;
       font-size: 2rem;
-      color: #000;
+      color: var(--primary-blue);
       margin: 0.5rem 0;
     }
+
     .dashboard-header p {
       font-size: 1rem;
-      color: #666;
+      color: var(--text-gray);
       margin: 0;
     }
+
     #filters {
       margin-bottom: 1.5rem;
       display: flex;
@@ -57,73 +71,141 @@
       justify-content: center;
       align-items: center;
     }
-    #filters label { font-size: 1rem; color: #000; }
+
+    #filters label { 
+      font-size: 1rem;
+      color: var(--primary-blue);
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+
     #filters select {
       padding: 0.5rem;
       font-size: 1rem;
-      border: 1px solid #000;
+      border: 1px solid var(--light-blue);
       border-radius: 5px;
+      background-color: white;
     }
+
     #apply-filters {
-      padding: 0.6rem 1.2rem;
-      background: #000;
+      padding: 12px 24px;
+      background: var(--accent-orange);
       border: none;
       color: white;
       font-size: 1rem;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
+      transition: transform 0.3s ease;
+      font-family: 'Mardoto-Medium', sans-serif;
     }
-    #problem-list { margin-top: 1rem; }
+
+    #apply-filters:hover {
+      transform: translateY(-2px);
+    }
+
+    #problem-list { 
+      margin-top: 1rem;
+    }
+
     .problem-item {
-      border: 1px solid #000;
+      border: 1px solid var(--light-blue);
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1rem;
       background: white;
       width: 100%;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    .problem-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
     .problem-text {
       font-family: 'Mardoto-Light', sans-serif;
       font-size: 1.5rem;
-      color: #000;
+      color: #000 !important; /* Force black color */
       margin-bottom: 2rem;
     }
-    .topic-difficulty { font-size: 0.9rem; color: #666; }
-    /* Left Sidebar */
+
+    .topic-difficulty { 
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      border-bottom: 1px solid var(--light-blue);
+      display: inline-block;
+      padding-bottom: 3px;
+    }
+
     .nav-links {
       position: fixed;
       left: 0;
       top: 0;
       height: 100%;
       width: 200px;
-      background: #f5f5f5;
+      background: white;
       padding: 2rem 1rem;
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
     }
+
     .nav-links a {
       text-decoration: none;
       font-size: 1rem;
-      color: #000;
+      color: var(--primary-blue);
       padding: 0.8rem 1.2rem;
-      border: 1px solid #000;
+      border: 1px solid var(--primary-blue);
       border-radius: 8px;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
+      font-family: 'Mardoto-Medium', sans-serif;
     }
-    .nav-links a.active { background: #000; color: white; }
-    .nav-links a:hover { background: #000; color: white; }
+
+    .nav-links a.active { 
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .nav-links a:hover { 
+      opacity: 0.8;
+    }
+
     .logout-link {
       margin-top: auto;
       font-size: 0.9rem;
       color: #dc3545;
       text-decoration: none;
+      transition: opacity 0.3s ease;
     }
-    @media (min-width: 768px) { html { font-size: 18px; } }
+
+    .logout-link:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 998px) {
+      body {
+        padding-left: 2rem;
+      }
+      
+      .nav-links {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .dashboard {
+        max-width: 100%;
+      }
+    }
   </style>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <!-- Firebase Authentication -->
   <script type="module">
+    // Firebase configuration remains unchanged
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     const firebaseConfig = {
@@ -179,6 +261,7 @@
   </div>
 
   <script type="module">
+    // JavaScript code remains unchanged
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRiXXttnQUv_hkrfd8-UkNLkACnLPnyXgeAwqh1XCBUf9s3SDaPFApqQtQF2co14wLX0uwasA9004YI/pubhtml';
     let problems = [];
     async function fetchProblems() {
