@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="hy">
+<!DOCTYPE html>
+<html lang="hy">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <title>Ֆիզմաթ Ակադեմիա - Հաճախություն</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Դասավանդի Հարցերի Տվյալներ</title>
   <style>
     @font-face {
       font-family: 'Mardoto-Light';
@@ -19,7 +21,6 @@
       font-style: normal;
       font-display: swap;
     }
-
     :root {
       --primary-blue: #1155d4;
       --accent-orange: #eb783f;
@@ -27,176 +28,191 @@
       --light-blue: #9fc5e8;
       --text-gray: #666;
     }
-
     body {
-      margin: 0;
-      padding: 2rem 2rem 2rem 220px;
-      min-height: 100vh;
       font-family: 'Mardoto-Light', sans-serif;
-      background-color: white;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .dashboard {
-      max-width: 70%;
-      margin: 0 auto;
-      flex: 1;
-    }
-
-    .dashboard-header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .dashboard-title {
-      font-family: 'Mardoto-Medium', sans-serif;
-      font-size: 2rem;
-      color: var(--primary-blue);
-      margin: 0.5rem 0;
-    }
-
-    .dashboard-subtitle {
-      font-size: 1rem;
-      color: var(--text-gray);
       margin: 0;
-    }
-
-    #filters {
-      margin-bottom: 1.5rem;
       display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #filters label { 
-      font-size: 1rem;
-      color: var(--primary-blue);
-      font-family: 'Mardoto-Medium', sans-serif;
-    }
-
-    #filters select {
-      padding: 0.5rem;
-      font-size: 1rem;
-      border: 1px solid var(--light-blue);
-      border-radius: 5px;
-      background-color: white;
-    }
-
-    #apply-filters {
-      padding: 12px 24px;
-      background: var(--accent-orange);
-      border: none;
-      color: white;
-      font-size: 1rem;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-      font-family: 'Mardoto-Medium', sans-serif;
-    }
-
-    #apply-filters:hover {
-      transform: translateY(-2px);
-    }
-
-    #problem-list { 
-      margin-top: 1rem;
-    }
-
-    .problem-item {
-      border: 1px solid var(--light-blue);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      background: white;
-      width: 100%;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .problem-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .problem-text {
-      font-family: 'Mardoto-Light', sans-serif;
-      font-size: 1.5rem;
-      color: #000 !important;
-      margin-bottom: 2rem;
-    }
-
-    .topic-difficulty { 
-      font-size: 0.9rem;
-      color: var(--text-gray);
-      border-bottom: 1px solid var(--light-blue);
-      display: inline-block;
-      padding-bottom: 3px;
-    }
-
-    .nav-links {
-      position: fixed;
-      left: 0;
-      top: 0;
       height: 100vh;
-      width: 200px;
+      background: #f8f9fa;
+    }
+    /* Sidebar */
+    #sidebar {
+      width: 240px;
       background: white;
       padding: 2rem 1rem;
+      border-right: 1px solid var(--light-blue);
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.05);
     }
-
-    .nav-links a {
+    #sidebar a {
       text-decoration: none;
       font-size: 1rem;
       color: var(--primary-blue);
-      padding: 0.8rem 1.2rem;
+      padding: 12px 20px;
       border: 1px solid var(--primary-blue);
       border-radius: 8px;
       transition: all 0.3s ease;
       font-family: 'Mardoto-Medium', sans-serif;
     }
-
-    .nav-links a.active { 
+    #sidebar a.active { 
       background: var(--primary-blue);
       color: white;
     }
-
-    .nav-links a:hover { 
+    #sidebar a:hover { 
       opacity: 0.8;
     }
-
-    @media (max-width: 998px) {
+    /* Logout Button */
+    .logout-link {
+      margin-top: auto;
+      font-size: 0.9rem;
+      color: #dc3545 !important;
+      text-decoration: none;
+      padding: 12px 20px;
+      border: 1px solid #dc3545 !important;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .logout-link:hover {
+      background: rgba(220, 53, 69, 0.1);
+    }
+    /* Main Content */
+    #calendar-container {
+      flex: 1;
+      padding: 2rem;
+      overflow: auto;
+      background: white;
+    }
+    #calendar-nav { 
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    #calendar-nav button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: var(--accent-orange);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+    #calendar-nav button:hover {
+      transform: translateY(-2px);
+    }
+    #current-month {
+      font-size: 1.2rem;
+      color: var(--primary-blue);
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    th, td {
+      border: 1px solid var(--light-blue);
+      text-align: center;
+      padding: 12px;
+      min-width: 50px;
+      background: white;
+    }
+    th {
+      background: var(--primary-blue);
+      color: white;
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+    td.clickable { 
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    td.clickable:hover {
+      background: var(--light-blue);
+    }
+    /* Student Grouping Section */
+    #student-grouping {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+    #group-select {
+      padding: 10px 15px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--light-blue);
+      border-radius: 8px;
+      width: 100%;
+      font-family: 'Mardoto-Light', sans-serif;
+    }
+    .student-item {
+      padding: 12px 20px;
+      margin: 8px 0;
+      background: white;
+      border: 1px solid var(--light-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .student-item.selected {
+      background-color: var(--light-blue);
+      border-color: var(--primary-blue);
+    }
+    @media (max-width: 768px) {
       body {
-        padding: 1rem;
+        flex-direction: column;
       }
-      
-      .nav-links {
-        position: relative;
+      #sidebar {
         width: 100%;
         height: auto;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
-        margin-bottom: 2rem;
-        box-shadow: none;
+        border-right: none;
+        border-bottom: 1px solid var(--light-blue);
       }
-
-      .dashboard {
-        max-width: 100%;
+      #calendar-container {
+        padding: 1rem;
       }
     }
   </style>
-  <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
-  
-  <!-- Firebase Authentication -->
+</head>
+<body>
+  <!-- Navigation Sidebar -->
+  <nav class="nav-links">
+    <a href="https://pha.am/tutorcal" class="active">Հարցերի տվյալներ</a>
+    <a id="attendanceLink" href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
+    <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
+    <!-- Logout button added just underneath the third link -->
+    <a href="#" class="logout-link" id="logoutLink">Դուրս գալ</a>
+  </nav>
+
+  <div id="calendar-container">
+    <div id="calendar-nav">
+      <button id="prev-month">Նախորդ ամիս</button>
+      <button id="next-month">Հաջորդ ամիս</button>
+      <span id="current-month"></span>
+    </div>
+    <div id="calendar"></div>
+    <div id="student-grouping">
+      <select id="group-select">
+        <option value="All">Բոլոր ուսանողները</option>
+        <option value="Group A">Խումբ Ա</option>
+        <option value="Group B">Խումբ Բ</option>
+      </select>
+      <div id="student-list"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs: Auth, Firestore -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
       authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -208,142 +224,229 @@
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    // If not logged in, redirect to login.
+    const db = getFirestore(app);
+
+    // Check if the user is authenticated and update the attendance link.
     onAuthStateChanged(auth, (user) => { 
       if (!user) {
         window.location.href = "/login/"; 
       } else {
-        // Extract the username (e.g. "mike.himmel") from the email.
+        // Extract username from email.
         const email = user.email.toLowerCase().trim();
         const username = email.split('@')[0];
-        // Dynamically update the attendance link.
+        // Update attendance link dynamically.
         const attendanceLink = document.getElementById("attendanceLink");
         if (attendanceLink) {
           attendanceLink.href = `https://pha.am/attendance/${username}`;
         }
       }
     });
-  </script>
-</head>
-<body>
-  <!-- Navigation Sidebar -->
-  <nav class="nav-links">
-    <a href="https://pha.am/tutorcal" class="active">Հարցերի տվյալներ</a>
-    <!-- Notice we added an id here to update it dynamically -->
-    <a id="attendanceLink" href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
-    <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
-  </nav>
 
-  <div class="dashboard">
-    <header class="dashboard-header">
-      <p class="dashboard-title">Հարցերի տվյալներ</p>
-      <p class="dashboard-subtitle">Ֆիլտրել ըստ թեմաների և դժվարությունների</p>
-    </header>
-    
-    <section id="filters">
-      <label for="topic-filter">Թեմա:</label>
-      <select id="topic-filter">
-        <option value="">Բոլորը</option>
-      </select>
-      
-      <label for="difficulty-filter">Դժվարություն:</label>
-      <select id="difficulty-filter">
-        <option value="">Բոլորը</option>
-      </select>
-      
-      <button id="apply-filters">Ֆիլտրել</button>
-    </section>
-    
-    <section id="problem-list">
-      <p>Բեռնվում են հարցերը...</p>
-    </section>
-  </div>
+    // Logout event handler.
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoutBtn = document.getElementById("logoutLink");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+          await signOut(auth);
+          window.location.href = "/login/";
+        });
+      }
+    });
+  </script>
 
   <script type="module">
-    // Fetch problems from a published Google Sheets URL.
-    const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRiXXttnQUv_hkrfd8-UkNLkACnLPnyXgeAwqh1XCBUf9s3SDaPFApqQtQF2co14wLX0uwasA9004YI/pubhtml';
-    let problems = [];
-    async function fetchProblems() {
-      try {
-        const response = await fetch(sheetUrl);
-        const htmlText = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, "text/html");
-        const table = doc.querySelector("table");
-        if (!table) throw new Error("Table not found");
-        const rows = table.querySelectorAll("tr");
-        for (let i = 2; i < rows.length; i++) {
-          const cells = rows[i].querySelectorAll("td");
-          if (cells.length < 8) continue;
-          const problemObj = {
-            problem: cells[0].textContent.trim(),
-            topic: cells[6].textContent.trim(),
-            difficulty: cells[7].textContent.trim()
-          };
-          problems.push(problemObj);
+    // Attendance Calendar and Student Grouping functionality.
+    const armMonths = [
+      "Հունվար", "Փետրվար", "Մարտ", "Ապրիլ",
+      "Մայիս", "Հունիս", "Հուլիս", "Օգոստոս",
+      "Սեպտեմբեր", "Հոկտեմբեր", "Նոյեմբեր", "Դեկտեմբեր"
+    ];
+
+    let selectedStudent = null;
+    let currentDate = new Date();
+    currentDate.setDate(1);
+    const calendarDiv = document.getElementById("calendar");
+    const currentMonthSpan = document.getElementById("current-month");
+    const prevMonthBtn = document.getElementById("prev-month");
+    const nextMonthBtn = document.getElementById("next-month");
+    const studentListDiv = document.getElementById("student-list");
+    const groupSelect = document.getElementById("group-select");
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      return `${year}-${month}-${day}`;
+    }
+
+    function displayMonth(date) {
+      return `${armMonths[date.getMonth()]} ${date.getFullYear()}`;
+    }
+
+    function displayStudents() {
+      const selectedGroup = groupSelect.value;
+      let students = [];
+      if (selectedGroup === "All") {
+        students = [
+          { email: "aramasatryan290@gmail.com", name: "Արամասատրյան" },
+          { email: "aaram3389@gmail.com", name: "Աարամ" }
+        ];
+      } else if (selectedGroup === "Group A") {
+        students = [{ email: "aramasatryan290@gmail.com", name: "Արամասատրյան" }];
+      } else if (selectedGroup === "Group B") {
+        students = [{ email: "aaram3389@gmail.com", name: "Աարամ" }];
+      }
+      studentListDiv.innerHTML = "";
+      students.forEach(student => {
+        const div = document.createElement("div");
+        div.className = "student-item";
+        div.textContent = `${student.name} (${student.email})`;
+        div.addEventListener("click", (event) => { selectStudent(student, event); });
+        studentListDiv.appendChild(div);
+      });
+      if (students.length > 0) {
+        const firstStudentEl = studentListDiv.querySelector(".student-item");
+        selectStudent(students[0], { currentTarget: firstStudentEl });
+      }
+    }
+    
+    function selectStudent(student, event) {
+      selectedStudent = student;
+      document.querySelectorAll(".student-item").forEach(el => el.classList.remove("selected"));
+      event.currentTarget.classList.add("selected");
+      generateCalendar();
+      loadAttendance(student.email);
+    }
+
+    function generateCalendar() {
+      calendarDiv.innerHTML = "";
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      currentMonthSpan.textContent = displayMonth(currentDate);
+      
+      const table = document.createElement("table");
+      const headerRow = document.createElement("tr");
+      const daysOfWeek = ["Կիր", "Երկ", "Երք", "Չրք", "Հնգ", "Ուր", "Շբթ"];
+      
+      daysOfWeek.forEach(day => {
+        const th = document.createElement("th");
+        th.textContent = day;
+        headerRow.appendChild(th);
+      });
+      
+      table.appendChild(headerRow);
+      let date = 1;
+      
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j < 7; j++) {
+          const cell = document.createElement("td");
+          if (i === 0 && j < firstDay) { 
+            cell.textContent = ""; 
+          } else if (date > daysInMonth) { 
+            cell.textContent = ""; 
+          } else {
+            cell.textContent = date;
+            const fullDate = new Date(year, month, date);
+            cell.setAttribute("data-date", formatDate(fullDate));
+            cell.classList.add("clickable");
+            cell.addEventListener("click", cellClick);
+            date++;
+          }
+          row.appendChild(cell);
         }
-        renderProblems(problems);
-        populateFilters();
-      } catch (error) {
-        document.getElementById('problem-list').textContent = "Խնդրում ենք փորձել կրկին...";
+        table.appendChild(row);
+      }
+      calendarDiv.appendChild(table);
+    }
+
+    async function loadAttendance(studentEmail) {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const startDate = formatDate(new Date(year, month, 1));
+      const endDate = formatDate(new Date(year, month, daysInMonth));
+      
+      const attendanceQuery = query(
+        collection(db, "attendance"),
+        where("studentEmail", "==", studentEmail)
+      );
+      
+      try {
+        const querySnapshot = await getDocs(attendanceQuery);
+        querySnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data.date && data.date >= startDate && data.date <= endDate) {
+            const cells = document.querySelectorAll("[data-date]");
+            cells.forEach(cell => {
+              if (cell.getAttribute("data-date") === data.date) {
+                cell.textContent = cell.textContent.split(" - ")[0] + " - " + data.attendanceCode;
+                if (data.attendanceCode.toUpperCase().startsWith("P"))
+                  cell.style.backgroundColor = "#c8e6c9";
+                else if (data.attendanceCode.toUpperCase().startsWith("A"))
+                  cell.style.backgroundColor = "#ffcdd2";
+              }
+            });
+          }
+        });
+      } catch (error) { 
+        console.error("Սխալ տվյալներ բեռնելիս:", error); 
       }
     }
-    function renderProblems(list) {
-      const problemListDiv = document.getElementById('problem-list');
-      problemListDiv.innerHTML = "";
-      if (list.length === 0) {
-        problemListDiv.textContent = "Ոչ մի հարց չի գտնվել։";
-        return;
+
+    async function cellClick(event) {
+      if (!selectedStudent) { 
+        alert("Խնդրում ենք նախ ընտրել ուսանողի։"); 
+        return; 
       }
-      list.forEach(item => {
-        const problemItem = document.createElement('div');
-        problemItem.className = "problem-item";
-        const problemText = document.createElement('p');
-        problemText.className = "problem-text";
-        problemText.textContent = item.problem;
-        problemItem.appendChild(problemText);
-        const topicDifficulty = document.createElement('p');
-        topicDifficulty.className = "topic-difficulty";
-        topicDifficulty.textContent = "Թեմա: " + item.topic + " | Դժվարություն: " + item.difficulty;
-        problemItem.appendChild(topicDifficulty);
-        problemListDiv.appendChild(problemItem);
-      });
+      
+      const cell = event.currentTarget;
+      const cellDateStr = cell.getAttribute("data-date");
+      const input = prompt("Մուտքագրեք հաճախության կոդը (օրինակ՝ P3 ներկայի, A4 բացակայի համար) " + cellDateStr);
+      
+      if (!input) return;
+      
+      try {
+        const docId = selectedStudent.email.replace(/[@.]/g, '_') + "_" + cellDateStr;
+        await setDoc(doc(db, "attendance", docId), {
+          studentEmail: selectedStudent.email,
+          date: cellDateStr,
+          attendanceCode: input
+        });
+        cell.textContent = cell.textContent.split(" - ")[0] + " - " + input;
+        if (input.toUpperCase().startsWith("P"))
+          cell.style.backgroundColor = "#c8e6c9";
+        else if (input.toUpperCase().startsWith("A"))
+          cell.style.backgroundColor = "#ffcdd2";
+      } catch (error) { 
+        console.error("Սխալ տվյալների թարմացման ժամանակ:", error); 
+      }
     }
-    function populateFilters() {
-      const topicSet = new Set();
-      const difficultySet = new Set();
-      problems.forEach(item => {
-        topicSet.add(item.topic);
-        difficultySet.add(item.difficulty);
-      });
-      const topicFilter = document.getElementById('topic-filter');
-      topicSet.forEach(topic => {
-        const option = document.createElement('option');
-        option.value = topic;
-        option.textContent = topic;
-        topicFilter.appendChild(option);
-      });
-      const difficultyFilter = document.getElementById('difficulty-filter');
-      difficultySet.forEach(diff => {
-        const option = document.createElement('option');
-        option.value = diff;
-        option.textContent = diff;
-        difficultyFilter.appendChild(option);
-      });
-    }
-    function applyFilters() {
-      const selectedTopic = document.getElementById('topic-filter').value;
-      const selectedDifficulty = document.getElementById('difficulty-filter').value;
-      const filtered = problems.filter(item => {
-        const topicMatch = selectedTopic === "" || item.topic === selectedTopic;
-        const difficultyMatch = selectedDifficulty === "" || item.difficulty === selectedDifficulty;
-        return topicMatch && difficultyMatch;
-      });
-      renderProblems(filtered);
-    }
-    document.getElementById('apply-filters').addEventListener('click', applyFilters);
-    fetchProblems();
+
+    prevMonthBtn.addEventListener("click", () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      generateCalendar();
+      if (selectedStudent) loadAttendance(selectedStudent.email);
+    });
+    
+    nextMonthBtn.addEventListener("click", () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      generateCalendar();
+      if (selectedStudent) loadAttendance(selectedStudent.email);
+    });
+
+    groupSelect.addEventListener("change", displayStudents);
+
+    // Initial load of students once authenticated.
+    onAuthStateChanged(auth, (user) => {
+      if (!user) { 
+        window.location.href = "/login/"; 
+        return; 
+      }
+      displayStudents();
+    });
   </script>
 </body>
 </html>
-
