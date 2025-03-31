@@ -170,7 +170,6 @@
       opacity: 0.8;
     }
 
-
     @media (max-width: 998px) {
       body {
         padding: 1rem;
@@ -187,14 +186,13 @@
         box-shadow: none;
       }
 
-  
-      
       .dashboard {
         max-width: 100%;
       }
     }
   </style>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
+  
   <!-- Firebase Authentication -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -210,14 +208,29 @@
     };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "/login/"; });
+    // If not logged in, redirect to login.
+    onAuthStateChanged(auth, (user) => { 
+      if (!user) {
+        window.location.href = "/login/"; 
+      } else {
+        // Extract the username (e.g. "mike.himmel") from the email.
+        const email = user.email.toLowerCase().trim();
+        const username = email.split('@')[0];
+        // Dynamically update the attendance link.
+        const attendanceLink = document.getElementById("attendanceLink");
+        if (attendanceLink) {
+          attendanceLink.href = `https://pha.am/attendance/${username}`;
+        }
+      }
+    });
   </script>
 </head>
 <body>
   <!-- Navigation Sidebar -->
   <nav class="nav-links">
     <a href="https://pha.am/tutorcal" class="active">Հարցերի տվյալներ</a>
-    <a href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
+    <!-- Notice we added an id here to update it dynamically -->
+    <a id="attendanceLink" href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
     <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
   </nav>
 
@@ -247,6 +260,7 @@
   </div>
 
   <script type="module">
+    // Fetch problems from a published Google Sheets URL.
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRiXXttnQUv_hkrfd8-UkNLkACnLPnyXgeAwqh1XCBUf9s3SDaPFApqQtQF2co14wLX0uwasA9004YI/pubhtml';
     let problems = [];
     async function fetchProblems() {
@@ -332,3 +346,4 @@
   </script>
 </body>
 </html>
+
