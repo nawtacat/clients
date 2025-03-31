@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8">
+  <title>Ֆիզմաթ Ակադեմիա - Հաճախություն</title>
+  <style>
+    @font-face {
+      font-family: 'Mardoto-Light';
+      src: url('../../fonts/Mardoto-Light.ttf') format('truetype');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Mardoto-Medium';
+      src: url('../../fonts/Mardoto-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --primary-blue: #1155d4;
+      --accent-orange: #eb783f;
+      --dark-blue: #0e47af;
+      --light-blue: #9fc5e8;
+      --text-gray: #666;
+    }
+
+    body {
+      font-family: 'Mardoto-Light', sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background: #f8f9fa;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: 240px;
+      background: white;
+      padding: 2rem 1rem;
+      border-right: 1px solid var(--light-blue);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    }
+
+    #sidebar a {
+      text-decoration: none;
+      font-size: 1rem;
+      color: var(--primary-blue);
+      padding: 12px 20px;
+      border: 1px solid var(--primary-blue);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+
+    #sidebar a.active {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    #sidebar a:hover {
+      opacity: 0.8;
+    }
+
+    .logout-link {
+      margin-top: auto;
+      font-size: 0.9rem;
+      color: #dc3545 !important;
+      text-decoration: none;
+      padding: 12px 20px;
+      border: 1px solid #dc3545 !important;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .logout-link:hover {
+      background: rgba(220, 53, 69, 0.1);
+    }
+
+    /* Main Content */
+    #calendar-container {
+      flex: 1;
+      padding: 2rem;
+      overflow: auto;
+      background: white;
+    }
+
+    #calendar-nav { 
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #calendar-nav button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      background: var(--accent-orange);
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+
+    #calendar-nav button:hover {
+      transform: translateY(-2px);
+    }
+
+    #current-month {
+      font-size: 1.2rem;
+      color: var(--primary-blue);
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid var(--light-blue);
+      text-align: center;
+      padding: 12px;
+      min-width: 50px;
+      background: white;
+    }
+
+    th {
+      background: var(--primary-blue);
+      color: white;
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+
+    td.clickable { 
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    td.clickable:hover {
+      background: var(--light-blue);
+    }
+
+    /* Student Grouping Section */
+    #student-grouping {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    #group-select {
+      padding: 10px 15px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--light-blue);
+      border-radius: 8px;
+      width: 100%;
+      font-family: 'Mardoto-Light', sans-serif;
+    }
+
+    .student-item {
+      padding: 12px 20px;
+      margin: 8px 0;
+      background: white;
+      border: 1px solid var(--light-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .student-item.selected {
+      background-color: var(--light-blue);
+      border-color: var(--primary-blue);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      
+      #sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-right: none;
+        border-bottom: 1px solid var(--light-blue);
+      }
+    
+      
+      #calendar-container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar">
+    <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
+    <a href="https://pha.am/tutorcal/attendance" class="active">Հաճախություն</a>
+    <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
+  </div>
+  
+  <div id="calendar-container">
+    <div id="calendar-nav">
+      <button id="prev-month">Նախորդ ամիս</button>
+      <button id="next-month">Հաջորդ ամիս</button>
+      <span id="current-month"></span>
+    </div>
+    <div id="calendar"></div>
+    
+    <div id="student-grouping">
+      <select id="group-select">
+        <option value="All">Բոլոր ուսանողները</option>
+        <option value="Group A">Խումբ Ա</option>
+        <option value="Group B">Խումբ Բ</option>
+      </select>
+      <div id="student-list"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, setDoc, getDocs, query, where, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    
+
+    const studentGroups = {
+      "All": [
+        { email: "aramasatryan290@gmail.com", name: "Արամասատրյան" },
+        { email: "aaram3389@gmail.com", name: "Աարամ" }
+      ],
+      "Group A": [
+        { email: "aramasatryan290@gmail.com", name: "Արամասատրյան" }
+      ],
+      "Group B": [
+        { email: "aaram3389@gmail.com", name: "Աարամ" }
+      ]
+    };
+
+    let selectedStudent = null;
+    let currentDate = new Date();
+    currentDate.setDate(1);
+    const calendarDiv = document.getElementById("calendar");
+    const currentMonthSpan = document.getElementById("current-month");
+    const prevMonthBtn = document.getElementById("prev-month");
+    const nextMonthBtn = document.getElementById("next-month");
+    const studentListDiv = document.getElementById("student-list");
+    const groupSelect = document.getElementById("group-select");
+
+    const armMonths = [
+      "Հունվար", "Փետրվար", "Մարտ", "Ապրիլ", 
+      "Մայիս", "Հունիս", "Հուլիս", "Օգոստոս", 
+      "Սեպտեմբեր", "Հոկտեմբեր", "Նոյեմբեր", "Դեկտեմբեր"
+    ];
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      return `${year}-${month}-${day}`;
+    }
+
+    function displayMonth(date) {
+      return `${armMonths[date.getMonth()]} ${date.getFullYear()}`;
+    }
+
+    function displayStudents() {
+      const selectedGroup = groupSelect.value;
+      let students = studentGroups[selectedGroup] || [];
+      studentListDiv.innerHTML = "";
+      students.forEach(student => {
+        const div = document.createElement("div");
+        div.className = "student-item";
+        div.textContent = `${student.name} (${student.email})`;
+        div.addEventListener("click", (event) => { selectStudent(student, event); });
+        studentListDiv.appendChild(div);
+      });
+      if (students.length > 0) {
+        const firstStudentEl = studentListDiv.querySelector(".student-item");
+        selectStudent(students[0], { currentTarget: firstStudentEl });
+      }
+    }
+    
+    function selectStudent(student, event) {
+      selectedStudent = student;
+      document.querySelectorAll(".student-item").forEach(el => el.classList.remove("selected"));
+      event.currentTarget.classList.add("selected");
+      generateCalendar();
+      loadAttendance(student.email);
+    }
+
+    function generateCalendar() {
+      calendarDiv.innerHTML = "";
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      currentMonthSpan.textContent = displayMonth(currentDate);
+      
+      const table = document.createElement("table");
+      const headerRow = document.createElement("tr");
+      const daysOfWeek = ["Կիր", "Երկ", "Երք", "Չրք", "Հնգ", "Ուր", "Շբթ"];
+      
+      daysOfWeek.forEach(day => {
+        const th = document.createElement("th");
+        th.textContent = day;
+        headerRow.appendChild(th);
+      });
+      
+      table.appendChild(headerRow);
+      let date = 1;
+      
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("tr");
+        for (let j = 0; j < 7; j++) {
+          const cell = document.createElement("td");
+          if (i === 0 && j < firstDay) { 
+            cell.textContent = ""; 
+          } else if (date > daysInMonth) { 
+            cell.textContent = ""; 
+          } else {
+            cell.textContent = date;
+            const fullDate = new Date(year, month, date);
+            cell.setAttribute("data-date", formatDate(fullDate));
+            cell.classList.add("clickable");
+            cell.addEventListener("click", cellClick);
+            date++;
+          }
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+      calendarDiv.appendChild(table);
+    }
+
+    async function loadAttendance(studentEmail) {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const startDate = formatDate(new Date(year, month, 1));
+      const endDate = formatDate(new Date(year, month, daysInMonth));
+      
+      const attendanceQuery = query(
+        collection(db, "attendance"),
+        where("studentEmail", "==", studentEmail)
+      );
+      
+      try {
+        const querySnapshot = await getDocs(attendanceQuery);
+        querySnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data.date && data.date >= startDate && data.date <= endDate) {
+            const cells = document.querySelectorAll("[data-date]");
+            cells.forEach(cell => {
+              if (cell.getAttribute("data-date") === data.date) {
+                cell.textContent = cell.textContent.split(" - ")[0] + " - " + data.attendanceCode;
+                if (data.attendanceCode.toUpperCase().startsWith("P"))
+                  cell.style.backgroundColor = "#c8e6c9";
+                else if (data.attendanceCode.toUpperCase().startsWith("A"))
+                  cell.style.backgroundColor = "#ffcdd2";
+              }
+            });
+          }
+        });
+      } catch (error) { 
+        console.error("Սխալ տվյալներ բեռնելիս:", error); 
+      }
+    }
+
+    async function cellClick(event) {
+      if (!selectedStudent) { 
+        alert("Խնդրում ենք նախ ընտրել ուսանողի։"); 
+        return; 
+      }
+      
+      const cell = event.currentTarget;
+      const cellDateStr = cell.getAttribute("data-date");
+      const input = prompt("Մուտքագրեք հաճախության կոդը (օրինակ՝ P3 ներկայի, A4 բացակայի համար) " + cellDateStr);
+      
+      if (!input) return;
+      
+      try {
+        const docId = selectedStudent.email.replace(/[@.]/g, '_') + "_" + cellDateStr;
+        await setDoc(doc(db, "attendance", docId), {
+          studentEmail: selectedStudent.email,
+          date: cellDateStr,
+          attendanceCode: input
+        });
+        cell.textContent = cell.textContent.split(" - ")[0] + " - " + input;
+        if (input.toUpperCase().startsWith("P"))
+          cell.style.backgroundColor = "#c8e6c9";
+        else if (input.toUpperCase().startsWith("A"))
+          cell.style.backgroundColor = "#ffcdd2";
+      } catch (error) { 
+        console.error("Սխալ տվյալների թարմացման ժամանակ:", error); 
+      }
+    }
+
+    prevMonthBtn.addEventListener("click", () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      generateCalendar();
+      if (selectedStudent) loadAttendance(selectedStudent.email);
+    });
+    
+    nextMonthBtn.addEventListener("click", () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      generateCalendar();
+      if (selectedStudent) loadAttendance(selectedStudent.email);
+    });
+
+    groupSelect.addEventListener("change", displayStudents);
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) { 
+        window.location.href = "/login/"; 
+        return; 
+      }
+      displayStudents();
+    });
+  </script>
+</body>
+</html>
