@@ -66,23 +66,26 @@
             text-align: center;
             z-index: 1000;
         }
+        .controls input[type="file"],
         .controls button {
-            padding: 8px 16px;
             margin: 0 5px;
-            background-color: #4CAF50;
-            color: white;
+            padding: 8px 16px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
+        .controls button {
+            background-color: #4CAF50;
+            color: white;
+        }
         #extendPage { background-color: #2196F3; }
-        /* Fixed A4 container dimensions */
+        /* A4 Container */
         #a4-container {
             width: 8.27in;
             height: 11.69in;
             background-color: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin: 80px auto 20px auto; /* Increased top margin so content starts below fixed toolbar */
+            margin: 80px auto 20px auto; /* Increased top margin to avoid fixed toolbar */
             position: relative;
             overflow: hidden;
         }
@@ -151,8 +154,12 @@
         const auth = getAuth(app);
         onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "/login/"; });
         window.logout = async () => {
-          try { await signOut(auth); window.location.href = "/login/"; }
-          catch (error) { console.error("Logout error:", error); }
+          try { 
+              await signOut(auth); 
+              window.location.href = "/login/"; 
+          } catch (error) { 
+              console.error("Logout error:", error); 
+          }
         };
     </script>
     <script>
@@ -163,6 +170,7 @@
         function getClientX(e) { return e.touches ? e.touches[0].clientX : e.clientX; }
         function getClientY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
         
+        // When an image is uploaded, place it relative to the user's current viewport
         document.getElementById('imageUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -175,9 +183,10 @@
                 img.onload = function() {
                     const aspect = img.naturalWidth / img.naturalHeight;
                     container.dataset.aspect = aspect;
+                    // Set default dimensions without squeezing the image
                     const imgWidth = 200;
                     const imgHeight = 200 / aspect;
-                    // Calculate position relative to where the user is currently viewing
+                    // Calculate position based on the current viewport center relative to the A4 container
                     const containerRect = a4Container.getBoundingClientRect();
                     const viewportCenterX = window.innerWidth / 2;
                     const viewportCenterY = window.innerHeight / 2;
@@ -202,12 +211,13 @@
             reader.readAsDataURL(file);
         });
         
+        // Extend the A4 container's height by one A4 page (11.69in * 96px/in)
         function extendPage() {
             const container = document.getElementById('a4-container');
-            // Increase the container's height by one A4 page (11.69in * 96px/in)
             container.style.height = (container.offsetHeight + 11.69 * 96) + "px";
         }
         
+        // Ensure new dimensions remain within the container bounds
         function enforceBoundaries(element, newWidth, newHeight) {
             const container = document.getElementById('a4-container');
             const maxX = container.offsetWidth - element.offsetLeft;
@@ -218,24 +228,31 @@
             };
         }
         
+        // Save the A4 container as a PNG with high quality yet reasonable file size.
         async function saveAsPNG() {
             const container = document.getElementById('a4-container');
             container.classList.add('hide-handles');
+            // Remove box-shadow temporarily to avoid a black rectangle in the export
+            const originalBoxShadow = container.style.boxShadow;
+            container.style.boxShadow = "none";
+            // Use a scale factor based on devicePixelRatio, but cap it at 2 for reasonable weight.
+            const scaleFactor = Math.min(window.devicePixelRatio || 1, 2);
             await html2canvas(container, {
-                scale: 1, // use a lower scale to reduce file size
+                scale: scaleFactor,
                 useCORS: true,
-                backgroundColor: '#FFFFFF',
-                width: container.clientWidth,
-                height: container.clientHeight
+                backgroundColor: '#FFFFFF'
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'document.png';
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
+                // Restore original styling after export
+                container.style.boxShadow = originalBoxShadow;
                 container.classList.remove('hide-handles');
             });
         }
         
+        // Drag functionality for moving uploaded elements
         function startDragging(e) {
             if (isResizing) return;
             selectedElement = e.currentTarget;
@@ -273,6 +290,7 @@
             document.removeEventListener('touchend', stopDragging);
         }
         
+        // Resizing functionality for the uploaded images
         function startResizing(e) {
             e.stopPropagation();
             isResizing = true;
@@ -300,6 +318,7 @@
             const deltaY = getClientY(e) - startY;
             let newWidth = startWidth + deltaX;
             let newHeight = startHeight + deltaY;
+            // Maintain the original aspect ratio without squeezing the image
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 newHeight = newWidth / aspect;
             } else {
