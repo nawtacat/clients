@@ -73,8 +73,6 @@
             opacity: 0.8;
         }
 
-    
-
         /* Controls */
         .controls {
             position: fixed;
@@ -189,10 +187,7 @@
                 flex-wrap: wrap;
                 border-right: none;
                 border-bottom: 1px solid var(--light-blue);
-                height: auto;
             }
-            
-        
             
             .controls {
                 left: 0;
@@ -213,7 +208,8 @@
     <!-- Navigation Sidebar -->
     <nav id="sidebar">
       <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
-      <a href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
+      <!-- We assign an id so we can update this link dynamically -->
+      <a id="attendanceLink" href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
       <a href="https://pha.am/editor" class="active">Դասի խմբագրիչ</a>
     </nav>
     
@@ -229,10 +225,12 @@
     
     <div id="a4-container"></div>
     
-    <!-- Firebase Authentication -->
+    <!-- Firebase SDKs: Auth and Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
         const firebaseConfig = {
           apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
           authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -244,8 +242,38 @@
         };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        onAuthStateChanged(auth, (user) => { if (!user) window.location.href = "/login/"; });
+        const db = getFirestore(app);
+        
+        // Function to check if the logged-in user's email is in the "tutors" collection.
+        async function isTutor(email) {
+          const tutorRef = doc(db, "tutors", email);
+          const tutorSnap = await getDoc(tutorRef);
+          return tutorSnap.exists();
+        }
+        
+        // Listen for auth state changes.
+        onAuthStateChanged(auth, async (user) => {
+          if (!user) {
+            // Not logged in; redirect to login.
+            window.location.href = "/login/";
+          } else {
+            const email = user.email.toLowerCase().trim();
+            const username = email.split('@')[0];
+            // Check tutor status.
+            if (!(await isTutor(email))) {
+              // If the user is not a tutor, redirect (for example, to their student page).
+              window.location.href = `https://pha.am/${username}`;
+            } else {
+              // If the user is a tutor, update the attendance link dynamically.
+              const attendanceLink = document.getElementById("attendanceLink");
+              if (attendanceLink) {
+                attendanceLink.href = `https://pha.am/attendance/${username}`;
+              }
+            }
+          }
+        });
     </script>
+    
     <script>
         let selectedElement = null;
         let isResizing = false;
@@ -409,7 +437,6 @@
             document.removeEventListener('touchmove', resizeElement);
             document.removeEventListener('touchend', stopResizing);
         }
-    </script>
     </script>
 </body>
 </html>
