@@ -37,13 +37,20 @@
       // Login button functionality
       document.getElementById("loginButton").addEventListener("click", () => {
         onAuthStateChanged(auth, (user) => {
-          if (user) {
-            const username = user.email.split("@")[0];
-            window.location.href = `/${username}/`; // Redirect to parent's dashboard
-          } else {
-            window.location.href = "/login/"; // Redirect to login page
-          }
-        });
+  if (user) {
+    const email = user.email.toLowerCase();
+    const username = email.split("@")[0];
+
+    if (email.endsWith("@pha.am")) {
+      window.location.href = "/tutorcal"; // Redirect to tutor dashboard
+    } else {
+      window.location.href = `/${username}/`; // Redirect to parent dashboard
+    }
+  } else {
+    window.location.href = "/login/";
+  }
+});
+
       });
 
       // Scroll button functionality
