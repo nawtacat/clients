@@ -172,7 +172,28 @@
             z-index: 2;
         }
 
-        .hide-handles .resize-handle { display: none !important; }
+        .remove-button {
+            position: absolute;
+            right: -8px;
+            top: -8px;
+            width: 16px;
+            height: 16px;
+            background-color: #ff4444;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 2;
+        }
+
+        .hide-handles .resize-handle,
+        .hide-handles .remove-button { 
+            display: none !important; 
+        }
 
         @media (max-width: 768px) {
             body {
@@ -309,8 +330,17 @@
                 img.src = event.target.result;
                 const resizeHandle = document.createElement('div');
                 resizeHandle.className = 'resize-handle';
+                
+                // Add remove button
+                const removeButton = document.createElement('div');
+                removeButton.className = 'remove-button';
+                removeButton.innerHTML = '×';
+                removeButton.addEventListener('mousedown', removeElement);
+                removeButton.addEventListener('touchstart', removeElement, {passive: false});
+
                 container.appendChild(img);
                 container.appendChild(resizeHandle);
+                container.appendChild(removeButton);
                 container.addEventListener('mousedown', startDragging);
                 container.addEventListener('touchstart', startDragging, {passive: false});
                 resizeHandle.addEventListener('mousedown', startResizing);
@@ -437,7 +467,15 @@
             document.removeEventListener('touchmove', resizeElement);
             document.removeEventListener('touchend', stopResizing);
         }
+
+        // New remove element function
+        function removeElement(e) {
+            e.stopPropagation();
+            const container = e.currentTarget.parentElement;
+            container.remove();
+        }
     </script>
 </body>
+</html>
 </html>
 
