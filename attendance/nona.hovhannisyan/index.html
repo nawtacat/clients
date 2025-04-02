@@ -102,10 +102,12 @@
     #calendar-nav button:hover {
       transform: translateY(-2px);
     }
+    /* Use a p tag for month/year display */
     #current-month {
       font-size: 1.2rem;
       color: var(--primary-blue);
       font-family: 'Mardoto-Medium', sans-serif;
+      margin: 0;
     }
     table {
       border-collapse: collapse;
@@ -113,16 +115,23 @@
       margin: 1rem 0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    th, td {
+    td, th {
       border: 1px solid var(--light-blue);
       text-align: center;
       padding: 12px;
       min-width: 50px;
       background: white;
     }
-    th {
-      background: var(--primary-blue);
+    /* Weekday header cells: use td with a p tag and ensure full-cell blue background */
+    .weekday-cell {
+      background-color: var(--primary-blue);
+      padding: 0;
+    }
+    .weekday-cell p {
+      margin: 0;
+      padding: 12px;
       color: white;
+      text-align: center;
       font-family: 'Mardoto-Medium', sans-serif;
     }
     td.clickable { 
@@ -192,7 +201,8 @@
     <div id="calendar-nav">
       <button id="prev-month">Նախորդ ամիս</button>
       <button id="next-month">Հաջորդ ամիս</button>
-      <span id="current-month"></span>
+      <!-- Current month display using a p tag -->
+      <p id="current-month"></p>
     </div>
     <div id="calendar"></div>
     <div id="student-grouping">
@@ -209,7 +219,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
@@ -229,7 +239,6 @@
     function setActiveNav() {
       const attendanceLink = document.querySelector('#sidebar a[href*="attendance"]');
       if (attendanceLink) {
-        // Remove "active" class from all links first.
         document.querySelectorAll('#sidebar a').forEach(link => link.classList.remove("active"));
         attendanceLink.classList.add("active");
       }
@@ -247,9 +256,8 @@
     });
 
     // Extract the expected username from the URL.
-    // Expecting a URL like: https://pha.am/attendance/mike.himmel
     const pathParts = window.location.pathname.split("/").filter(part => part !== "");
-    const expectedUsername = pathParts[pathParts.length - 1]; // e.g., "mike.himmel"
+    const expectedUsername = pathParts[pathParts.length - 1];
 
     // Listen for auth state changes and verify that the logged-in user matches the URL.
     onAuthStateChanged(auth, (user) => {
@@ -259,21 +267,18 @@
         const email = user.email.toLowerCase().trim();
         const loggedInUsername = email.split('@')[0];
         if (loggedInUsername !== expectedUsername) {
-          // If the logged in user's username does not match the URL, redirect.
           window.location.href = "/login/";
         } else {
-          // Update the attendance link (if present) to always point to the correct URL.
           const attendanceLink = document.getElementById("attendanceLink");
           if (attendanceLink) {
             attendanceLink.href = `https://pha.am/attendance/${loggedInUsername}`;
           }
-          // Initialize page content once the user is verified.
           initPage();
         }
       }
     });
 
-    // Initialize the page: set active nav, load calendar and students.
+    // Initialize page content.
     function initPage() {
       setActiveNav();
       generateCalendar();
@@ -291,7 +296,7 @@
     let currentDate = new Date();
     currentDate.setDate(1);
     const calendarDiv = document.getElementById("calendar");
-    const currentMonthSpan = document.getElementById("current-month");
+    const currentMonthP = document.getElementById("current-month");
     const prevMonthBtn = document.getElementById("prev-month");
     const nextMonthBtn = document.getElementById("next-month");
     const studentListDiv = document.getElementById("student-list");
@@ -314,21 +319,23 @@
       const month = currentDate.getMonth();
       const firstDay = new Date(year, month, 1).getDay();
       const daysInMonth = new Date(year, month + 1, 0).getDate();
-      currentMonthSpan.textContent = displayMonth(currentDate);
+      currentMonthP.textContent = displayMonth(currentDate);
       
       const table = document.createElement("table");
+      // Build header row using TD cells with p tags for weekday names.
       const headerRow = document.createElement("tr");
       const daysOfWeek = ["Կիր", "Երկ", "Երք", "Չրք", "Հնգ", "Ուր", "Շբթ"];
-      
       daysOfWeek.forEach(day => {
-        const th = document.createElement("th");
-        th.textContent = day;
-        headerRow.appendChild(th);
+        const td = document.createElement("td");
+        td.classList.add("weekday-cell");
+        const p = document.createElement("p");
+        p.textContent = day;
+        td.appendChild(p);
+        headerRow.appendChild(td);
       });
-      
       table.appendChild(headerRow);
-      let date = 1;
       
+      let date = 1;
       for (let i = 0; i < 6; i++) {
         const row = document.createElement("tr");
         for (let j = 0; j < 7; j++) {
@@ -375,7 +382,6 @@
         studentListDiv.appendChild(div);
       });
       if (students.length > 0) {
-        // Auto-select first student.
         const firstStudentEl = studentListDiv.firstChild;
         firstStudentEl.click();
       }
@@ -431,21 +437,35 @@
       
       const cell = event.currentTarget;
       const cellDateStr = cell.getAttribute("data-date");
-      const input = prompt("Մուտքագրեք հաճախության կոդը (օրինակ՝ P3 ներկայի, A4 բացակայի համար) " + cellDateStr);
+      const input = prompt("Մուտքագրեք հաճախության կոդը (օրինակ՝ P3 ներկայի, A4 բացակայի համար) " + cellDateStr + "\nՀեռացման համար թողեք դատարկ:");
       
-      if (!input) return;
+      if (input === null) return;
+      
+      const trimmedInput = input.trim();
+      if (trimmedInput === "") {
+        try {
+          const docId = selectedStudent.email.replace(/[@.]/g, '_') + "_" + cellDateStr;
+          await deleteDoc(doc(db, "attendance", docId));
+          cell.textContent = cell.textContent.split(" - ")[0];
+          cell.style.backgroundColor = "";
+          return;
+        } catch (error) { 
+          console.error("Սխալ տվյալների ջնջման ժամանակ:", error);
+          return;
+        }
+      }
       
       try {
         const docId = selectedStudent.email.replace(/[@.]/g, '_') + "_" + cellDateStr;
         await setDoc(doc(db, "attendance", docId), {
           studentEmail: selectedStudent.email,
           date: cellDateStr,
-          attendanceCode: input
+          attendanceCode: trimmedInput
         });
-        cell.textContent = cell.textContent.split(" - ")[0] + " - " + input;
-        if (input.toUpperCase().startsWith("P"))
+        cell.textContent = cell.textContent.split(" - ")[0] + " - " + trimmedInput;
+        if (trimmedInput.toUpperCase().startsWith("P"))
           cell.style.backgroundColor = "#c8e6c9";
-        else if (input.toUpperCase().startsWith("A"))
+        else if (trimmedInput.toUpperCase().startsWith("A"))
           cell.style.backgroundColor = "#ffcdd2";
       } catch (error) { 
         console.error("Սխալ տվյալների թարմացման ժամանակ:", error); 
@@ -469,7 +489,6 @@
     document.addEventListener("DOMContentLoaded", () => {
       setActiveNav();
     });
-
   </script>
 </body>
 </html>
