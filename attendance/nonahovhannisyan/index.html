@@ -437,7 +437,7 @@
       
       const cell = event.currentTarget;
       const cellDateStr = cell.getAttribute("data-date");
-      const input = prompt("Մուտքագրեք հաճախության կոդը (օրինակ՝ P3 ներկայի, A4 բացակայի համար) " + cellDateStr + "\nՀեռացման համար թողեք դատարկ:");
+      const input = prompt("Մուտքագրեք հաճախության կոդը (օրինակ՝ Ն3 ներկայի, Բ4 բացակայի համար) " + cellDateStr + "\nՀեռացման համար թողեք դատարկ:");
       
       if (input === null) return;
       
@@ -463,9 +463,9 @@
           attendanceCode: trimmedInput
         });
         cell.textContent = cell.textContent.split(" - ")[0] + " - " + trimmedInput;
-        if (trimmedInput.toUpperCase().startsWith("P"))
+        if (trimmedInput.toUpperCase().startsWith("Ն"))
           cell.style.backgroundColor = "#c8e6c9";
-        else if (trimmedInput.toUpperCase().startsWith("A"))
+        else if (trimmedInput.toUpperCase().startsWith("Բ"))
           cell.style.backgroundColor = "#ffcdd2";
       } catch (error) { 
         console.error("Սխալ տվյալների թարմացման ժամանակ:", error); 
