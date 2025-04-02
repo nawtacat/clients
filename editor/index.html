@@ -73,6 +73,12 @@
             opacity: 0.8;
         }
 
+        /* Disabled link style */
+        #attendanceLink.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
         /* Controls */
         .controls {
             position: fixed;
@@ -229,8 +235,8 @@
     <!-- Navigation Sidebar -->
     <nav id="sidebar">
       <a href="https://pha.am/tutorcal">Հարցերի տվյալներ</a>
-      <!-- We assign an id so we can update this link dynamically -->
-      <a id="attendanceLink" href="#">Հաճախություն</a>
+      <!-- Initially disabled and href set to '#' -->
+      <a id="attendanceLink" href="#" class="disabled">Հաճախություն</a>
       <a href="https://pha.am/editor" class="active">Դասի խմբագրիչ</a>
     </nav>
     
@@ -289,6 +295,8 @@
               const attendanceLink = document.getElementById("attendanceLink");
               if (attendanceLink) {
                 attendanceLink.href = `https://pha.am/attendance/${username}`;
+                attendanceLink.classList.remove("disabled");
+                console.log("Attendance link updated to:", attendanceLink.href);
               }
             }
           }
@@ -477,5 +485,3 @@
     </script>
 </body>
 </html>
-</html>
-
