@@ -172,6 +172,12 @@
       opacity: 0.8;
     }
 
+    /* Disabled link style for attendance link */
+    .nav-links a.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
     @media (max-width: 998px) {
       body {
         padding: 1rem;
@@ -230,6 +236,8 @@
         const attendanceLink = document.getElementById("attendanceLink");
         if (attendanceLink) {
           attendanceLink.href = `https://pha.am/attendance/${username}`;
+          attendanceLink.classList.remove("disabled");
+          console.log("Attendance link updated to:", attendanceLink.href);
         }
       }
     });
@@ -239,7 +247,8 @@
   <!-- Navigation Sidebar (No Logout Button for /tutorcal) -->
   <nav class="nav-links">
     <a href="https://pha.am/tutorcal" class="active">Հարցերի տվյալներ</a>
-    <a id="attendanceLink" href="https://pha.am/tutorcal/attendance">Հաճախություն</a>
+    <!-- Initially disabled; href set to '#' -->
+    <a id="attendanceLink" href="#" class="disabled">Հաճախություն</a>
     <a href="https://pha.am/editor">Դասի խմբագրիչ</a>
   </nav>
 
@@ -354,4 +363,3 @@
   </script>
 </body>
 </html>
-
