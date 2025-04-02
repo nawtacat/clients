@@ -379,7 +379,7 @@
       students.forEach(student => {
         const div = document.createElement("div");
         div.className = "student-item";
-        div.textContent = `${student.name};
+        div.textContent = student.name;
         div.addEventListener("click", (event) => { selectStudent(student, event); });
         studentListDiv.appendChild(div);
       });
