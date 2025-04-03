@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PhA - Optimized</title>
+  <title>PhA - Official</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-iconB.png">
   <link rel="manifest" href="/manifest.json">
 
-  <!-- Firebase Full Implementation -->
+  <!-- Complete Firebase Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { 
@@ -25,7 +25,6 @@
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
       authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -36,23 +35,23 @@
       measurementId: "G-CGVKXTXJLB"
     };
 
-    // Initialize Services
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     setPersistence(auth, browserSessionPersistence);
 
-    // Auth Manager
     let currentUser = null;
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
-      if (user) user.getIdTokenResult(true); // Pre-fresh claims
+      if (user) user.getIdTokenResult(true);
     });
 
-    // Login Handler
     async function handleLogin() {
       const btn = document.getElementById('loginButton');
-      if (!currentUser) return window.location.href = "/login/";
+      if (!currentUser) {
+        window.location.href = "https://pha.am/login/";
+        return;
+      }
       
       btn.disabled = true;
       const originalText = btn.textContent;
@@ -60,41 +59,49 @@
 
       try {
         const { claims } = await currentUser.getIdTokenResult(true);
-        window.location.href = claims.tutor ? "/tutorcal" : `/${currentUser.email.split('@')[0]}/`;
+        const email = currentUser.email.toLowerCase().trim();
+        const username = email.split('@')[0];
+
+        if (claims.tutor) {
+          window.location.href = "https://pha.am/tutorcal";
+        } else {
+          window.location.href = `https://pha.am/${username}/`;
+        }
       } catch (error) {
-        console.error("Login error:", error);
-        window.location.href = "/login/";
+        window.location.href = "https://pha.am/login/";
       } finally {
         btn.disabled = false;
         btn.textContent = originalText;
       }
     }
 
-    // DOM Setup
     document.addEventListener('DOMContentLoaded', () => {
-      // Login Button
       document.getElementById('loginButton').addEventListener('click', (e) => {
         e.preventDefault();
         handleLogin();
       });
 
-      // Scroll Handlers
-      const smoothScroll = (element) => window.scrollTo({
-        top: element.offsetTop,
-        behavior: "smooth"
+      document.getElementById("scroll-btn").addEventListener("click", () => {
+        window.scrollTo({
+          top: document.getElementById("second-section").offsetTop,
+          behavior: "smooth"
+        });
       });
-
-      document.getElementById("scroll-btn").addEventListener("click", () => 
-        smoothScroll(document.getElementById("second-section")));
 
       document.getElementById("about-link").addEventListener("click", (e) => {
         e.preventDefault();
-        smoothScroll(document.getElementById("second-section"));
+        window.scrollTo({
+          top: document.getElementById("second-section").offsetTop,
+          behavior: "smooth"
+        });
       });
 
       document.getElementById("contact-link").addEventListener("click", (e) => {
         e.preventDefault();
-        smoothScroll(document.querySelector("footer"));
+        window.scrollTo({
+          top: document.querySelector("footer").offsetTop,
+          behavior: "smooth"
+        });
       });
 
       document.getElementById("register-link").addEventListener("click", (e) => {
@@ -102,7 +109,6 @@
         document.getElementById("application-form-container").scrollIntoView({ behavior: "smooth" });
       });
 
-      // Form Submission
       document.querySelector(".application-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -120,7 +126,6 @@
           alert("Ձեր հայտը հաջողությամբ ուղարկվեց:");
           form.reset();
         } catch (error) {
-          console.error("Submission error:", error);
           alert("Կապի սխալ: Փորձեք կրկին:");
         }
       });
