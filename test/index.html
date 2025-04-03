@@ -41,8 +41,9 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      // Login button functionality: determine the destination using Firestore lookup.
-      document.getElementById("loginButton").addEventListener("click", () => {
+      // Login button functionality: determine destination using Firestore lookup.
+      document.getElementById("loginButton").addEventListener("click", (e) => {
+        e.preventDefault(); // Prevent default anchor behavior
         onAuthStateChanged(auth, async (user) => {
           if (user) {
             const email = user.email.toLowerCase().trim();
@@ -139,7 +140,7 @@
   <div class="hero-section">
     <div class="content-wrapper">
       <h1>Բարի գալուստ <br> Ֆիզմաթ Ակադեմիա</h1>
-      <p>Մեր նպատակը՝ դարձնել որակյալ կրթությունը հասանելի բոլոր երեխաների համար, առցանց գործիքների միջոցով։</p>
+      <p>Մեր նպատակն է՝ դարձնել որակյալ կրթությունը հասանելի բոլոր երեխաների համար, առցանց գործիքների միջոցով։</p>
       <button class="get-started-btn" id="scroll-btn">Իմանալ ավելին</button>
     </div>
     <div class="image-container">
@@ -253,3 +254,4 @@
   </footer>
 </body>
 </html>
+
