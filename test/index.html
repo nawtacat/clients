@@ -15,7 +15,7 @@
     // Import Firebase modules from CDN
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     // Firebase configuration (replace with your own config)
     const firebaseConfig = {
@@ -33,24 +33,30 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    document.addEventListener("DOMContentLoaded", function () {
-      // Login button functionality
-      document.getElementById("loginButton").addEventListener("click", () => {
-        onAuthStateChanged(auth, (user) => {
-  if (user) {
-    const email = user.email.toLowerCase();
-    const username = email.split("@")[0];
-
-    if (email.endsWith("@pha.am")) {
-      window.location.href = "/tutorcal"; // Redirect to tutor dashboard
-    } else {
-      window.location.href = `/${username}/`; // Redirect to parent dashboard
+    // Firestore-based tutor detection: returns true if a document exists in "tutors" for the email.
+    async function isTutor(email) {
+      const tutorRef = doc(db, "tutors", email);
+      const tutorSnap = await getDoc(tutorRef);
+      return tutorSnap.exists();
     }
-  } else {
-    window.location.href = "/login/";
-  }
-});
 
+    document.addEventListener("DOMContentLoaded", function () {
+      // Login button functionality: determine the destination using Firestore lookup.
+      document.getElementById("loginButton").addEventListener("click", () => {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const email = user.email.toLowerCase().trim();
+            const username = email.split("@")[0];
+            // Use Firestore to check if the email belongs to a tutor.
+            if (await isTutor(email)) {
+              window.location.href = "/tutorcal"; // Redirect to tutor dashboard
+            } else {
+              window.location.href = `/${username}/`; // Redirect to parent/unique dashboard
+            }
+          } else {
+            window.location.href = "/login/";
+          }
+        });
       });
 
       // Scroll button functionality
@@ -105,7 +111,7 @@
             phone:      phone,
             childName:  childName,
             location:   location,
-              school:     school,
+            school:     school,
             class:      classVal,
             timestamp:  serverTimestamp()
           });
@@ -133,7 +139,7 @@
   <div class="hero-section">
     <div class="content-wrapper">
       <h1>Բարի գալուստ <br> Ֆիզմաթ Ակադեմիա</h1>
-      <p>Մեր նպատակն է՝ դարձնել որակյալ կրթությունը հասանելի բոլոր երեխաների համար, առցանց գործիքների միջոցով։</p>
+      <p>Մեր նպատակը՝ դարձնել որակյալ կրթությունը հասանելի բոլոր երեխաների համար, առցանց գործիքների միջոցով։</p>
       <button class="get-started-btn" id="scroll-btn">Իմանալ ավելին</button>
     </div>
     <div class="image-container">
@@ -154,7 +160,7 @@
     <div class="second-section-container">
       <div class="second-section-text">
         <h2>Բացահայտեք Ձեր երեխայի ներուժը մաթեմատիկայում</h2>
-        <p>Ֆիզմաթ Ակադեմիայի առցանց դասերը նախատեսված են բոլոր երեխաների համար։ Մանրակրտկորեն կազմված դասերի շնորհիվ, երեխաները կարճ ժամանակահատվածում հնարավորություն են ստանում հմտանալ մաթեմատիկայում, ձեռք բերել ինքնավստահություն և դառնալ ավելի ինքնուրույն սովորողներ</p>
+        <p>Ֆիզմաթ Ակադեմիայի առցանց դասերը նախատեսված են բոլոր երեխաների համար։ Մանրակրված դասերի շնորհիվ, երեխաները կարճ ժամանակահատվածում հնարավորություն են ստանում հմտանալ մաթեմատիկայում, ձեռք բերել ինքնավստահություն և դառնալ ավելի ինքնուրույն սովորողներ</p>
       </div>
       <div class="second-section-image">
         <img src="https://pha.am/kid.png" alt="Child with Notebook Hat">
