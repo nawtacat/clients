@@ -3,19 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PhA</title>
+  <title>PhA - Optimized</title>
   <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-iconB.png">
   <link rel="manifest" href="/manifest.json">
 
-  <!-- Firebase Functionality (Authentication & Firestore for form submission) -->
+  <!-- Firebase Full Implementation -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged,
+      setPersistence,
+      browserSessionPersistence 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { 
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
       authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -26,99 +36,91 @@
       measurementId: "G-CGVKXTXJLB"
     };
 
+    // Initialize Services
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    setPersistence(auth, browserSessionPersistence);
 
-    async function isTutor(email) {
-      const tutorRef = doc(db, "tutors", email);
-      const tutorSnap = await getDoc(tutorRef);
-      return tutorSnap.exists();
+    // Auth Manager
+    let currentUser = null;
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) user.getIdTokenResult(true); // Pre-fresh claims
+    });
+
+    // Login Handler
+    async function handleLogin() {
+      const btn = document.getElementById('loginButton');
+      if (!currentUser) return window.location.href = "/login/";
+      
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = "Մուտքագործում...";
+
+      try {
+        const { claims } = await currentUser.getIdTokenResult(true);
+        window.location.href = claims.tutor ? "/tutorcal" : `/${currentUser.email.split('@')[0]}/`;
+      } catch (error) {
+        console.error("Login error:", error);
+        window.location.href = "/login/";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      // Improved login button handler
-      document.getElementById("loginButton").addEventListener("click", async (e) => {
+    // DOM Setup
+    document.addEventListener('DOMContentLoaded', () => {
+      // Login Button
+      document.getElementById('loginButton').addEventListener('click', (e) => {
         e.preventDefault();
-        const user = auth.currentUser;
-        
-        if (user) {
-          try {
-            const email = user.email.toLowerCase().trim();
-            const username = email.split("@")[0];
-            if (await isTutor(email)) {
-              window.location.href = "/tutorcal";
-            } else {
-              window.location.href = `/${username}/`; // Fixed template literal
-            }
-          } catch (error) {
-            console.error("Redirect error:", error);
-            window.location.href = "/login/";
-          }
-        } else {
-          window.location.href = "/login/";
-        }
+        handleLogin();
       });
 
-      // Scroll button functionality
-      document.getElementById("scroll-btn").addEventListener("click", function () {
-        window.scrollTo({
-          top: document.getElementById("second-section").offsetTop,
-          behavior: "smooth"
-        });
+      // Scroll Handlers
+      const smoothScroll = (element) => window.scrollTo({
+        top: element.offsetTop,
+        behavior: "smooth"
       });
 
-      // "Մասին" link scroll
-      document.getElementById("about-link").addEventListener("click", function (e) {
+      document.getElementById("scroll-btn").addEventListener("click", () => 
+        smoothScroll(document.getElementById("second-section")));
+
+      document.getElementById("about-link").addEventListener("click", (e) => {
         e.preventDefault();
-        window.scrollTo({
-          top: document.getElementById("second-section").offsetTop,
-          behavior: "smooth"
-        });
+        smoothScroll(document.getElementById("second-section"));
       });
 
-      // "Կապ" link scroll
-      document.getElementById("contact-link").addEventListener("click", function (e) {
+      document.getElementById("contact-link").addEventListener("click", (e) => {
         e.preventDefault();
-        window.scrollTo({
-          top: document.querySelector("footer").offsetTop,
-          behavior: "smooth"
-        });
+        smoothScroll(document.querySelector("footer"));
       });
 
-      // Register link scroll
-      document.getElementById("register-link").addEventListener("click", function (e) {
+      document.getElementById("register-link").addEventListener("click", (e) => {
         e.preventDefault();
         document.getElementById("application-form-container").scrollIntoView({ behavior: "smooth" });
       });
 
-      // Application form submission
-      const form = document.querySelector(".application-form");
-      form.addEventListener("submit", async function (e) {
+      // Form Submission
+      document.querySelector(".application-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        const parentName = document.getElementById("parentName").value;
-        const phone      = document.getElementById("phone").value;
-        const childName  = document.getElementById("childName").value;
-        const location   = document.getElementById("location").value;
-        const school     = document.getElementById("school").value;
-        const classVal   = document.getElementById("class").value;
+        const form = e.target;
 
         try {
           await addDoc(collection(db, "applications"), {
-            parentName: parentName,
-            phone:      phone,
-            childName:  childName,
-            location:   location,
-            school:     school,
-            class:      classVal,
-            timestamp:  serverTimestamp()
+            parentName: form.parentName.value,
+            phone: form.phone.value,
+            childName: form.childName.value,
+            location: form.location.value,
+            school: form.school.value,
+            class: form.class.value,
+            timestamp: serverTimestamp()
           });
-
           alert("Ձեր հայտը հաջողությամբ ուղարկվեց:");
           form.reset();
         } catch (error) {
-          console.error("Error writing to Firestore:", error);
+          console.error("Submission error:", error);
           alert("Կապի սխալ: Փորձեք կրկին:");
         }
       });
