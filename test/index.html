@@ -12,12 +12,10 @@
 
   <!-- Firebase Functionality (Authentication & Firestore for form submission) -->
   <script type="module">
-    // Import Firebase modules from CDN
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Firebase configuration (replace with your own config)
     const firebaseConfig = {
       apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
       authDomain: "physmathacademy-722b3.firebaseapp.com",
@@ -28,49 +26,36 @@
       measurementId: "G-CGVKXTXJLB"
     };
 
-    // Initialize Firebase App, Auth, and Firestore
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Firestore-based tutor detection: returns true if a document exists in "tutors" for the email.
     async function isTutor(email) {
       const tutorRef = doc(db, "tutors", email);
       const tutorSnap = await getDoc(tutorRef);
       return tutorSnap.exists();
     }
 
-    // Immediately check if the user is already authenticated and redirect accordingly.
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const email = user.email.toLowerCase().trim();
-        const username = email.split("@")[0];
-        if (await isTutor(email)) {
-          window.location.href = "/tutorcal";
-        } else {
-          window.location.href = `/${username}/`;
-        }
-      }
-      // If no user, do nothing – the page remains on the login screen.
-    });
-
     document.addEventListener("DOMContentLoaded", function () {
-      // Login button functionality
-      document.getElementById("loginButton").addEventListener("click", (e) => {
-        e.preventDefault(); // Prevent default anchor behavior
-        // If the user is already logged in, use the cached value from auth.currentUser
-        if (auth.currentUser) {
-          const email = auth.currentUser.email.toLowerCase().trim();
-          const username = email.split("@")[0];
-          isTutor(email).then(isTutorResult => {
-            if (isTutorResult) {
+      // Improved login button handler
+      document.getElementById("loginButton").addEventListener("click", async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        
+        if (user) {
+          try {
+            const email = user.email.toLowerCase().trim();
+            const username = email.split("@")[0];
+            if (await isTutor(email)) {
               window.location.href = "/tutorcal";
             } else {
-              window.location.href = `/${username}/`;
+              window.location.href = `/${username}/`; // Fixed template literal
             }
-          });
+          } catch (error) {
+            console.error("Redirect error:", error);
+            window.location.href = "/login/";
+          }
         } else {
-          // If not logged in, send to login page.
           window.location.href = "/login/";
         }
       });
@@ -83,7 +68,7 @@
         });
       });
 
-      // "Մասին" link scroll functionality (same as "Իմանալ ավելին")
+      // "Մասին" link scroll
       document.getElementById("about-link").addEventListener("click", function (e) {
         e.preventDefault();
         window.scrollTo({
@@ -92,7 +77,7 @@
         });
       });
 
-      // "Կապ" link scroll functionality (scroll to footer)
+      // "Կապ" link scroll
       document.getElementById("contact-link").addEventListener("click", function (e) {
         e.preventDefault();
         window.scrollTo({
@@ -101,18 +86,17 @@
         });
       });
 
-      // Register link scroll functionality
+      // Register link scroll
       document.getElementById("register-link").addEventListener("click", function (e) {
         e.preventDefault();
         document.getElementById("application-form-container").scrollIntoView({ behavior: "smooth" });
       });
 
-      // Capture application form submission and write to Firestore
+      // Application form submission
       const form = document.querySelector(".application-form");
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        // Gather form data
         const parentName = document.getElementById("parentName").value;
         const phone      = document.getElementById("phone").value;
         const childName  = document.getElementById("childName").value;
@@ -121,7 +105,6 @@
         const classVal   = document.getElementById("class").value;
 
         try {
-          // Write a new document to the "applications" collection
           await addDoc(collection(db, "applications"), {
             parentName: parentName,
             phone:      phone,
@@ -155,7 +138,7 @@
   <div class="hero-section">
     <div class="content-wrapper">
       <h1>Բարի գալուստ <br> Ֆիզմաթ Ակադեմիա</h1>
-      <p>Մեր նպատակը՝ դարձնել որակյալ կրթությունը հասանելի բոլոր երեխաների համար, առցանց գործիքների միջոցով։</p>
+      <p>Մեր նպատակն է՝ դարձնել որակյալ կրթությունը հասանելի բոլոր երեխաների համար, առցանց գործիքների միջոցով։</p>
       <button class="get-started-btn" id="scroll-btn">Իմանալ ավելին</button>
     </div>
     <div class="image-container">
@@ -204,7 +187,6 @@
     </div>
   </section>
 
-  <!-- Integrated Application Form -->
   <div class="application-container" id="application-form-container">
     <h1>Միանալ մեր առցանց դասերին</h1>
     <p>Լրացրեք հայտը՝ առաջին անվճար դասին գրանցվելու համար։</p>
