@@ -199,10 +199,11 @@
             // Get the current URL path (e.g., "aramasatryan290" for pha.am/aramasatryan290)
             let currentPath = window.location.pathname.replace(/^\/+|\/+$/g, '');
             // If the current path does not match the authenticated username, redirect.
-            if (currentPath !== username) {
-                window.location.href = `/${username}/`;
-                return;
-            }
+            if (currentPath !== `dashboard/${username}`) {
+    window.location.href = `/dashboard/${username}/`;
+    return;
+}
+
             // Optionally populate profile info
             document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("profile-name").textContent = user.displayName || username;
