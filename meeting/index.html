@@ -1,0 +1,99 @@
+<!-- /meeting/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Join Lesson - Physmath Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://source.zoom.us/2.18.0/lib/vendor/react.min.js"></script>
+  <script src="https://source.zoom.us/2.18.0/lib/vendor/react-dom.min.js"></script>
+  <script src="https://source.zoom.us/2.18.0/lib/vendor/redux.min.js"></script>
+  <script src="https://source.zoom.us/2.18.0/lib/vendor/redux-thunk.min.js"></script>
+  <script src="https://source.zoom.us/2.18.0/lib/vendor/lodash.min.js"></script>
+  <script src="https://source.zoom.us/zoom-meeting-2.18.0.min.js"></script>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: sans-serif;
+    }
+    #zmmtg-root {
+      height: 100vh;
+      width: 100%;
+    }
+    .mobile-warning {
+      padding: 30px;
+      text-align: center;
+      font-size: 18px;
+    }
+    .zoom-button {
+      padding: 10px 20px;
+      background-color: #2D8CFF;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="zoom-container"></div>
+
+  <script>
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      document.body.innerHTML = `
+        <div class="mobile-warning">
+          <p>This lesson opens in the Zoom app.</p>
+          <button class="zoom-button" onclick="joinZoom()">Join Now</button>
+        </div>
+      `;
+    } else {
+      startZoomMeeting();
+    }
+
+    function joinZoom() {
+      // Replace with your actual Meeting ID and Password
+      const meetingId = 'YOUR_MEETING_ID';
+      const password = 'YOUR_MEETING_PASSWORD';
+
+      const zoomDeepLink = `zoomus://zoom.us/join?confno=${meetingId}&pwd=${password}`;
+      window.location.href = zoomDeepLink;
+    }
+
+    async function startZoomMeeting() {
+      const meetingNumber = 'YOUR_MEETING_ID';
+      const userName = 'Physmath Student';
+      const userEmail = 'student@pha.am';
+      const passWord = 'YOUR_MEETING_PASSWORD';
+
+      // Fetch the signature from your backend
+      const res = await fetch('/api/generate-signature?meetingNumber=' + meetingNumber);
+      const { signature } = await res.json();
+
+      ZoomMtg.setZoomJSLib('https://source.zoom.us/2.18.0/lib', '/av');
+      ZoomMtg.preLoadWasm();
+      ZoomMtg.prepareJssdk();
+
+      ZoomMtg.init({
+        leaveUrl: 'https://pha.am',
+        success: function () {
+          ZoomMtg.join({
+            signature,
+            meetingNumber,
+            userName,
+            apiKey: 'YOUR_ZOOM_API_KEY',
+            userEmail,
+            passWord,
+            success: () => console.log('Joined meeting'),
+            error: (err) => console.error(err)
+          });
+        },
+        error: function (err) {
+          console.error(err);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
