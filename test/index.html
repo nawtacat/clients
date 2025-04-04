@@ -64,7 +64,7 @@
               window.location.href = "/tutorcal"; // Redirect to tutor dashboard
             } else {
               const username = user.email.toLowerCase().split("@")[0];
-              window.location.href = `/${username}/`; // Redirect to student dashboard
+              window.location.href = `/dashboard/${username}/`  // Redirect to student dashboard
             }
           } else {
             // Fallback: if the role isn't cached yet, determine it now
