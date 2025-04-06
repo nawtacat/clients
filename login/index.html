@@ -207,7 +207,14 @@
       return tutorSnap.exists();
     }
 
-    // Listen for authentication state changes
+    // Function to check if the given email is in maintenance mode
+    async function isMaintenance(email) {
+      const maintenanceRef = doc(db, "maintenance", email);
+      const maintenanceSnap = await getDoc(maintenanceRef);
+      return maintenanceSnap.exists();
+    }
+
+    // Listen for authentication state changes and redirect accordingly
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const email = user.email.toLowerCase().trim();
@@ -215,8 +222,11 @@
         if (await isTutor(email)) {
           // Tutor: redirect to the common problem database
           window.location.href = "https://pha.am/tutorcal";
+        } else if (await isMaintenance(email)) {
+          // Maintenance: redirect to personal page (no dashboard)
+          window.location.href = `/${username}/`;
         } else {
-          // Student: redirect to their personal page
+          // Student: redirect to their personal dashboard
           window.location.href = `/dashboard/${username}/`;
         }
       }
@@ -270,3 +280,4 @@
   </div>
 </body>
 </html>
+
