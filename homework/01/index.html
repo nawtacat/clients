@@ -14,16 +14,13 @@
     // Retrieve the user's email from localStorage.
     let userEmail = localStorage.getItem('userEmail');
 
-    // Normalize email: trim and convert to lowercase.
+    // Normalize the email: trim and convert to lowercase.
     if (userEmail) {
       userEmail = userEmail.trim().toLowerCase();
     }
 
-    // Check if the user email is allowed.
-    const isAllowed = allowedEmails.some(email => email === userEmail);
-
-    // If not allowed, redirect to the login page.
-    if (!isAllowed) {
+    // If userEmail is not set or is not one of the allowed emails, redirect to the login page.
+    if (!userEmail || !allowedEmails.includes(userEmail)) {
       window.location.href = "https://pha.am/login";
     }
   </script>
@@ -109,7 +106,7 @@
         const q = questions[idx];
         if (!q) return;
 
-        // If option C is actually "C)" it might indicate no real C or D answers.
+        // Determine whether to show all options or only two.
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -130,7 +127,7 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // If user hasn't answered yet, allow selecting.
+        // Allow selecting options only if not answered yet.
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -144,7 +141,7 @@
             });
           });
         } else {
-          // If user has answered, show correct/incorrect states.
+          // If already answered, disable inputs and show results.
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -156,7 +153,6 @@
                 li.classList.remove('selected');
                 li.classList.add(response.correct ? 'correct' : 'incorrect');
               }
-              // Also show the correct one if user was wrong.
               if (!response.correct && input.value === q.correct) {
                 li.classList.add('correct');
               }
@@ -201,7 +197,7 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
-          // Highlight the correct answer if user was wrong.
+          // If answer was wrong, highlight the correct answer.
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -218,26 +214,21 @@
           updateButtonTexts();
 
         } else {
-          // Go to the next question or show results.
+          // Move to the next question or show results.
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
           } else {
-            // End of quiz.
             clearInterval(timerInterval);
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
 
-            // Hide the quiz form so only results are shown.
             quizForm.style.display = 'none';
 
-            // Prepare final result.
             const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
-            const resultMessage = percentageScore >= 75 
-              ? "Ապրես!" 
-              : "Փորձիր կրկին!";
+            const resultMessage = percentageScore >= 75 ? "Ապրես!" : "Փորձիր կրկին!";
 
             resultsDiv.innerHTML = `
               <p class="result-message">${resultMessage}</p>
@@ -248,9 +239,7 @@
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">Ժամանակ</span>
-                  <span class="stat-value time">
-                    ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
-                  </span>
+                  <span class="stat-value time">${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">Արդյունք</span>
