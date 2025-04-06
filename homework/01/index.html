@@ -7,22 +7,41 @@
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
 
-  <script>
+  <!-- Firebase Auth check -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    
+    // Replace these values with your own Firebase configuration.
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
     // Allowed email addresses (in lowercase)
     const allowedEmails = ['aramasatryan290@gmail.com', 'hayksargsyan@pha.am'];
 
-    // Retrieve the user's email from localStorage.
-    let userEmail = localStorage.getItem('userEmail');
-
-    // Normalize the email: trim and convert to lowercase.
-    if (userEmail) {
-      userEmail = userEmail.trim().toLowerCase();
-    }
-
-    // If userEmail is not set or is not one of the allowed emails, redirect to the login page.
-    if (!userEmail || !allowedEmails.includes(userEmail)) {
-      window.location.href = "https://pha.am/login";
-    }
+    // Check authentication state.
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const email = user.email.trim().toLowerCase();
+        // If the signed-in email is not in the allowed list, redirect to login.
+        if (!allowedEmails.includes(email)) {
+          window.location.href = "https://pha.am/login";
+        }
+      } else {
+        // If no user is signed in, redirect to login.
+        window.location.href = "https://pha.am/login";
+      }
+    });
   </script>
 </head>
 <body>
@@ -106,7 +125,7 @@
         const q = questions[idx];
         if (!q) return;
 
-        // Determine whether to show all options or only two.
+        // Decide whether to show all options.
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -127,7 +146,7 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // Allow selecting options only if not answered yet.
+        // Enable option selection only if the question is not yet answered.
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -141,7 +160,7 @@
             });
           });
         } else {
-          // If already answered, disable inputs and show results.
+          // If already answered, disable inputs and show the outcome.
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -181,7 +200,6 @@
 
       submitBtn.addEventListener('click', () => {
         if (!questionSubmitted) {
-          // Submit the current question.
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
             alert("Պատասխանի՛ր հարցին");
@@ -197,7 +215,6 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
-          // If answer was wrong, highlight the correct answer.
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -214,7 +231,6 @@
           updateButtonTexts();
 
         } else {
-          // Move to the next question or show results.
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
@@ -223,7 +239,6 @@
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
-
             quizForm.style.display = 'none';
 
             const dashboardURL = "https://pha.am/login";
