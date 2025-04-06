@@ -155,8 +155,8 @@
 
       function updateButtonTexts() {
         submitBtn.textContent = questionSubmitted 
-          ? (currentQuestion === questions.length - 1 ? "Ավարտել աշխատանքը" : "Հաջորդ հարց")
-          : "Հաստատել պատասխան";
+          ? (currentQuestion === questions.length - 1 ? "Ավարտել աշխատանքը" : "Հաջորդ հարցը")
+          : "Հաստատել";
       }
 
       function updatePrevButtonState() {
@@ -168,7 +168,7 @@
           // Submit the current question
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
-            alert("Պատասխանի՛ր հարցը");
+            alert("Պատասխանի՛ր հարցին");
             return;
           }
           const currentQ = questions[currentQuestion];
@@ -217,7 +217,7 @@
             const percentageScore = Math.round((score / questions.length) * 100);
             const resultMessage = percentageScore >= 75 
               ? "Ապրես!" 
-              : "Կարող ես փորձել կրկին!";
+              : "Փորձիր կրկին!";
 
             resultsDiv.innerHTML = `
               <p class="result-message">${resultMessage}</p>
@@ -233,11 +233,11 @@
                   </span>
                 </div>
                 <div class="stat-item">
-                  <span class="stat-label">Հարցաթերթիկի բալ</span>
+                  <span class="stat-label">Արդյունք</span>
                   <span class="stat-value percentage">${percentageScore}%</span>
                 </div>
               </div>
-              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշխբորդ</a>
+              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ անձնական էջ</a>
             `;
           }
         }
