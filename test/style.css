@@ -396,6 +396,15 @@ p {
 .application-form textarea {
     resize: vertical;
 }
+.application-form select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: 'Mardoto-Light', sans-serif;
+    font-size: 1rem;
+    background-color: white;
+}
 
 .apply-btn {
     background-color: var(--primary-blue);
