@@ -8,15 +8,22 @@
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
 
   <script>
-    // Allowed email addresses
+    // Allowed email addresses (in lowercase)
     const allowedEmails = ['aramasatryan290@gmail.com', 'hayksargsyan@pha.am'];
-    
+
     // Retrieve the user's email from localStorage.
-    // Adjust this part if you're using cookies or another method.
-    const userEmail = localStorage.getItem('userEmail');
-    
-    // If the user is not authenticated or is not allowed, redirect to login.
-    if (!allowedEmails.includes(userEmail)) {
+    let userEmail = localStorage.getItem('userEmail');
+
+    // Normalize email: trim and convert to lowercase.
+    if (userEmail) {
+      userEmail = userEmail.trim().toLowerCase();
+    }
+
+    // Check if the user email is allowed.
+    const isAllowed = allowedEmails.some(email => email === userEmail);
+
+    // If not allowed, redirect to the login page.
+    if (!isAllowed) {
       window.location.href = "https://pha.am/login";
     }
   </script>
@@ -38,7 +45,6 @@
         </div>
       </form>
     </div>
-
     <div id="results"></div>
   </div>
 
@@ -103,7 +109,7 @@
         const q = questions[idx];
         if (!q) return;
 
-        // If option C is actually "C)" it might indicate no real C or D answers
+        // If option C is actually "C)" it might indicate no real C or D answers.
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -124,7 +130,7 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // If user hasn't answered yet, allow selecting
+        // If user hasn't answered yet, allow selecting.
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -138,7 +144,7 @@
             });
           });
         } else {
-          // If user has answered, show correct/incorrect states
+          // If user has answered, show correct/incorrect states.
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -150,7 +156,7 @@
                 li.classList.remove('selected');
                 li.classList.add(response.correct ? 'correct' : 'incorrect');
               }
-              // Also show the correct one if user was wrong
+              // Also show the correct one if user was wrong.
               if (!response.correct && input.value === q.correct) {
                 li.classList.add('correct');
               }
@@ -179,7 +185,7 @@
 
       submitBtn.addEventListener('click', () => {
         if (!questionSubmitted) {
-          // Submit the current question
+          // Submit the current question.
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
             alert("Պատասխանի՛ր հարցին");
@@ -195,7 +201,7 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
-          // Highlight the correct answer if user was wrong
+          // Highlight the correct answer if user was wrong.
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -212,21 +218,21 @@
           updateButtonTexts();
 
         } else {
-          // Go to the next question or show results
+          // Go to the next question or show results.
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
           } else {
-            // End of quiz
+            // End of quiz.
             clearInterval(timerInterval);
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
 
-            // Hide the quiz form so only results are shown
+            // Hide the quiz form so only results are shown.
             quizForm.style.display = 'none';
 
-            // Prepare final result
+            // Prepare final result.
             const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
             const resultMessage = percentageScore >= 75 
