@@ -25,6 +25,8 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    // Make auth accessible to non-module scripts.
+    window.auth = auth;
 
     // Allowed email addresses (in lowercase)
     const allowedEmails = ['aramasatryan290@gmail.com', 'hayksargsyan@pha.am'];
@@ -241,7 +243,6 @@
             const seconds = Math.floor((elapsed % 60000) / 1000);
             quizForm.style.display = 'none';
 
-            const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
             const resultMessage = percentageScore >= 75 ? "Ապրես!" : "Փորձիր կրկին!";
 
@@ -261,8 +262,21 @@
                   <span class="stat-value percentage">${percentageScore}%</span>
                 </div>
               </div>
-              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ անձնական էջ</a>
+              <button type="button" class="dashboard-btn" id="dashboardBtn">Վերադառնալ անձնական էջ</button>
             `;
+
+            // Attach click listener to the final button.
+            document.getElementById("dashboardBtn").addEventListener("click", () => {
+              // Get the current user from the global auth object.
+              const user = window.auth.currentUser;
+              if (user) {
+                const email = user.email.trim().toLowerCase();
+                const username = email.split("@")[0];
+                window.location.href = `https://pha.am/dashboard/${username}/`;
+              } else {
+                window.location.href = "https://pha.am/login";
+              }
+            });
           }
         }
       });
@@ -277,3 +291,4 @@
   </script>
 </body>
 </html>
+
