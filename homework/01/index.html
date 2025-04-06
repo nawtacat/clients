@@ -7,20 +7,29 @@
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
   <script>
-    // List of allowed email addresses
+    // List of allowed email addresses in lowercase
     const allowedEmails = ["aramasatryan290@gmail.com", "hayksargsyan@pha.am"];
-    
+
     // Helper function to check allowed email (case-insensitive and trimmed)
     function isAllowed(email) {
-      if (!email) return false;
-      return allowedEmails.some(allowed => allowed === email.trim().toLowerCase());
+      return email && allowedEmails.includes(email.trim().toLowerCase());
+    }
+
+    // Poll for the currentUserEmail until it's defined
+    function checkAuth() {
+      if (window.currentUserEmail) {
+        // When email is set, verify if it's allowed.
+        if (!isAllowed(window.currentUserEmail)) {
+          window.location.replace("https://pha.am/login");
+        }
+      } else {
+        // Wait 50ms and check again.
+        setTimeout(checkAuth, 50);
+      }
     }
     
-    // Check for the current user's email. Ensure that your auth system sets window.currentUserEmail (in lowercase) before this runs.
-    if (!isAllowed(window.currentUserEmail)) {
-      // Redirect to login page if not allowed.
-      window.location.replace("https://pha.am/login");
-    }
+    // Start checking authentication status.
+    checkAuth();
   </script>
 </head>
 <body>
