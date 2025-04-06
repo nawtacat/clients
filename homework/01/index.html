@@ -6,7 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
-  </head>
+  <script>
+    // List of allowed email addresses
+    const allowedEmails = ["aramasatryan290@gmail.com", "hayksargsyan@pha.am"];
+    // The current user's email should be provided by your authentication system.
+    // For testing purposes, you can uncomment one of the following lines:
+    // window.currentUserEmail = "aramasatryan290@gmail.com"; // Allowed
+    // window.currentUserEmail = "unauthorized@example.com";  // Not allowed
+
+    // Check if the user is authenticated and allowed
+    if (!window.currentUserEmail || !allowedEmails.includes(window.currentUserEmail)) {
+      document.write("<h1>Access Denied</h1><p>You are not authorized to view this page.</p>");
+      throw new Error("Access Denied");
+    }
+  </script>
+</head>
 <body>
   <div class="wrapper">
     <div class="header">
