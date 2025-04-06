@@ -7,29 +7,36 @@
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
   <script>
-    // List of allowed email addresses in lowercase
-    const allowedEmails = ["aramasatryan290@gmail.com", "hayksargsyan@pha.am"];
-
-    // Helper function to check allowed email (case-insensitive and trimmed)
-    function isAllowed(email) {
-      return email && allowedEmails.includes(email.trim().toLowerCase());
-    }
-
-    // Poll for the currentUserEmail until it's defined
-    function checkAuth() {
-      if (window.currentUserEmail) {
-        // When email is set, verify if it's allowed.
-        if (!isAllowed(window.currentUserEmail)) {
-          window.location.replace("https://pha.am/login");
+    (function() {
+      // Allowed email addresses (in lowercase)
+      const allowedEmails = ["aramasatryan290@gmail.com", "hayksargsyan@pha.am"];
+      // Maximum wait time for the currentUserEmail to be defined (in milliseconds)
+      const maxWait = 1000;
+      let waited = 0;
+      
+      function checkAuth() {
+        if (window.currentUserEmail) {
+          const email = window.currentUserEmail.trim().toLowerCase();
+          // If the email is not in the allowed list, redirect immediately.
+          if (allowedEmails.indexOf(email) === -1) {
+            window.location.href = "https://pha.am/login";
+          }
+          // If the email is allowed, do nothing and let the page load.
+        } else {
+          // Wait a bit and try again.
+          waited += 50;
+          if (waited < maxWait) {
+            setTimeout(checkAuth, 50);
+          } else {
+            // If after waiting the email is still undefined, redirect to login.
+            window.location.href = "https://pha.am/login";
+          }
         }
-      } else {
-        // Wait 50ms and check again.
-        setTimeout(checkAuth, 50);
       }
-    }
-    
-    // Start checking authentication status.
-    checkAuth();
+      
+      // Start checking for the current user's email.
+      checkAuth();
+    })();
   </script>
 </head>
 <body>
@@ -80,7 +87,7 @@
         stopwatchEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
       }, 1000);
 
-      // Load CSV
+      // Load CSV data for the quiz
       fetch(csvUrl)
         .then(response => response.text())
         .then(csv => {
@@ -114,7 +121,7 @@
         const q = questions[idx];
         if (!q) return;
 
-        // If option C is actually "C)" it might indicate no real C or D answers
+        // Determine which options to show (if option C is just "C)", only two options are shown)
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -135,7 +142,7 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // If user hasn't answered yet, allow selecting
+        // Enable selection if the question has not yet been answered
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -149,7 +156,7 @@
             });
           });
         } else {
-          // If user has answered, show correct/incorrect states
+          // If answered, show the correct/incorrect states.
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -161,7 +168,7 @@
                 li.classList.remove('selected');
                 li.classList.add(response.correct ? 'correct' : 'incorrect');
               }
-              // Also show the correct one if user was wrong
+              // Also mark the correct answer if the response was wrong.
               if (!response.correct && input.value === q.correct) {
                 li.classList.add('correct');
               }
@@ -190,7 +197,7 @@
 
       submitBtn.addEventListener('click', () => {
         if (!questionSubmitted) {
-          // Submit the current question
+          // Submit the current question.
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
             alert("Պատասխանի՛ր հարցին");
@@ -206,7 +213,7 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
-          // Highlight the correct answer if user was wrong
+          // Highlight the correct answer if the user's response was incorrect.
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -223,26 +230,24 @@
           updateButtonTexts();
 
         } else {
-          // Go to the next question or show results
+          // Go to the next question or display the results.
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
           } else {
-            // End of quiz
+            // End of quiz: stop timer and show results.
             clearInterval(timerInterval);
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
 
-            // Hide the quiz form so only results are shown
+            // Hide the quiz form so only results are shown.
             quizForm.style.display = 'none';
 
-            // Prepare final result
+            // Prepare final result.
             const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
-            const resultMessage = percentageScore >= 75 
-              ? "Ապրես!" 
-              : "Փորձիր կրկին!";
+            const resultMessage = percentageScore >= 75 ? "Ապրես!" : "Փորձիր կրկին!";
 
             resultsDiv.innerHTML = `
               <p class="result-message">${resultMessage}</p>
