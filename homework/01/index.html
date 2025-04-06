@@ -11,24 +11,22 @@
       // Allowed email addresses (in lowercase)
       const allowedEmails = ["aramasatryan290@gmail.com", "hayksargsyan@pha.am"];
       // Maximum wait time for the currentUserEmail to be defined (in milliseconds)
-      const maxWait = 1000;
+      const maxWait = 3000;
       let waited = 0;
       
       function checkAuth() {
         if (window.currentUserEmail) {
           const email = window.currentUserEmail.trim().toLowerCase();
-          // If the email is not in the allowed list, redirect immediately.
           if (allowedEmails.indexOf(email) === -1) {
             window.location.href = "https://pha.am/login";
           }
-          // If the email is allowed, do nothing and let the page load.
+          // Allowed user; no redirect.
         } else {
-          // Wait a bit and try again.
           waited += 50;
           if (waited < maxWait) {
             setTimeout(checkAuth, 50);
           } else {
-            // If after waiting the email is still undefined, redirect to login.
+            // If still undefined after waiting, redirect to login.
             window.location.href = "https://pha.am/login";
           }
         }
@@ -121,7 +119,7 @@
         const q = questions[idx];
         if (!q) return;
 
-        // Determine which options to show (if option C is just "C)", only two options are shown)
+        // Determine which options to show
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -142,7 +140,6 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // Enable selection if the question has not yet been answered
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -156,7 +153,6 @@
             });
           });
         } else {
-          // If answered, show the correct/incorrect states.
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -168,7 +164,6 @@
                 li.classList.remove('selected');
                 li.classList.add(response.correct ? 'correct' : 'incorrect');
               }
-              // Also mark the correct answer if the response was wrong.
               if (!response.correct && input.value === q.correct) {
                 li.classList.add('correct');
               }
@@ -197,7 +192,6 @@
 
       submitBtn.addEventListener('click', () => {
         if (!questionSubmitted) {
-          // Submit the current question.
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
             alert("Պատասխանի՛ր հարցին");
@@ -213,7 +207,6 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
-          // Highlight the correct answer if the user's response was incorrect.
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -230,25 +223,18 @@
           updateButtonTexts();
 
         } else {
-          // Go to the next question or display the results.
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
           } else {
-            // End of quiz: stop timer and show results.
             clearInterval(timerInterval);
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
-
-            // Hide the quiz form so only results are shown.
             quizForm.style.display = 'none';
-
-            // Prepare final result.
             const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
             const resultMessage = percentageScore >= 75 ? "Ապրես!" : "Փորձիր կրկին!";
-
             resultsDiv.innerHTML = `
               <p class="result-message">${resultMessage}</p>
               <div class="result-stats">
