@@ -39,8 +39,15 @@
       const tutorSnap = await getDoc(tutorRef);
       return tutorSnap.exists();
     }
+    
+    // Firestore-based maintenance detection: returns true if a document exists in "maintenance" for the email.
+    async function isMaintenance(email) {
+      const maintenanceRef = doc(db, "maintenance", email);
+      const maintenanceSnap = await getDoc(maintenanceRef);
+      return maintenanceSnap.exists();
+    }
 
-    // Global variable to cache user role ("tutor" or "student")
+    // Global variable to cache user role: "tutor", "maintenance", or "student"
     let cachedUserRole = null;
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -48,8 +55,13 @@
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           const email = user.email.toLowerCase().trim();
-          // Determine and cache the role
-          cachedUserRole = await isTutor(email) ? "tutor" : "student";
+          if (await isTutor(email)) {
+            cachedUserRole = "tutor";
+          } else if (await isMaintenance(email)) {
+            cachedUserRole = "maintenance";
+          } else {
+            cachedUserRole = "student";
+          }
         }
       });
 
@@ -58,24 +70,25 @@
         e.preventDefault();
         const user = auth.currentUser;
         if (user) {
-          // If the role was already determined, use it
+          const email = user.email.toLowerCase().trim();
+          const username = email.split("@")[0];
           if (cachedUserRole) {
             if (cachedUserRole === "tutor") {
-              window.location.href = "/tutorcal"; // Redirect to tutor dashboard
-            } else {
-              const username = user.email.toLowerCase().split("@")[0];
-              window.location.href = `/dashboard/${username}/`  // Redirect to student dashboard
+              window.location.href = "/tutorcal";
+            } else if (cachedUserRole === "maintenance") {
+              window.location.href = `/${username}/`;
+            } else if (cachedUserRole === "student") {
+              window.location.href = `/dashboard/${username}/`;
             }
           } else {
             // Fallback: if the role isn't cached yet, determine it now
             (async () => {
-              const email = user.email.toLowerCase().trim();
-              const isTutorRole = await isTutor(email);
-              if (isTutorRole) {
+              if (await isTutor(email)) {
                 window.location.href = "/tutorcal";
-              } else {
-                const username = email.split("@")[0];
+              } else if (await isMaintenance(email)) {
                 window.location.href = `/${username}/`;
+              } else {
+                window.location.href = `/dashboard/${username}/`;
               }
             })();
           }
