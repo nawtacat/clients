@@ -122,15 +122,17 @@
     }
 
     .action-btn {
-      padding: 12px 20px;
-      background: var(--accent-coral);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 1.1rem;
-    }
+  padding: 12px 20px;
+  background: var(--accent-coral);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 1.1rem;
+  font-family: 'Mardoto-Medium', sans-serif;
+}
+
 
     .action-btn:hover {
       background: #e07555;
