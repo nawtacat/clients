@@ -5,6 +5,9 @@
   <title>Ինքնուրույն դաս</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
+  <!-- KaTeX CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css" 
+        integrity="sha384-vZAWd3WozSr6vfGM1uXH8oPeKvewS05OjtH4dVE7ZrO8iR6wA01X+ysIf3bEKoKc" crossorigin="anonymous">
   <style>
     @font-face {
       font-family: 'Mardoto-Light';
@@ -13,12 +16,10 @@
       font-style: normal;
       font-display: swap;
     }
-
     :root {
       --primary-blue: #1155d4;
       --accent-coral: #eb783f; 
     }
-
     body {
       background-color: white;
       margin: 0;
@@ -26,23 +27,19 @@
       font-size: 18px;
       font-family: 'Mardoto-Light', sans-serif;
     }
-
     .wrapper {
       max-width: 700px;
       margin: 0 auto;
       padding: 20px;
       text-align: center;
     }
-
     .header {
       margin-bottom: 20px;
     }
-
     #stopwatch {
       font-size: 1.4rem;
       margin-bottom: 10px;
     }
-
     #progress-container {
       width: 100%;
       background: #ddd;
@@ -50,36 +47,30 @@
       overflow: hidden;
       height: 10px;
     }
-
     #progress-bar {
       height: 100%;
       width: 0%;
       background: var(--primary-blue);
       transition: width 0.3s ease;
     }
-
     .quiz-container {
       background: white;
       padding: 20px;
     }
-
     .question-block {
       margin-bottom: 40px;
       text-align: left;
     }
-
     .question-block p {
       color: black;
       font-size: 1.2rem;
       margin: 0.5rem 0;
     }
-
     .options {
       list-style: none;
       padding: 0;
       margin: 15px 0 0;
     }
-
     .options li {
       margin-bottom: 8px;
       background: #ffffff;
@@ -90,45 +81,37 @@
       transition: 0.3s ease;
       position: relative;
     }
-
     .options li:hover {
       background: #BBDEFB;
     }
-
     .options li.selected {
       background: var(--primary-blue) !important;
       border-color: #0D47A1 !important;
       color: white;
     }
-
     .options input[type="radio"] {
       display: none;
     }
-
     .options label {
       display: inline-block;
       width: 100%;
       cursor: pointer;
     }
-
     .correct {
       background-color: #E8F5E9 !important;
       border-left: 5px solid #4CAF50 !important;
       color: black;
     }
-
     .incorrect {
       background-color: #FFEBEE !important;
       border-left: 5px solid #F44336 !important;
       color: black;
     }
-
     .button-container {
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
     }
-
     .action-btn {
       padding: 12px 20px;
       background: var(--accent-coral);
@@ -139,17 +122,14 @@
       transition: 0.3s;
       font-size: 1.1rem;
     }
-
     .action-btn:hover {
       background: #e07555;
     }
-
     .action-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-
-    /* Fraction Styles */
+    /* Fraction Styles for non-KaTeX fallback (not used when KaTeX renders) */
     .fraction {
       display: inline-block;
       vertical-align: middle;
@@ -166,20 +146,17 @@
       font-size: 0.8em;
       line-height: 1;
     }
-
     /* Results Styles */
     #results {
       margin: 1rem auto;
       max-width: 500px;
     }
-
     .result-message {
       color: var(--primary-blue);
       font-size: 2rem;
       margin-bottom: 1rem;
       font-weight: bold;
     }
-
     .result-stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -187,31 +164,26 @@
       margin: 1.5rem 0;
       text-align: center;
     }
-
     .stat-item {
       background: #f9f9f9;
       padding: 1rem;
       border-radius: 10px;
       border: 2px solid var(--primary-blue);
     }
-
     .stat-label {
       display: block;
       color: var(--primary-blue);
       font-size: 0.9rem;
       margin-bottom: 0.5rem;
     }
-
     .stat-value {
       display: block;
       font-size: 1.5rem;
       font-weight: bold;
     }
-
     .correct { color: #4CAF50; }
     .time { color: var(--primary-blue); }
     .percentage { color: var(--accent-coral); }
-
     .dashboard-btn {
       background: var(--primary-blue);
       color: white !important;
@@ -224,25 +196,21 @@
       border: 2px solid white;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-
     .dashboard-btn:hover {
       background: var(--accent-coral);
       transform: translateY(-2px);
       box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
     }
-
     @media (min-width: 768px) {
       body { font-size: 24px; }
       .question-block p { font-size: 1.4rem; }
       #stopwatch { font-size: 1.6rem; }
       .action-btn { font-size: 1.3rem; }
     }
-
     @media (max-width: 767px) {
       .button-container { flex-direction: column; }
       #submit-btn { order: 1; width: 100%; margin-bottom: 10px; }
       #prev-btn { order: 2; width: 100%; }
-
       #results {
         width: 90%;
         margin: 1rem auto;
@@ -278,18 +246,21 @@
         </div>
       </form>
     </div>
-
     <div id="results"></div>
   </div>
 
-  <script>
-    // Function to convert text fractions like "3/4" to formatted HTML fractions
-    function convertFractions(text) {
-      return text.replace(/(\d+)\s*\/\s*(\d+)/g, function(match, num, denom) {
-        return `<span class="fraction"><sup>${num}</sup>&frasl;<sub>${denom}</sub></span>`;
-      });
-    }
+  <!-- KaTeX JS -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js" 
+          integrity="sha384-S/N+Z4Xg1aafVGLiVDqUXo1KHLQmrAgzDk6pc6b5t67TAOGuQ2FG7Y3z0n00YjZd" crossorigin="anonymous"></script>
+  <!-- KaTeX Auto-render extension -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/contrib/auto-render.min.js" 
+          integrity="sha384-rN1Kj5uNoLZmc3xDAX7s57iElhGwGekq3HGfEIEqHG7Q3xKxomvP/duvcCA8RelT" crossorigin="anonymous"></script>
 
+  <script>
+    // Example: Convert fractions are now handled by KaTeX via LaTeX input.
+    // Ensure that any fraction in your CSV or question text is written in LaTeX format,
+    // for example: "$\\frac{3}{4}$" or "$\\frac{9}{8}$".
+    
     document.addEventListener('DOMContentLoaded', () => {
       const quizDiv = document.getElementById('quiz');
       const submitBtn = document.getElementById('submit-btn');
@@ -299,7 +270,7 @@
       const progressBar = document.getElementById('progress-bar');
       const stopwatchEl = document.getElementById('stopwatch');
 
-      // Replace with your CSV URL
+      // Replace with your CSV URL or use a static question for testing.
       const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
 
       let questions = [];
@@ -350,21 +321,21 @@
         const q = questions[idx];
         if (!q) return;
 
-        // Check if we should show options C and D
+        // Determine whether to show options C and D
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
         const questionBlock = document.createElement('div');
         questionBlock.className = 'question-block';
-        // Convert fractions in the problem and options using convertFractions()
+        // Assume the CSV text contains LaTeX for fractions (e.g., "$\\frac{3}{4}$")
         questionBlock.innerHTML = `
-          <p>${convertFractions(q.problem)}</p>
+          <p>${q.problem}</p>
           <ul class="options">
             ${letters.map(letter => `
               <li>
                 <label>
                   <input type="radio" name="q" value="${letter}">
-                  ${convertFractions(q.options[letter])}
+                  ${q.options[letter]}
                 </label>
               </li>
             `).join('')}
@@ -372,7 +343,17 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // If user hasn't answered yet, allow selecting
+        // Render any LaTeX math in the question block using KaTeX auto-render
+        renderMathInElement(questionBlock, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true}
+          ]
+        });
+
+        // Allow selecting options if not answered yet
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -386,7 +367,6 @@
             });
           });
         } else {
-          // If user has answered, show correct/incorrect states
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -426,7 +406,6 @@
 
       submitBtn.addEventListener('click', () => {
         if (!questionSubmitted) {
-          // Submit the current question
           const selected = quizForm.querySelector('input[name="q"]:checked');
           if (!selected) {
             alert("Պատասխանի՛ր հարցը");
@@ -450,15 +429,12 @@
               }
             });
           }
-
           quizDiv.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
           userResponses[currentQuestion] = { selected: selected.value, correct: isCorrect };
           questionSubmitted = true;
           updateProgress();
           updateButtonTexts();
-
         } else {
-          // Next question or show results
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
@@ -467,14 +443,12 @@
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
-
             quizForm.style.display = 'none';
             const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
             const resultMessage = percentageScore >= 75 
               ? "Ապրես!" 
               : "Կարող ես փորձել կրկին!";
-
             resultsDiv.innerHTML = `
               <p class="result-message">${resultMessage}</p>
               <div class="result-stats">
