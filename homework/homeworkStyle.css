@@ -120,6 +120,10 @@
       justify-content: space-between;
       margin-top: 20px;
     }
+button, .action-btn {
+  font-family: 'Mardoto-Medium', sans-serif !important;
+}
+
 
     .action-btn {
   padding: 12px 20px;
