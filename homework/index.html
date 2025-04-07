@@ -5,10 +5,12 @@
   <title>Ինքնուրույն դաս</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
-  <!-- KaTeX Resources -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- KaTeX CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"
+        integrity="sha384-7/prjA+01p1aNnzrFlXx4MFl6xDx6rqgRge9c37r06zB22zvAiT+K3slTJT6wZbE"
+        crossorigin="anonymous">
   <style>
     @font-face {
       font-family: 'Mardoto-Light';
@@ -35,7 +37,7 @@
       max-width: 700px;
       margin: 0 auto;
       padding: 20px;
-      text-align: center;
+      text-align: center; /* helps center child elements like #results */
     }
 
     .header {
@@ -69,7 +71,7 @@
 
     .question-block {
       margin-bottom: 40px;
-      text-align: left;
+      text-align: left; /* so questions/options don’t get centered */
     }
 
     .question-block p {
@@ -229,6 +231,7 @@
       #submit-btn { order: 1; width: 100%; margin-bottom: 10px; }
       #prev-btn { order: 2; width: 100%; }
 
+      /* Mobile adjustments for results */
       #results {
         width: 90%;
         margin: 1rem auto;
@@ -245,10 +248,20 @@
         font-size: 1rem;
       }
     }
-
-    /* KaTeX Overrides */
-    .katex { font-size: 1em !important; }
   </style>
+
+  <!-- KaTeX JS -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"
+          integrity="sha384-J8zN7W8b3g/ajYrhNbHpLkMgiZMtQePy0bhv5Y3A9H51fj9q6IX9gICnVXsr81Kf"
+          crossorigin="anonymous">
+  </script>
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js"
+          integrity="sha384-mLLX1zIGSmFT1C/Ki0zhunSyt8Qb/6zD2P4HfR3rWquunA4t9RR5qUTyj/T3TfoR"
+          crossorigin="anonymous">
+  </script>
+
 </head>
 <body>
   <div class="wrapper">
@@ -258,6 +271,7 @@
         <div id="progress-bar"></div>
       </div>
     </div>
+
     <div class="quiz-container">
       <form id="quiz-form">
         <div id="quiz"></div>
@@ -272,13 +286,6 @@
   </div>
 
   <script>
-    // Function to convert text fractions to KaTeX format
-    function convertFractions(text) {
-      return text.replace(/(\d+)\s*\/\s*(\d+)/g, (match, num, denom) => 
-        `\\frac{${num}}{${denom}}`
-      );
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       const quizDiv = document.getElementById('quiz');
       const submitBtn = document.getElementById('submit-btn');
@@ -288,7 +295,7 @@
       const progressBar = document.getElementById('progress-bar');
       const stopwatchEl = document.getElementById('stopwatch');
 
-      // Replace with your CSV URL
+      // URL to your published CSV from Google Sheets
       const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
 
       let questions = [];
@@ -297,6 +304,7 @@
       let questionSubmitted = false;
       let userResponses = [];
 
+      // Start timer
       const startTime = Date.now();
       let timerInterval = setInterval(() => {
         const elapsed = Date.now() - startTime;
@@ -318,40 +326,60 @@
           resultsDiv.textContent = 'Failed to load quiz. Please try again later.';
         });
 
+      // --- CSV Parsing with fraction detection ---
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
         lines.shift(); // remove header line
+
+        // This helper replaces n/m with \(\frac{n}{m}\)
+        function fractionify(text) {
+          if (!text) return text;
+          return text.replace(/\b(\d+)\/(\d+)\b/g, (match, numerator, denominator) => {
+            return `\\(\\frac{${numerator}}{${denominator}}\\)`;
+          });
+        }
+
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
           if (cells.length < 6) return null;
-          const optA = cells[cells.length - 5];
-          const optB = cells[cells.length - 4];
-          const optC = cells[cells.length - 3];
-          const optD = cells[cells.length - 2];
+
+          const optA = fractionify(cells[cells.length - 5]);
+          const optB = fractionify(cells[cells.length - 4]);
+          const optC = fractionify(cells[cells.length - 3]);
+          const optD = fractionify(cells[cells.length - 2]);
           const correct = cells[cells.length - 1].toUpperCase();
-          const problem = cells.slice(0, cells.length - 5).join(',');
-          return { problem, options: { A: optA, B: optB, C: optC, D: optD }, correct };
+
+          // Everything before last 5 cells is the question text
+          const problem = fractionify(cells.slice(0, cells.length - 5).join(','));
+
+          return {
+            problem,
+            options: { A: optA, B: optB, C: optC, D: optD },
+            correct
+          };
         }).filter(Boolean);
       }
+      // ------------------------------------------
 
       function renderQuestion(idx) {
         quizDiv.innerHTML = '';
         const q = questions[idx];
         if (!q) return;
 
+        // If option C is actually "C)" it might indicate no real C or D answers
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
         const questionBlock = document.createElement('div');
         questionBlock.className = 'question-block';
         questionBlock.innerHTML = `
-          <p>${convertFractions(q.problem)}</p>
+          <p>${q.problem}</p>
           <ul class="options">
             ${letters.map(letter => `
               <li>
                 <label>
                   <input type="radio" name="q" value="${letter}">
-                  ${convertFractions(q.options[letter])}
+                  ${q.options[letter]}
                 </label>
               </li>
             `).join('')}
@@ -359,21 +387,152 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // Render KaTeX after inserting HTML
+        // If user hasn't answered yet, allow selecting
+        if (!userResponses[idx]) {
+          questionSubmitted = false;
+          quizDiv.querySelectorAll('.options li').forEach(li => {
+            li.addEventListener('click', () => {
+              li.parentElement.querySelectorAll('li').forEach(sibling => {
+                sibling.classList.remove('selected');
+              });
+              li.classList.add('selected');
+              const radio = li.querySelector('input[type="radio"]');
+              if (radio) radio.checked = true;
+            });
+          });
+        } else {
+          // If user has answered, show correct/incorrect states
+          questionSubmitted = true;
+          const response = userResponses[idx];
+          const listItems = quizDiv.querySelectorAll('.options li');
+          listItems.forEach(li => {
+            const input = li.querySelector('input[type="radio"]');
+            if (input) {
+              input.disabled = true;
+              if (input.value === response.selected) {
+                li.classList.remove('selected');
+                li.classList.add(response.correct ? 'correct' : 'incorrect');
+              }
+              // Also show the correct one if user was wrong
+              if (!response.correct && input.value === q.correct) {
+                li.classList.add('correct');
+              }
+            }
+          });
+        }
+
+        updateButtonTexts();
+        updatePrevButtonState();
+
+        // --- Render any LaTeX in this block ---
         renderMathInElement(questionBlock, {
           delimiters: [
-            {left: '\\\\(', right: '\\\\)', display: false},
-            {left: '\\\\[', right: '\\\\]', display: true}
-          ],
-          throwOnError: false
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true}
+          ]
         });
-
-        // Rest of the rendering logic remains the same...
-        // [Keep the existing event listeners and state management code]
       }
 
-      // [Rest of the original JavaScript code remains unchanged]
-      // ... (preserve all existing functionality)
+      function updateProgress() {
+        const gradedCount = userResponses.filter(resp => resp !== undefined).length;
+        const percentage = (gradedCount / questions.length) * 100;
+        progressBar.style.width = percentage + '%';
+      }
+
+      function updateButtonTexts() {
+        submitBtn.textContent = questionSubmitted
+          ? (currentQuestion === questions.length - 1 ? "Ավարտել աշխատանքը" : "Հաջորդ հարց")
+          : "Հաստատել պատասխան";
+      }
+
+      function updatePrevButtonState() {
+        prevBtn.disabled = (currentQuestion === 0);
+      }
+
+      submitBtn.addEventListener('click', () => {
+        if (!questionSubmitted) {
+          // Submit the current question
+          const selected = quizForm.querySelector('input[name="q"]:checked');
+          if (!selected) {
+            alert("Պատասխանի՛ր հարցը");
+            return;
+          }
+          const currentQ = questions[currentQuestion];
+          const listItems = quizDiv.querySelectorAll('.options li');
+          listItems.forEach(li => li.classList.remove('correct', 'incorrect'));
+          
+          const isCorrect = selected.value === currentQ.correct;
+          if (isCorrect) score++;
+          
+          selected.closest('li').classList.remove('selected');
+          selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
+          
+          // Highlight the correct answer if user was wrong
+          if (!isCorrect) {
+            listItems.forEach(li => {
+              const input = li.querySelector('input[type="radio"]');
+              if (input && input.value === currentQ.correct) {
+                li.classList.add('correct');
+              }
+            });
+          }
+
+          quizDiv.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
+          userResponses[currentQuestion] = { selected: selected.value, correct: isCorrect };
+          questionSubmitted = true;
+          updateProgress();
+          updateButtonTexts();
+
+        } else {
+          // Go to the next question or show results
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            renderQuestion(currentQuestion);
+          } else {
+            // End of quiz
+            clearInterval(timerInterval);
+            const elapsed = Date.now() - startTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+
+            quizForm.style.display = 'none'; // hide quiz
+
+            const dashboardURL = "https://pha.am/login";
+            const percentageScore = Math.round((score / questions.length) * 100);
+            const resultMessage = percentageScore >= 75 
+              ? "Ապրես!" 
+              : "Կարող ես փորձել կրկին!";
+
+            resultsDiv.innerHTML = `
+              <p class="result-message">${resultMessage}</p>
+              <div class="result-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Ճիշտ պատասխաններ</span>
+                  <span class="stat-value correct">${score}/${questions.length}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Ժամանակ</span>
+                  <span class="stat-value time">
+                    ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
+                  </span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Հարցաթերթիկի բալ</span>
+                  <span class="stat-value percentage">${percentageScore}%</span>
+                </div>
+              </div>
+              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշխբորդ</a>
+            `;
+          }
+        }
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentQuestion > 0) {
+          currentQuestion--;
+          renderQuestion(currentQuestion);
+        }
+      });
     });
   </script>
 </body>
