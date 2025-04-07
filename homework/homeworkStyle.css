@@ -192,7 +192,7 @@ button, .action-btn {
     .percentage { color: var(--accent-coral); }
 
     .dashboard-btn {
-    background-color: var(--accent-orange);
+    background-color: var(--accent-coral);
     color: white;
     padding: 12px 24px;
     border: none;
