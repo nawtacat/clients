@@ -31,7 +31,7 @@
       max-width: 700px;
       margin: 0 auto;
       padding: 20px;
-      text-align: center; /* helps center child elements like #results */
+      text-align: center;
     }
 
     .header {
@@ -65,7 +65,7 @@
 
     .question-block {
       margin-bottom: 40px;
-      text-align: left; /* so questions/options don’t get centered */
+      text-align: left;
     }
 
     .question-block p {
@@ -149,6 +149,24 @@
       cursor: not-allowed;
     }
 
+    /* Fraction Styles */
+    .fraction {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 2px;
+    }
+    .fraction sup {
+      display: block;
+      font-size: 0.8em;
+      line-height: 1;
+    }
+    .fraction sub {
+      display: block;
+      font-size: 0.8em;
+      line-height: 1;
+    }
+
     /* Results Styles */
     #results {
       margin: 1rem auto;
@@ -225,7 +243,6 @@
       #submit-btn { order: 1; width: 100%; margin-bottom: 10px; }
       #prev-btn { order: 2; width: 100%; }
 
-      /* Mobile adjustments for results */
       #results {
         width: 90%;
         margin: 1rem auto;
@@ -266,6 +283,13 @@
   </div>
 
   <script>
+    // Function to convert text fractions like "3/4" to formatted HTML fractions
+    function convertFractions(text) {
+      return text.replace(/(\d+)\s*\/\s*(\d+)/g, function(match, num, denom) {
+        return `<span class="fraction"><sup>${num}</sup>&frasl;<sub>${denom}</sub></span>`;
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const quizDiv = document.getElementById('quiz');
       const submitBtn = document.getElementById('submit-btn');
@@ -326,20 +350,21 @@
         const q = questions[idx];
         if (!q) return;
 
-        // If option C is actually "C)" it might indicate no real C or D answers
+        // Check if we should show options C and D
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
         const questionBlock = document.createElement('div');
         questionBlock.className = 'question-block';
+        // Convert fractions in the problem and options using convertFractions()
         questionBlock.innerHTML = `
-          <p>${q.problem}</p>
+          <p>${convertFractions(q.problem)}</p>
           <ul class="options">
             ${letters.map(letter => `
               <li>
                 <label>
                   <input type="radio" name="q" value="${letter}">
-                  ${q.options[letter]}
+                  ${convertFractions(q.options[letter])}
                 </label>
               </li>
             `).join('')}
@@ -373,7 +398,6 @@
                 li.classList.remove('selected');
                 li.classList.add(response.correct ? 'correct' : 'incorrect');
               }
-              // Also show the correct one if user was wrong
               if (!response.correct && input.value === q.correct) {
                 li.classList.add('correct');
               }
@@ -418,7 +442,6 @@
           selected.closest('li').classList.remove('selected');
           selected.closest('li').classList.add(isCorrect ? 'correct' : 'incorrect');
           
-          // Highlight the correct answer if user was wrong
           if (!isCorrect) {
             listItems.forEach(li => {
               const input = li.querySelector('input[type="radio"]');
@@ -435,21 +458,17 @@
           updateButtonTexts();
 
         } else {
-          // Go to the next question or show results
+          // Next question or show results
           currentQuestion++;
           if (currentQuestion < questions.length) {
             renderQuestion(currentQuestion);
           } else {
-            // End of quiz
             clearInterval(timerInterval);
             const elapsed = Date.now() - startTime;
             const minutes = Math.floor(elapsed / 60000);
             const seconds = Math.floor((elapsed % 60000) / 1000);
 
-            // Hide the quiz form so only results are shown
             quizForm.style.display = 'none';
-
-            // Prepare final result
             const dashboardURL = "https://pha.am/login";
             const percentageScore = Math.round((score / questions.length) * 100);
             const resultMessage = percentageScore >= 75 
