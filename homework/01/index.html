@@ -6,45 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
-
-  <!-- Firebase Auth check -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    
-    // Replace these values with your own Firebase configuration.
-    const firebaseConfig = {
-      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
-      authDomain: "physmathacademy-722b3.firebaseapp.com",
-      projectId: "physmathacademy-722b3",
-      storageBucket: "physmathacademy-722b3.appspot.com",
-      messagingSenderId: "1093649922622",
-      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
-      measurementId: "G-CGVKXTXJLB"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    // Make auth accessible to non-module scripts.
-    window.auth = auth;
-
-    // Allowed email addresses (in lowercase)
-    const allowedEmails = ['aramasatryan290@gmail.com', 'hayksargsyan@pha.am'];
-
-    // Check authentication state.
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const email = user.email.trim().toLowerCase();
-        // If the signed-in email is not in the allowed list, redirect to login.
-        if (!allowedEmails.includes(email)) {
-          window.location.href = "https://pha.am/login";
-        }
-      } else {
-        // If no user is signed in, redirect to login.
-        window.location.href = "https://pha.am/login";
-      }
-    });
-  </script>
+  
+  <!-- Fraction CSS using Mardoto-Medium -->
+  <style>
+    @font-face {
+      font-family: 'Mardoto-Medium';
+      src: url('/path/to/Mardoto-Medium.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    .fraction {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 2px;
+      font-family: 'Mardoto-Medium', sans-serif;
+    }
+    .fraction .numerator {
+      display: block;
+      padding: 0 2px;
+      border-bottom: 1px solid;
+      font-size: 0.9em;
+    }
+    .fraction .denominator {
+      display: block;
+      padding: 0 2px;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
   <div class="wrapper">
@@ -65,6 +55,41 @@
     </div>
     <div id="results"></div>
   </div>
+
+  <!-- Firebase Auth check -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    
+    // Replace these values with your own Firebase configuration.
+    const firebaseConfig = {
+      apiKey: "AIzaSyAbnPpcIt88B0jIAoLUdC71zmQDvR_fdu8",
+      authDomain: "physmathacademy-722b3.firebaseapp.com",
+      projectId: "physmathacademy-722b3",
+      storageBucket: "physmathacademy-722b3.appspot.com",
+      messagingSenderId: "1093649922622",
+      appId: "1:1093649922622:web:35b1bf4d2364bcf745f587",
+      measurementId: "G-CGVKXTXJLB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    window.auth = auth;
+
+    // Allowed email addresses (in lowercase)
+    const allowedEmails = ['aramasatryan290@gmail.com', 'hayksargsyan@pha.am'];
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const email = user.email.trim().toLowerCase();
+        if (!allowedEmails.includes(email)) {
+          window.location.href = "https://pha.am/login";
+        }
+      } else {
+        window.location.href = "https://pha.am/login";
+      }
+    });
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -106,18 +131,29 @@
           resultsDiv.textContent = 'Failed to load quiz. Please try again later.';
         });
 
+      // fractionify: detects patterns like "1/6" and replaces them with HTML fraction markup
+      function fractionify(text) {
+        if (!text) return text;
+        return text.replace(/\b(\d+)\/(\d+)\b/g, (match, numerator, denominator) => {
+          return `<span class="fraction">
+                    <span class="numerator">${numerator}</span>
+                    <span class="denominator">${denominator}</span>
+                  </span>`;
+        });
+      }
+
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
         lines.shift(); // remove header line
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
           if (cells.length < 6) return null;
-          const optA = cells[cells.length - 5];
-          const optB = cells[cells.length - 4];
-          const optC = cells[cells.length - 3];
-          const optD = cells[cells.length - 2];
+          const optA = fractionify(cells[cells.length - 5]);
+          const optB = fractionify(cells[cells.length - 4]);
+          const optC = fractionify(cells[cells.length - 3]);
+          const optD = fractionify(cells[cells.length - 2]);
           const correct = cells[cells.length - 1].toUpperCase();
-          const problem = cells.slice(0, cells.length - 5).join(',');
+          const problem = fractionify(cells.slice(0, cells.length - 5).join(','));
           return { problem, options: { A: optA, B: optB, C: optC, D: optD }, correct };
         }).filter(Boolean);
       }
@@ -148,7 +184,6 @@
         `;
         quizDiv.appendChild(questionBlock);
 
-        // Enable option selection only if the question is not yet answered.
         if (!userResponses[idx]) {
           questionSubmitted = false;
           quizDiv.querySelectorAll('.options li').forEach(li => {
@@ -162,7 +197,6 @@
             });
           });
         } else {
-          // If already answered, disable inputs and show the outcome.
           questionSubmitted = true;
           const response = userResponses[idx];
           const listItems = quizDiv.querySelectorAll('.options li');
@@ -265,9 +299,7 @@
               <button type="button" class="dashboard-btn" id="dashboardBtn">Վերադառնալ անձնական էջ</button>
             `;
 
-            // Attach click listener to the final button.
             document.getElementById("dashboardBtn").addEventListener("click", () => {
-              // Get the current user from the global auth object.
               const user = window.auth.currentUser;
               if (user) {
                 const email = user.email.trim().toLowerCase();
