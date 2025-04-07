@@ -5,34 +5,97 @@
   <title>Ինքնուրույն դաս</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
-
-  <!-- KaTeX CSS -->
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css"
-        integrity="sha384-7/prjA+01p1aNnzrFlXx4MFl6xDx6rqgRge9c37r06zB22zvAiT+K3slTJT6wZbE"
-        crossorigin="anonymous">
-
-  <!-- KaTeX JS -->
-  <script defer
-          src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"
-          integrity="sha384-J8zN7W8b3g/ajYrhNbHpLkMgiZMtQePy0bhv5Y3A9H51fj9q6IX9gICnVXsr81Kf"
-          crossorigin="anonymous">
-  </script>
-  <script defer
-          src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/contrib/auto-render.min.js"
-          integrity="sha384-mLLX1zIGSmFT1C/Ki0zhunSyt8Qb/6zD2P4HfR3rWquunA4t9RR5qUTyj/T3TfoR"
-          crossorigin="anonymous">
-  </script>
+  <style>
+    /* Basic quiz styling */
+    body {
+      background-color: white;
+      margin: 0;
+      padding: 0;
+      font-size: 18px;
+      font-family: Arial, sans-serif;
+    }
+    .wrapper {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    .header, .quiz-container, #results {
+      margin-bottom: 20px;
+    }
+    .question-block {
+      text-align: left;
+      margin-bottom: 40px;
+    }
+    .question-block p {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin-bottom: 8px;
+      padding: 10px;
+      border: 2px solid #1155d4;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .options li:hover {
+      background: #BBDEFB;
+    }
+    .options li.selected {
+      background: #1155d4;
+      color: white;
+    }
+    .options input[type="radio"] {
+      display: none;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .action-btn {
+      padding: 12px 20px;
+      background: #eb783f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 1.1rem;
+    }
+    .action-btn:hover {
+      background: #e07555;
+    }
+    /* Fraction styling */
+    .fraction {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      margin: 0 2px;
+    }
+    .fraction .numerator {
+      display: block;
+      padding: 0 2px;
+      border-bottom: 1px solid;
+      font-size: 0.9em;
+    }
+    .fraction .denominator {
+      display: block;
+      padding: 0 2px;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="header">
       <div id="stopwatch">00:00</div>
-      <div id="progress-container">
-        <div id="progress-bar"></div>
-      </div>
     </div>
-
     <div class="quiz-container">
       <form id="quiz-form">
         <div id="quiz"></div>
@@ -42,7 +105,6 @@
         </div>
       </form>
     </div>
-
     <div id="results"></div>
   </div>
 
@@ -53,9 +115,9 @@
       const prevBtn = document.getElementById('prev-btn');
       const resultsDiv = document.getElementById('results');
       const quizForm = document.getElementById('quiz-form');
-      const progressBar = document.getElementById('progress-bar');
       const stopwatchEl = document.getElementById('stopwatch');
 
+      // Published CSV URL from Google Sheets
       const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
 
       let questions = [];
@@ -77,25 +139,27 @@
         .then(csv => {
           questions = parseCSV(csv);
           renderQuestion(currentQuestion);
-          updateProgress();
         })
         .catch(err => {
           console.error('Error loading quiz:', err);
           resultsDiv.textContent = 'Failed to load quiz. Please try again later.';
         });
 
-      // Replace fractions like 1/6 with inline math delimiters
+      // fractionify function detects patterns like "1/6" and replaces them with HTML fraction markup.
+      function fractionify(text) {
+        if (!text) return text;
+        return text.replace(/\b(\d+)\/(\d+)\b/g, (match, numerator, denominator) => {
+          return `<span class="fraction">
+                    <span class="numerator">${numerator}</span>
+                    <span class="denominator">${denominator}</span>
+                  </span>`;
+        });
+      }
+
+      // Parse the CSV and run each cell through fractionify
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
-        lines.shift();
-
-        function fractionify(text) {
-          if (!text) return text;
-          return text.replace(/\b(\d+)\/(\d+)\b/g, (match, numerator, denominator) => {
-            return `$\\frac{${numerator}}{${denominator}}$`;
-          });
-        }
-
+        lines.shift(); // remove header line
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
           if (cells.length < 6) return null;
@@ -113,7 +177,7 @@
         quizDiv.innerHTML = '';
         const q = questions[idx];
         if (!q) return;
-
+        // Determine whether to show options C and D
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
 
@@ -166,22 +230,6 @@
         }
         updateButtonTexts();
         updatePrevButtonState();
-
-        // Delay math rendering to ensure the content is in the DOM
-        setTimeout(() => {
-          renderMathInElement(questionBlock, {
-            delimiters: [
-              {left: "$", right: "$", display: false},
-              {left: "\\[", right: "\\]", display: true}
-            ]
-          });
-        }, 0);
-      }
-
-      function updateProgress() {
-        const gradedCount = userResponses.filter(resp => resp !== undefined).length;
-        const percentage = (gradedCount / questions.length) * 100;
-        progressBar.style.width = percentage + '%';
       }
 
       function updateButtonTexts() {
@@ -219,8 +267,6 @@
           quizDiv.querySelectorAll('input[type="radio"]').forEach(input => input.disabled = true);
           userResponses[currentQuestion] = { selected: selected.value, correct: isCorrect };
           questionSubmitted = true;
-          updateProgress();
-          updateButtonTexts();
         } else {
           currentQuestion++;
           if (currentQuestion < questions.length) {
@@ -239,17 +285,15 @@
               <div class="result-stats">
                 <div class="stat-item">
                   <span class="stat-label">Ճիշտ պատասխաններ</span>
-                  <span class="stat-value correct">${score}/${questions.length}</span>
+                  <span class="stat-value">${score}/${questions.length}</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">Ժամանակ</span>
-                  <span class="stat-value time">
-                    ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
-                  </span>
+                  <span class="stat-value">${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}</span>
                 </div>
                 <div class="stat-item">
                   <span class="stat-label">Հարցաթերթիկի բալ</span>
-                  <span class="stat-value percentage">${percentageScore}%</span>
+                  <span class="stat-value">${percentageScore}%</span>
                 </div>
               </div>
               <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշտբորդ</a>
@@ -268,4 +312,3 @@
   </script>
 </body>
 </html>
-
