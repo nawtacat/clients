@@ -261,7 +261,6 @@
           integrity="sha384-mLLX1zIGSmFT1C/Ki0zhunSyt8Qb/6zD2P4HfR3rWquunA4t9RR5qUTyj/T3TfoR"
           crossorigin="anonymous">
   </script>
-
 </head>
 <body>
   <div class="wrapper">
@@ -331,11 +330,11 @@
         const lines = csv.trim().split('\n');
         lines.shift(); // remove header line
 
-        // This helper replaces n/m with \(\frac{n}{m}\)
+        // This helper replaces patterns like 1/6 with $\frac{1}{6}$
         function fractionify(text) {
           if (!text) return text;
           return text.replace(/\b(\d+)\/(\d+)\b/g, (match, numerator, denominator) => {
-            return `\\(\\frac{${numerator}}{${denominator}}\\)`;
+            return `$\\frac{${numerator}}{${denominator}}$`;
           });
         }
 
@@ -349,7 +348,7 @@
           const optD = fractionify(cells[cells.length - 2]);
           const correct = cells[cells.length - 1].toUpperCase();
 
-          // Everything before last 5 cells is the question text
+          // Everything before the last 5 cells is the question text
           const problem = fractionify(cells.slice(0, cells.length - 5).join(','));
 
           return {
@@ -424,10 +423,10 @@
         updateButtonTexts();
         updatePrevButtonState();
 
-        // --- Render any LaTeX in this block ---
+        // --- Render any LaTeX in this block using $...$ delimiters ---
         renderMathInElement(questionBlock, {
           delimiters: [
-            {left: "\\(", right: "\\)", display: false},
+            {left: "$", right: "$", display: false},
             {left: "\\[", right: "\\]", display: true}
           ]
         });
@@ -521,7 +520,7 @@
                   <span class="stat-value percentage">${percentageScore}%</span>
                 </div>
               </div>
-              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշխբորդ</a>
+              <a href="${dashboardURL}" class="dashboard-btn">Վերադառնալ Դաշտբորդ</a>
             `;
           }
         }
@@ -537,3 +536,4 @@
   </script>
 </body>
 </html>
+
