@@ -7,7 +7,7 @@
   <link rel="icon" type="image/jpg" href="https://pha.am/favicon.png">
   <link rel="stylesheet" href="/homework/homeworkStyle.css">
   
-  <!-- Fraction CSS using Mardoto-Medium -->
+  <!-- Fraction CSS using Mardoto-Medium and image styling -->
   <style>
     @font-face {
       font-family: 'Mardoto-Medium';
@@ -33,6 +33,11 @@
       display: block;
       padding: 0 2px;
       font-size: 0.9em;
+    }
+    .problem-image {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -101,7 +106,7 @@
       const progressBar = document.getElementById('progress-bar');
       const stopwatchEl = document.getElementById('stopwatch');
 
-      // Replace with your CSV URL
+      // Replace with your CSV URL (published Google Sheet)
       const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ62e3BtAa3qBaARYmZvUhPDK94geO54JG20Qosadp7cNdrg1tzb4JKj-K4xupDlKPRHvio6yjPg6B2/pub?output=csv';
 
       let questions = [];
@@ -118,7 +123,6 @@
         stopwatchEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
       }, 1000);
 
-      // Load CSV
       fetch(csvUrl)
         .then(response => response.text())
         .then(csv => {
@@ -131,7 +135,7 @@
           resultsDiv.textContent = 'Failed to load quiz. Please try again later.';
         });
 
-      // fractionify: detects patterns like "1/6" and replaces them with HTML fraction markup
+      // fractionify: converts "n/m" to HTML fraction markup
       function fractionify(text) {
         if (!text) return text;
         return text.replace(/\b(\d+)\/(\d+)\b/g, (match, numerator, denominator) => {
@@ -142,19 +146,23 @@
         });
       }
 
+      // parseCSV now expects 7 columns:
+      // Problem, Option 1, Option 2, Option 3, Option 4, Correct Option, Image
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
         lines.shift(); // remove header line
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
-          if (cells.length < 6) return null;
-          const optA = fractionify(cells[cells.length - 5]);
-          const optB = fractionify(cells[cells.length - 4]);
-          const optC = fractionify(cells[cells.length - 3]);
-          const optD = fractionify(cells[cells.length - 2]);
-          const correct = cells[cells.length - 1].toUpperCase();
-          const problem = fractionify(cells.slice(0, cells.length - 5).join(','));
-          return { problem, options: { A: optA, B: optB, C: optC, D: optD }, correct };
+          if (cells.length < 7) return null;
+          // Get the options and other fields
+          const optA = fractionify(cells[cells.length - 6]);
+          const optB = fractionify(cells[cells.length - 5]);
+          const optC = fractionify(cells[cells.length - 4]);
+          const optD = fractionify(cells[cells.length - 3]);
+          const correct = cells[cells.length - 2].toUpperCase();
+          const image = cells[cells.length - 1]; // leave image URL as-is
+          const problem = fractionify(cells.slice(0, cells.length - 6).join(','));
+          return { problem, options: { A: optA, B: optB, C: optC, D: optD }, correct, image };
         }).filter(Boolean);
       }
 
@@ -163,14 +171,18 @@
         const q = questions[idx];
         if (!q) return;
 
-        // Decide whether to show all options.
+        // Determine whether to show options C and D.
         const showAllOptions = q.options["C"].trim() !== "C)";
         const letters = showAllOptions ? ["A", "B", "C", "D"] : ["A", "B"];
+
+        // If an image URL exists, prepare the image HTML.
+        const imageHtml = q.image ? `<img src="${q.image}" alt="Problem Visual" class="problem-image">` : '';
 
         const questionBlock = document.createElement('div');
         questionBlock.className = 'question-block';
         questionBlock.innerHTML = `
           <p>${q.problem}</p>
+          ${imageHtml}
           <ul class="options">
             ${letters.map(letter => `
               <li>
@@ -323,4 +335,3 @@
   </script>
 </body>
 </html>
-
