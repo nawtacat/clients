@@ -147,23 +147,44 @@
         });
       }
 
-      // parseCSV now expects 7 columns:
-      // Problem, Option 1, Option 2, Option 3, Option 4, Correct Option, Image
+      // Updated parseCSV function that handles both cases: with or without an image column.
+      // Expected CSV column formats:
+      // - 6 columns (without image): [Problem, Option A, Option B, Option C, Option D, Correct Option]
+      // - 7 or more columns (with image): [Problem part (may include commas), Option A, Option B, Option C, Option D, Correct Option, Image URL]
       function parseCSV(csv) {
         const lines = csv.trim().split('\n');
         lines.shift(); // remove header line
+
         return lines.map(line => {
           const cells = line.split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
-          if (cells.length < 7) return null;
-          // Get the options and other fields
-          const optA = fractionify(cells[cells.length - 6]);
-          const optB = fractionify(cells[cells.length - 5]);
-          const optC = fractionify(cells[cells.length - 4]);
-          const optD = fractionify(cells[cells.length - 3]);
-          const correct = cells[cells.length - 2].toUpperCase();
-          const image = cells[cells.length - 1]; // leave image URL as-is
-          const problem = fractionify(cells.slice(0, cells.length - 6).join(','));
-          return { problem, options: { A: optA, B: optB, C: optC, D: optD }, correct, image };
+          
+          if (cells.length === 6) {
+            // No image provided
+            const [problem, optA, optB, optC, optD, correct] = cells;
+            return {
+              problem: fractionify(problem),
+              options: {
+                A: fractionify(optA),
+                B: fractionify(optB),
+                C: fractionify(optC),
+                D: fractionify(optD)
+              },
+              correct: correct.toUpperCase(),
+              image: ""  // Set image as empty string since none provided
+            };
+          } else if (cells.length >= 7) {
+            // Image column present (even if blank) and the problem might contain commas.
+            const problem = fractionify(cells.slice(0, cells.length - 6).join(','));
+            const optA = fractionify(cells[cells.length - 6]);
+            const optB = fractionify(cells[cells.length - 5]);
+            const optC = fractionify(cells[cells.length - 4]);
+            const optD = fractionify(cells[cells.length - 3]);
+            const correct = cells[cells.length - 2].toUpperCase();
+            const image = cells[cells.length - 1];
+            return { problem, options: { A: optA, B: optB, C: optC, D: optD }, correct, image };
+          } else {
+            return null;
+          }
         }).filter(Boolean);
       }
 
