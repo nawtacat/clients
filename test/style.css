@@ -16,7 +16,7 @@
 
 :root {
     --primary-blue: #1155d4;
-    --accent-orange: #eb783f;
+    --accent-orange: #f99f7a; /* #eb783f*/
     --dark-blue: #0e47af;
     --light-blue: #9fc5e8;
 }
